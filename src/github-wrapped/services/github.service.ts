@@ -503,10 +503,58 @@ export async function fetchStarredRepos(
     }
 }
 
-// Predict "GitHub age" based on starred repos, languages, and topics
+interface RepoWithDate {
+    created_at?: string
+    pushed_at?: string
+    language?: string
+    topics?: string[]
+}
+
+// Predict "GitHub age" based on starred repos, languages, topics, and repo creation dates
 function predictGitHubAge(languages: string[], topics: string[], repos: unknown[]): { predictedAge: number; ageReason: string } {
     let score = 25 // Base age
     const reasons: string[] = []
+    const currentYear = new Date().getFullYear()
+    const typedRepos = repos as RepoWithDate[]
+
+    // Analyze repo creation dates - this is key!
+    const repoYears = typedRepos
+        .filter(r => r.created_at)
+        .map(r => new Date(r.created_at!).getFullYear())
+    
+    if (repoYears.length > 0) {
+        const avgRepoYear = Math.round(repoYears.reduce((a, b) => a + b, 0) / repoYears.length)
+        const oldestRepoYear = Math.min(...repoYears)
+        const repoAgeAvg = currentYear - avgRepoYear
+
+        // Stars repos from ancient times (high priority reason)
+        if (oldestRepoYear <= 2010) {
+            score += 20
+            reasons.unshift(`Stars repos from ${oldestRepoYear} (GitHub archaeologist)`)
+        } else if (oldestRepoYear <= 2014) {
+            score += 12
+            reasons.unshift(`Stars repos from ${oldestRepoYear} (vintage collector)`)
+        } else if (oldestRepoYear >= 2022) {
+            score -= 8
+            reasons.push(`Only stars recent repos (${oldestRepoYear}+)`)
+        }
+
+        // Average age of starred repos
+        if (repoAgeAvg > 8) {
+            score += 10
+            reasons.push(`Avg starred repo is ${repoAgeAvg} years old`)
+        } else if (repoAgeAvg < 3) {
+            score -= 5
+            reasons.push(`Prefers fresh repos (avg ${repoAgeAvg}y old)`)
+        }
+
+        // Count how many "ancient" repos (pre-2012)
+        const ancientRepos = repoYears.filter(y => y <= 2012).length
+        if (ancientRepos >= 5) {
+            score += 15
+            reasons.unshift(`${ancientRepos} starred repos from pre-2012 era`)
+        }
+    }
 
     // Ancient languages add years
     const ancientLangs = ['C', 'Fortran', 'COBOL', 'Lisp', 'Assembly', 'Pascal', 'Perl']
