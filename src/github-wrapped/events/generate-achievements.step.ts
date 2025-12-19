@@ -42,7 +42,11 @@ export const handler: Handlers['GenerateAchievements'] = async (input, { emit, l
         const languages = await state.get<LanguageStat[]>('github-raw', `${username}-languages`) || [];
         const repos = await state.get<Repository[]>('github-raw', `${username}-repos`) || [];
         const contributions = await state.get<ContributionDay[]>('github-raw', `${username}-contributions`) || [];
-        const starredData = await state.get<{ oldest: { name: string; year: number } | null }>('github-raw', `${username}-starred`);
+        const starredData = await state.get<{ 
+            oldest: { name: string; year: number } | null;
+            predictedAge?: number;
+            ageReason?: string;
+        }>('github-raw', `${username}-starred`);
 
         if (!profile || !stats) {
             throw new Error('Required data not found in state');
@@ -53,15 +57,20 @@ export const handler: Handlers['GenerateAchievements'] = async (input, { emit, l
         const now = new Date();
         const codingAge = Math.floor((now.getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24 * 365));
 
+        // Get predicted age from starred repos analysis
+        const predictedAge = starredData?.predictedAge || codingAge + 18;
+        const predictedAgeReason = starredData?.ageReason || 'Based on your GitHub activity';
+
         // Generate achievement titles
         const titles = analyticsService.generateTitles(stats, languages, repos);
         await state.set('github-achievements', `${username}-titles`, titles);
 
-        // Generate fun facts
+        // Generate fun facts with predicted age
         const funFacts = analyticsService.generateFunFacts(
             codingAge,
             starredData?.oldest || null,
-            stats,
+            predictedAge,
+            predictedAgeReason,
             contributions
         );
         await state.set('github-achievements', `${username}-fun-facts`, funFacts);

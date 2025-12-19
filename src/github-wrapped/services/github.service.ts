@@ -59,6 +59,20 @@ function getHeaders(token?: string): HeadersInit {
     return headers
 }
 
+async function handleRateLimit(response: Response): Promise<void> {
+    if (response.status === 403) {
+        const remaining = response.headers.get('X-RateLimit-Remaining')
+        const resetTime = response.headers.get('X-RateLimit-Reset')
+        
+        if (remaining === '0' && resetTime) {
+            const resetDate = new Date(parseInt(resetTime) * 1000)
+            const minutesUntilReset = Math.ceil((resetDate.getTime() - Date.now()) / 60000)
+            throw new Error(`GitHub API rate limit exceeded. Resets in ${minutesUntilReset} minutes. Pass a GitHub token for higher limits.`)
+        }
+        throw new Error('GitHub API rate limit exceeded. Pass a GitHub token for higher limits (5000 req/hour vs 60).')
+    }
+}
+
 export async function fetchUserProfile(
     username: string,
     token?: string
@@ -71,6 +85,7 @@ export async function fetchUserProfile(
         if (response.status === 404) {
             throw new Error(`User "${username}" not found on GitHub`)
         }
+        await handleRateLimit(response)
         throw new Error(`GitHub API error: ${response.status}`)
     }
 
@@ -422,33 +437,164 @@ export async function fetchCollaborators(
     return squad
 }
 
+export interface StarredReposData {
+    oldest: { name: string; year: number } | null;
+    totalStarred: number;
+    starredLanguages: string[];
+    starredTopics: string[];
+    predictedAge: number;
+    ageReason: string;
+}
+
 export async function fetchStarredRepos(
     username: string,
     token?: string
-): Promise<{ oldest: { name: string; year: number } | null }> {
+): Promise<StarredReposData> {
     const response = await fetch(
         `${GITHUB_API_BASE}/users/${username}/starred?per_page=100&sort=created&direction=asc`,
         { headers: getHeaders(token) }
     )
 
     if (!response.ok) {
-        return { oldest: null }
+        return { 
+            oldest: null, 
+            totalStarred: 0, 
+            starredLanguages: [], 
+            starredTopics: [],
+            predictedAge: 0,
+            ageReason: 'Not enough data'
+        }
     }
 
     const repos = await response.json()
+    
+    // Collect languages and topics from starred repos
+    const languages: string[] = []
+    const topics: string[] = []
+    
+    for (const repo of repos) {
+        if (repo.language) languages.push(repo.language)
+        if (repo.topics) topics.push(...repo.topics)
+    }
+
+    // Predict "GitHub age" based on what they star
+    const { predictedAge, ageReason } = predictGitHubAge(languages, topics, repos)
 
     if (repos.length > 0) {
         const oldest = repos[0]
         const year = new Date(oldest.created_at).getFullYear()
         return {
-            oldest: {
-                name: oldest.full_name,
-                year,
-            },
+            oldest: { name: oldest.full_name, year },
+            totalStarred: repos.length,
+            starredLanguages: [...new Set(languages)],
+            starredTopics: [...new Set(topics)],
+            predictedAge,
+            ageReason,
         }
     }
 
-    return { oldest: null }
+    return { 
+        oldest: null, 
+        totalStarred: repos.length,
+        starredLanguages: [...new Set(languages)],
+        starredTopics: [...new Set(topics)],
+        predictedAge,
+        ageReason,
+    }
+}
+
+// Predict "GitHub age" based on starred repos, languages, and topics
+function predictGitHubAge(languages: string[], topics: string[], repos: unknown[]): { predictedAge: number; ageReason: string } {
+    let score = 25 // Base age
+    const reasons: string[] = []
+
+    // Ancient languages add years
+    const ancientLangs = ['C', 'Fortran', 'COBOL', 'Lisp', 'Assembly', 'Pascal', 'Perl']
+    const veteranLangs = ['Java', 'C++', 'PHP', 'Ruby', 'Objective-C']
+    const modernLangs = ['Rust', 'Go', 'Kotlin', 'Swift', 'TypeScript']
+    const trendyLangs = ['Zig', 'Gleam', 'Mojo', 'Carbon']
+
+    const langCounts = languages.reduce((acc, l) => {
+        acc[l] = (acc[l] || 0) + 1
+        return acc
+    }, {} as Record<string, number>)
+
+    for (const lang of ancientLangs) {
+        if (langCounts[lang]) {
+            score += 15
+            reasons.push(`Stars ${lang} repos (ancient tech)`)
+            break
+        }
+    }
+
+    for (const lang of veteranLangs) {
+        if (langCounts[lang] > 3) {
+            score += 8
+            reasons.push(`Heavy ${lang} enthusiast`)
+            break
+        }
+    }
+
+    for (const lang of modernLangs) {
+        if (langCounts[lang] > 5) {
+            score -= 5
+            reasons.push(`Into modern langs like ${lang}`)
+            break
+        }
+    }
+
+    for (const lang of trendyLangs) {
+        if (langCounts[lang]) {
+            score -= 8
+            reasons.push(`Following bleeding edge (${lang})`)
+            break
+        }
+    }
+
+    // Topics analysis
+    const oldSchoolTopics = ['vim', 'emacs', 'linux', 'unix', 'kernel', 'embedded', 'systems-programming']
+    const hipsterTopics = ['blockchain', 'web3', 'ai', 'machine-learning', 'llm', 'gpt']
+    const boomerTopics = ['jquery', 'wordpress', 'lamp', 'xml']
+
+    for (const topic of oldSchoolTopics) {
+        if (topics.includes(topic)) {
+            score += 10
+            reasons.push(`Into ${topic} (old school)`)
+            break
+        }
+    }
+
+    for (const topic of boomerTopics) {
+        if (topics.includes(topic)) {
+            score += 12
+            reasons.push(`Still using ${topic}`)
+            break
+        }
+    }
+
+    for (const topic of hipsterTopics) {
+        if (topics.includes(topic)) {
+            score -= 3
+            reasons.push(`Chasing ${topic} trends`)
+            break
+        }
+    }
+
+    // Starred count affects age
+    if (repos.length > 500) {
+        score += 10
+        reasons.push('Star hoarder (500+ repos)')
+    } else if (repos.length < 10) {
+        score -= 5
+        reasons.push('Selective starrer')
+    }
+
+    // Clamp age between 12 and 99
+    score = Math.max(12, Math.min(99, score))
+
+    const reason = reasons.length > 0 ? reasons[0] : 'Based on your taste in repos'
+
+    return { predictedAge: score, ageReason: reason }
 }
 
 export const githubService = {

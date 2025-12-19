@@ -83,8 +83,8 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
         const streak = analyticsService.calculateStreak(contributions);
         await state.set('github-calculated', `${username}-streak`, streak);
 
-        // Generate timeline
-        const timeline = analyticsService.generateTimeline(contributions, year);
+        // Generate timeline with accurate commit counts
+        const timeline = analyticsService.generateTimeline(contributions, year, totalCommitsData.count);
         await state.set('github-calculated', `${username}-timeline`, timeline);
 
         // Sort repos by stars for top repos
