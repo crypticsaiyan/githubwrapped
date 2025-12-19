@@ -1,0 +1,27 @@
+[
+  {
+    "id": "basic-tutorial",
+    "config": {
+      "src/petstore/state-audit-cron.step.ts": {
+        "x": -287,
+        "y": 222,
+        "sourceHandlePosition": "right"
+      },
+      "src/petstore/process-food-order.step.ts": {
+        "x": 144,
+        "y": 17,
+        "sourceHandlePosition": "bottom"
+      },
+      "src/petstore/notification.step.ts": {
+        "x": 331,
+        "y": 261,
+        "sourceHandlePosition": "bottom"
+      },
+      "src/petstore/api.step.ts": {
+        "x": -319,
+        "y": 0,
+        "sourceHandlePosition": "right"
+      }
+    }
+  }
+]
