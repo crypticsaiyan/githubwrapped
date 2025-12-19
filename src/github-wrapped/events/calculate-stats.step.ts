@@ -50,9 +50,9 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
             startedAt: (await state.get<any>('wrapped-status', username))?.startedAt,
         });
 
-        // Get stored token if available
+        // Get stored token if available, or fall back to environment variable
         const tokenData = await state.get<{ token: string }>('github-tokens', username);
-        const token = tokenData?.token;
+        const token = tokenData?.token || process.env.GITHUB_TOKEN;
 
         // Fetch language stats (requires additional API calls)
         logger.info('Fetching language stats', { username });

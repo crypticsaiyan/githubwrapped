@@ -5,21 +5,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Wrapped 2024</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
+    /* Custom font */
+    @font-face {
+      font-family: 'Tronica Mono';
+      src: url('/static/Tronica-Mono.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --bg-primary: #0d1117;
-      --bg-secondary: #161b22;
-      --bg-tertiary: #21262d;
-      --accent-pink: #e94560;
-      --accent-orange: #f39c12;
-      --accent-blue: #58a6ff;
-      --accent-green: #3fb950;
-      --accent-purple: #a371f7;
-      --accent-cyan: #00d2d3;
-      --text-primary: #f0f6fc;
-      --text-secondary: #8b949e;
-      --border-color: #30363d;
+      /* Theme colors */
+      --theme-green: #00ff87;
+      --theme-pink: #ff5caa;
+      --theme-cyan: #00ffd5;
+      --theme-yellow: #ffd93d;
+      --theme-purple: #a855f7;
+      
+      /* Base colors */
+      --bg-dark: #0a0a0a;
+      --bg-card: rgba(255, 255, 255, 0.05);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      
+      /* Font families */
+      --font-display: 'Tronica Mono', 'JetBrains Mono', monospace;
+      --font-mono: 'Tronica Mono', 'JetBrains Mono', monospace;
+      --font-body: 'Tronica Mono', 'JetBrains Mono', monospace;
     }
 
     * {
@@ -29,404 +43,816 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-primary);
+      font-family: var(--font-body);
+      background: var(--bg-dark);
       color: var(--text-primary);
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    /* Animated background */
-    .bg-animation {
+    /* Dot pattern background */
+    .dot-pattern {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      background:
-        radial-gradient(ellipse at 20% 20%, rgba(233, 69, 96, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(88, 166, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(163, 113, 247, 0.08) 0%, transparent 50%);
-      animation: pulse 8s ease-in-out infinite;
+      background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.7;
-      }
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+    /* Main container */
+    .app-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
     }
 
     /* Header */
     .header {
-      text-align: center;
-      padding: 3rem 0;
-    }
-
-    .header h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    .header p {
-      color: var(--text-secondary);
-      font-size: 1.2rem;
-    }
-
-    /* Search Form */
-    .search-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Progress nav */
+    .progress-nav {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .progress-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-    }
-
-    .search-input {
-      padding: 1rem 1.5rem;
-      font-size: 1.1rem;
-      border: 2px solid var(--border-color);
-      border-radius: 12px;
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      width: 300px;
+      background: rgba(255, 255, 255, 0.1);
       transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(233, 69, 96, 0.2);
-    }
-
-    .search-btn {
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
-      color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
-    .search-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+    .progress-dot.active {
+      /* Background color set dynamically by JavaScript */
     }
 
-    .search-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+    .progress-dot svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
     }
 
-    /* Loading */
-    .loading {
+    .progress-dot.active svg {
+      opacity: 1;
+      color: var(--bg-dark);
+    }
+
+    .progress-dot.completed {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Header controls */
+    .header-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Slides container */
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateX(50px);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .slide.exit {
+      transform: translateX(-50px);
+    }
+
+    .slide-content {
       text-align: center;
-      padding: 4rem;
+      max-width: 900px;
+      padding: 2rem;
     }
 
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid var(--bg-tertiary);
-      border-top-color: var(--accent-pink);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1rem;
+    /* Navigation arrows */
+    .nav-arrow {
+      position: fixed;
+      bottom: 2rem;
+      width: 48px;
+      height: 48px;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 100;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    .nav-arrow:hover {
+      background: inherit;
+      background-color: currentColor;
+    }
+
+    .nav-arrow:hover svg {
+      color: var(--bg-dark);
+    }
+
+    .nav-arrow svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-arrow.left {
+      left: 2rem;
+    }
+
+    .nav-arrow.right {
+      right: 2rem;
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Typography */
+    .title-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      color: currentColor;
+    }
+
+    .title-main {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 8vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+      color: currentColor;
+      text-shadow: 0 0 80px currentColor;
+    }
+
+    .title-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-top: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .big-number {
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 20vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.85;
+      color: currentColor;
+      text-shadow: 0 0 100px currentColor;
+    }
+
+    .stat-description {
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+    }
+
+    .highlight-box {
+      display: inline-block;
+      background: var(--theme-pink);
+      color: #000;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Theme-specific highlight colors */
+    .theme-green .highlight-box { background: var(--theme-green); }
+    .theme-pink .highlight-box { background: var(--theme-pink); }
+    .theme-cyan .highlight-box { background: var(--theme-cyan); }
+    .theme-yellow .highlight-box { background: var(--theme-yellow); }
+    .theme-purple .highlight-box { background: var(--theme-purple); }
+
+    /* Decorative icons row */
+    .deco-icons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      opacity: 0.6;
+    }
+
+    .deco-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* 3D GitHub Icon Frame */
+    .github-3d-frame {
+      perspective: 1000px;
+      margin: 1rem auto;
+      width: 250px;
+      height: 250px;
+    }
+
+    .github-3d-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: float3d 12s ease-in-out infinite;
+    }
+
+    @keyframes float3d {
+      0%, 100% {
+        transform: rotateY(-15deg) rotateX(10deg) translateY(0);
+      }
+      25% {
+        transform: rotateY(15deg) rotateX(-5deg) translateY(-10px);
+      }
+      50% {
+        transform: rotateY(-10deg) rotateX(5deg) translateY(0);
+      }
+      75% {
+        transform: rotateY(10deg) rotateX(-10deg) translateY(-5px);
       }
     }
 
-    .loading-text {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
+    .github-3d-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid currentColor;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(0, 255, 135, 0.1), rgba(0, 255, 135, 0.02));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      box-shadow: 
+        0 0 30px rgba(0, 255, 135, 0.2),
+        inset 0 0 30px rgba(0, 255, 135, 0.05);
     }
 
-    .progress-bar {
+    .github-3d-face svg {
+      width: 120px;
+      height: 120px;
+      color: currentColor;
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+
+    .github-3d-frame::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 280px;
+      height: 280px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(0, 255, 135, 0.15), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Glitch effect for WRAPPED title */
+    .glitch-text {
+      position: relative;
+      font-size: clamp(2rem, 6vw, 4rem) !important;
+      animation: glitch 2s infinite;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: 'WRAPPED';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-text::before {
+      color: #ff00ff;
+      animation: glitch-1 0.3s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+      transform: translate(-2px, -2px);
+      opacity: 0.8;
+    }
+
+    .glitch-text::after {
+      color: #00ffff;
+      animation: glitch-2 0.3s infinite;
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+      transform: translate(2px, 2px);
+      opacity: 0.8;
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% { opacity: 1; }
+      91% { opacity: 0.8; }
+      92% { opacity: 1; }
+      93% { opacity: 0.9; }
+    }
+
+    @keyframes glitch-1 {
+      0%, 100% { transform: translate(-2px, -2px); }
+      20% { transform: translate(2px, 0); }
+      40% { transform: translate(-2px, 2px); }
+      60% { transform: translate(3px, -1px); }
+      80% { transform: translate(-1px, 2px); }
+    }
+
+    @keyframes glitch-2 {
+      0%, 100% { transform: translate(2px, 2px); }
+      20% { transform: translate(-2px, 1px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-3px, 0); }
+      80% { transform: translate(1px, -1px); }
+    }
+
+    .github-3d-frame::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 200px;
-      height: 6px;
-      background: var(--bg-tertiary);
-      border-radius: 3px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(0, 255, 135, 0.15), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Start button */
+    .start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      background: var(--bg-dark);
+      color: currentColor;
+      cursor: pointer;
+      margin-top: 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .start-btn:hover {
+      background: var(--theme-green);
+      color: #000;
+    }
+
+    .start-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Input section */
+    .input-section {
+      margin-top: 3rem;
+    }
+
+    /* Demo mode toggle */
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .demo-toggle input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--theme-green);
+      cursor: pointer;
+    }
+
+    .demo-toggle label {
+      cursor: pointer;
+    }
+
+    .demo-badge {
+      background: rgba(0, 255, 135, 0.2);
+      color: var(--theme-green);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .username-input {
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      font-family: inherit;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      width: 320px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .username-input:focus {
+      outline: none;
+      border-color: currentColor;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .username-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    /* Loading state */
+    .loading-container {
+      display: none;
+    }
+
+    .loading-container.active {
+      display: block;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .loading-progress {
+      width: 200px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
       margin: 1rem auto;
       overflow: hidden;
     }
 
-    .progress-fill {
+    .loading-progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--accent-pink), var(--accent-orange));
-      border-radius: 3px;
+      background: var(--theme-green);
+      border-radius: 2px;
       transition: width 0.3s ease;
     }
 
-    /* Error */
-    .error {
-      text-align: center;
-      padding: 2rem;
-      background: rgba(233, 69, 96, 0.1);
-      border: 1px solid var(--accent-pink);
-      border-radius: 12px;
-      margin: 2rem 0;
-    }
-
-    /* Wrapped Content */
-    .wrapped-content {
+    /* Error message */
+    .error-message {
       display: none;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 92, 92, 0.1);
+      border: 1px solid rgba(255, 92, 92, 0.3);
+      border-radius: 10px;
+      color: #ff5c5c;
+      margin-top: 1.5rem;
     }
 
-    .wrapped-content.active {
+    .error-message.active {
       display: block;
-      animation: fadeIn 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Profile Header */
-    .profile-header {
+    /* Repos grid */
+    .repos-container {
       display: flex;
-      align-items: center;
-      gap: 2rem;
-      padding: 2rem;
-      background: var(--bg-secondary);
-      border-radius: 20px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid var(--accent-pink);
-      box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
-    }
-
-    .profile-info h2 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .profile-info .username {
-      color: var(--accent-blue);
-      font-size: 1.2rem;
-    }
-
-    .profile-info .bio {
-      color: var(--text-secondary);
-      margin-top: 0.5rem;
-    }
-
-    /* Titles Section */
-    .titles-section {
-      margin-bottom: 2rem;
-    }
-
-    .titles-grid {
-      display: flex;
+      flex-direction: column;
       gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
+      margin-top: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .title-badge {
-      display: inline-flex;
+    .repo-card {
+      display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.25rem;
-      background: linear-gradient(135deg, rgba(233, 69, 96, 0.2), rgba(163, 113, 247, 0.2));
-      border: 1px solid var(--accent-purple);
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.95rem;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      text-align: left;
+      position: relative;
     }
 
-    .title-icon {
-      font-size: 1.2rem;
+    .repo-card.featured {
+      border-color: currentColor;
+      box-shadow: 0 0 30px rgba(var(--current-rgb), 0.2);
     }
 
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-blue);
-      box-shadow: 0 10px 30px rgba(88, 166, 255, 0.1);
-    }
-
-    .stat-value {
-      font-size: 2.5rem;
+    .repo-rank {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: var(--theme-cyan);
+      color: #000;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    .stat-label {
-      color: var(--text-secondary);
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    /* Languages */
-    .languages-section {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+    .repo-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
 
-    .languages-bar {
+    .repo-info {
+      flex: 1;
+    }
+
+    .repo-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: currentColor;
+    }
+
+    .repo-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .repo-stats {
       display: flex;
-      height: 12px;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 1rem;
+      gap: 1.5rem;
     }
 
-    .lang-segment {
-      transition: all 0.3s ease;
+    .repo-stat {
+      text-align: center;
     }
 
-    .lang-segment:hover {
-      transform: scaleY(1.5);
+    .repo-stat-value {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: currentColor;
     }
 
-    .languages-list {
+    .repo-stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    /* Languages section */
+    .languages-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
     }
 
-    .lang-item {
+    .language-card {
+      padding: 1rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
-    .lang-dot {
+    .language-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
     }
 
-    .lang-name {
-      font-weight: 500;
+    .language-name {
+      font-weight: 600;
     }
 
-    .lang-percent {
+    .language-percent {
       color: var(--text-secondary);
       font-size: 0.9rem;
     }
 
-    /* Timeline */
-    .timeline-section {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+    /* Achievements */
+    .achievements-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
     }
 
-    .timeline-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 0.5rem;
+    .achievement-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(255, 92, 170, 0.2));
+      border: 1px solid currentColor;
+      border-radius: 50px;
+      font-weight: 600;
     }
 
-    .timeline-month {
+    .achievement-icon {
+      font-size: 1.3rem;
+    }
+
+    /* GitHub Contribution Graph */
+    .contribution-graph {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 1rem;
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .contribution-week {
+      display: flex;
+      gap: 3px;
+    }
+
+    .contribution-day {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .contribution-day:hover {
+      transform: scale(1.3);
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    /* Intensity levels - pink theme */
+    .contribution-day.level-1 { background: rgba(255, 92, 170, 0.25); }
+    .contribution-day.level-2 { background: rgba(255, 92, 170, 0.5); }
+    .contribution-day.level-3 { background: rgba(255, 92, 170, 0.75); }
+    .contribution-day.level-4 { background: rgba(255, 92, 170, 1); }
+
+    .contribution-months {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0.5rem;
+      font-size: 0.65rem;
+      opacity: 0.6;
+    }
+
+    .contribution-month {
+      flex: 1;
       text-align: center;
-      padding: 1rem 0.5rem;
-      border-radius: 8px;
-      background: var(--bg-tertiary);
+    }
+
+    /* Timeline styles */
+    .timeline-container {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      align-items: flex-end;
+      margin-top: 2rem;
+      height: 150px;
+      padding: 0 1rem;
+    }
+
+    .timeline-bar {
+      flex: 1;
+      max-width: 50px;
+      min-width: 30px;
+      background: linear-gradient(180deg, currentColor, rgba(255,255,255,0.3));
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
       transition: all 0.3s ease;
     }
 
-    .timeline-month:hover {
-      background: rgba(233, 69, 96, 0.2);
+    .timeline-bar:hover {
+      filter: brightness(1.2);
     }
 
-    .month-name {
+    .timeline-bar-label {
+      position: absolute;
+      bottom: -25px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    .timeline-bar-value {
+      position: absolute;
+      top: -20px;
       font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
-    }
-
-    .month-commits {
-      font-size: 1.1rem;
       font-weight: 700;
     }
 
-    /* Squad */
-    .squad-section {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .squad-grid {
+    /* Squad styles */
+    .squad-container {
       display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
+      gap: 2rem;
       justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      padding: 1rem;
     }
 
     .squad-member {
@@ -434,230 +860,1160 @@
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .squad-member:nth-child(2) { animation-delay: 0.5s; }
+    .squad-member:nth-child(3) { animation-delay: 1s; }
+    .squad-member:nth-child(4) { animation-delay: 1.5s; }
+    .squad-member:nth-child(5) { animation-delay: 2s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
     .squad-avatar {
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      border: 2px solid var(--accent-purple);
+      border: 3px solid currentColor;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      overflow: hidden;
+    }
+
+    .squad-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .squad-name {
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .squad-projects {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
       font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-    /* Fun Facts */
-    .fun-facts {
-      background: linear-gradient(135deg, rgba(233, 69, 96, 0.1), rgba(163, 113, 247, 0.1));
-      border: 1px solid var(--accent-purple);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .quote {
-      font-size: 1.5rem;
       font-weight: 600;
+    }
+
+    .squad-role {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    /* Quote styles */
+    .quote-container {
+      margin-top: 3rem;
+      padding: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .quote-text {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
       font-style: italic;
-      margin-bottom: 1rem;
+      color: currentColor;
+      line-height: 1.4;
     }
 
-    .roast {
-      color: var(--accent-orange);
-      font-size: 1.1rem;
+    .quote-author {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-top: 1.5rem;
     }
 
-    /* Top Repos */
-    .repos-section {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .repo-list {
+    /* Summary page - Discord Checkpoint style */
+    .summary-layout {
       display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      width: 100%;
+      height: 100vh;
+      align-items: stretch;
     }
 
-    .repo-item {
+    .summary-cards {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .card-stack {
+      position: relative;
+      width: 280px;
+      height: 380px;
+    }
+
+    .github-card {
+      position: absolute;
+      width: 260px;
+      height: 360px;
+      background: linear-gradient(135deg, #ff5caa, #ff8ecb);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(255, 92, 170, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .github-card.back {
+      transform: rotate(-8deg) translateX(-20px);
+      z-index: 1;
+      background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+      border: 2px solid rgba(255, 92, 170, 0.5);
+    }
+
+    .github-card.front {
+      transform: rotate(4deg) translateX(20px);
+      z-index: 2;
+    }
+
+    .github-card:hover {
+      transform: rotate(0deg) translateX(0) scale(1.02);
+    }
+
+    .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      background: var(--bg-tertiary);
-      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.7);
     }
 
-    .repo-name {
-      font-weight: 600;
-      color: var(--accent-blue);
+    .card-level {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
     }
 
-    .repo-stars {
+    .card-image {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+      border-radius: 12px;
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-      color: var(--accent-orange);
+      justify-content: center;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Badge Section */
-    .badge-section {
-      text-align: center;
+    .card-image svg {
+      width: 80px;
+      height: 80px;
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    .card-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      border: 3px solid currentColor;
+      background: var(--bg-dark);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .card-info {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    .card-year {
+      font-size: 0.65rem;
+      opacity: 0.7;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .card-icons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .card-icons svg {
+      width: 20px;
+      height: 20px;
+      opacity: 0.6;
+    }
+
+    .summary-stats {
+      flex: 1;
+      background: rgba(128, 0, 80, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+    }
+
+    .summary-header {
       margin-bottom: 2rem;
     }
 
-    .badge-container {
-      display: inline-block;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
+    .summary-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      color: currentColor;
     }
 
-    .badge-preview {
-      max-width: 300px;
-      border-radius: 12px;
+    .summary-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: currentColor;
     }
 
-    .download-btn {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: var(--accent-green);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-item-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: currentColor;
+      opacity: 0.8;
     }
 
-    .download-btn:hover {
+    .stat-item-label svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .stat-item-value {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 800;
+      color: currentColor;
+    }
+
+    .stat-item-value.small {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-item-value img {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+    }
+
+    .share-btn {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      background: var(--bg-dark);
+      color: currentColor;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .share-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(63, 185, 80, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .share-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .restart-btn {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      color: currentColor;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+    }
+
+    .restart-btn:hover {
+      opacity: 1;
+      background: var(--theme-pink);
+      color: #000;
+    }
+
+    /* 3D Geometric decoration */
+    .geometric-deco {
+      position: absolute;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .geometric-deco.left {
+      left: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .geometric-deco.right {
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     /* Footer */
     .footer {
-      text-align: center;
-      padding: 2rem;
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
       color: var(--text-secondary);
-      font-size: 0.9rem;
+      z-index: 50;
     }
 
+    /* Theme classes */
+    .theme-green { color: var(--theme-green); }
+    .theme-pink { color: var(--theme-pink); }
+    .theme-cyan { color: var(--theme-cyan); }
+    .theme-yellow { color: var(--theme-yellow); }
+    .theme-purple { color: var(--theme-purple); }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2.5rem;
+      .header {
+        padding: 1rem;
       }
 
-      .profile-header {
-        flex-direction: column;
-        text-align: center;
+      .progress-nav {
+        display: none;
       }
 
-      .search-input {
+      .nav-arrow {
+        bottom: 1rem;
+      }
+
+      .nav-arrow.left {
+        left: 1rem;
+      }
+
+      .nav-arrow.right {
+        right: 1rem;
+      }
+
+      .slide-content {
+        padding: 1rem;
+      }
+
+      .username-input {
         width: 100%;
+        max-width: 280px;
+      }
+
+      .repos-container {
+        padding: 0 1rem;
+      }
+
+      .title-main {
+        font-size: clamp(3rem, 15vw, 6rem);
+      }
+
+      .big-number {
+        font-size: clamp(4rem, 18vw, 8rem);
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-animation"></div>
+  <!-- Dynamic dot pattern -->
+  <div class="dot-pattern" id="dotPattern"></div>
 
-  <div class="container">
+  <div class="app-container" id="app">
+    <!-- Header -->
     <header class="header">
-      <h1>✨ GitHub Wrapped</h1>
-      <p>Your year in code, beautifully visualized</p>
+      <div class="logo" id="logo" style="visibility: hidden;">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        <span>GitHub Wrapped</span>
+      </div>
+
+      <nav class="progress-nav" id="progressNav" style="visibility: hidden;">
+        <!-- Progress dots will be generated by JS -->
+      </nav>
+
+      <div class="header-controls" id="headerControls" style="visibility: hidden;">
+        <button class="control-btn" id="soundBtn" title="Toggle Sound">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+        <button class="control-btn" id="closeBtn" title="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <section class="search-section">
-      <input type="text" class="search-input" id="usernameInput" placeholder="Enter GitHub username" />
-      <button class="search-btn" id="generateBtn" onclick="generateWrapped()">
-        🚀 Generate Wrapped
-      </button>
-    </section>
+    <!-- Slides -->
+    <div class="slides-container" id="slidesContainer">
+      
+      <!-- Slide 0: Landing / Start -->
+      <section class="slide theme-green active" id="slide-0" data-theme="green">
+        <div class="slide-content">
 
-    <div id="loading" class="loading" style="display: none;">
-      <div class="spinner"></div>
-      <p class="loading-text">Generating your wrapped...</p>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-      </div>
-      <p id="progressText" style="color: #8b949e; margin-top: 0.5rem;">0%</p>
-    </div>
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Your Year in Code
+          </div>
+          <h1 class="title-main">
+          <!-- 3D GitHub Icon Frame -->
+          <div class="github-3d-frame">
+            <div class="github-3d-inner">
+              <div class="github-3d-face">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <h1 class="title-main">WRAPPED</h1>
+          <p class="title-subtitle">Look back at your 2024 on GitHub</p>
+          
+          <div class="input-section" id="inputSection">
+            <input type="text" class="username-input" id="usernameInput" placeholder="Enter GitHub username" />
+            <br>
+            <button class="start-btn" id="startBtn" onclick="generateWrapped()">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              START
+            </button>
+            <div class="demo-toggle">
+              <input type="checkbox" id="demoModeToggle" checked />
+              <label for="demoModeToggle">Demo Mode</label>
+              <span class="demo-badge">NO API</span>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+          </div>
 
-    <div id="error" class="error" style="display: none;"></div>
-
-    <div id="wrappedContent" class="wrapped-content">
-      <!-- Profile Header -->
-      <section class="profile-header" id="profileHeader"></section>
-
-      <!-- Titles -->
-      <section class="titles-section">
-        <div class="titles-grid" id="titlesGrid"></div>
-      </section>
-
-      <!-- Stats -->
-      <section class="stats-grid" id="statsGrid"></section>
-
-      <!-- Languages -->
-      <section class="languages-section">
-        <h3 class="section-title">💻 Languages You Spoke</h3>
-        <div class="languages-bar" id="languagesBar"></div>
-        <div class="languages-list" id="languagesList"></div>
-      </section>
-
-      <!-- Timeline -->
-      <section class="timeline-section">
-        <h3 class="section-title">📅 Your Year in Commits</h3>
-        <div class="timeline-grid" id="timelineGrid"></div>
-      </section>
-
-      <!-- Fun Facts -->
-      <section class="fun-facts" id="funFacts"></section>
-
-      <!-- Squad -->
-      <section class="squad-section" id="squadSection" style="display: none;">
-        <h3 class="section-title">👥 Your Squad</h3>
-        <div class="squad-grid" id="squadGrid"></div>
-      </section>
-
-      <!-- Top Repos -->
-      <section class="repos-section" id="reposSection" style="display: none;">
-        <h3 class="section-title">⭐ Top Repositories</h3>
-        <div class="repo-list" id="repoList"></div>
-      </section>
-
-      <!-- Badge -->
-      <section class="badge-section">
-        <h3 class="section-title" style="justify-content: center;">🏆 Your Badge</h3>
-        <div class="badge-container">
-          <img id="badgePreview" class="badge-preview" src="" alt="GitHub Wrapped Badge" />
-          <br>
-          <a id="downloadBadge" class="download-btn" href="" download>📥 Download Badge</a>
+          <div class="loading-container" id="loadingContainer">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Generating your wrapped...</p>
+            <div class="loading-progress">
+              <div class="loading-progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p class="loading-text" id="progressText">0%</p>
+          </div>
         </div>
       </section>
+
+      <!-- Slide 1: Total Commits -->
+      <section class="slide theme-pink" id="slide-1" data-theme="pink">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="4"/>
+              <line x1="1.05" y1="12" x2="7" y2="12" stroke="currentColor" stroke-width="2"/>
+              <line x1="17.01" y1="12" x2="22.96" y2="12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            COMMITS THIS YEAR
+          </div>
+          <div class="big-number" id="commitsNumber">0</div>
+          <p class="stat-description" id="commitsDescription">
+            You were in the <span class="highlight-box" id="commitsPercentile">Top 0%</span> for commits on GitHub!
+          </p>
+          
+          <!-- GitHub-style Contribution Graph -->
+          <div class="contribution-graph" id="contributionGraph">
+            <!-- Will be populated by JavaScript -->
+          </div>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="11" width="3" height="10" rx="1"/>
+              <rect x="8" y="6" width="3" height="15" rx="1"/>
+              <rect x="13" y="9" width="3" height="12" rx="1"/>
+              <rect x="18" y="3" width="3" height="18" rx="1"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Top Repositories -->
+      <section class="slide theme-cyan" id="slide-2" data-theme="cyan">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            YOUR TOP REPOSITORIES
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">REPOS</h2>
+          <p class="title-subtitle">The projects you poured your heart into in 2024.</p>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+
+          <div class="repos-container" id="reposContainer">
+            <!-- Repos will be populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Languages -->
+      <section class="slide theme-yellow" id="slide-3" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            LANGUAGES YOU SPOKE
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">CODE</h2>
+          <p class="title-subtitle">Your programming languages of 2024.</p>
+
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+
+          <div class="languages-grid" id="languagesGrid">
+            <!-- Languages will be populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Streak & Days -->
+      <section class="slide theme-yellow" id="slide-4" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2v20M2 12h20"/>
+            </svg>
+            LONGEST STREAK
+          </div>
+          <div class="big-number" id="streakNumber">0</div>
+          <p class="stat-description">
+            <span id="streakDays">0</span> days straight! Plus, you coded on <span class="highlight-box" id="daysCodedNumber">0</span> days this year.
+          </p>
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3v18M5.5 8.5l13 7M5.5 15.5l13-7"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Achievements -->
+      <section class="slide theme-purple" id="slide-5" data-theme="purple">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="7"/>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+            </svg>
+            YOUR ACHIEVEMENTS
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">TITLES</h2>
+          <p class="title-subtitle">Badges earned through your 2024 coding journey.</p>
+
+          <div class="achievements-grid" id="achievementsGrid">
+            <!-- Achievements will be populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Fun Facts / Roast -->
+      <section class="slide theme-pink" id="slide-6" data-theme="pink">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            AGE IS JUST A NUMBER
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2rem, 6vw, 4rem);">FUN FACTS</h2>
+          <p class="stat-description" id="codingAgeText">
+            Your coding age is <span class="highlight-box" id="codingAge">0</span> years old!
+          </p>
+          <p class="stat-description" style="margin-top: 1rem;" id="oldestRepoText">
+            You've starred repos from <span class="highlight-box" id="oldestStarYear">2020</span>... vintage taste!
+          </p>
+          <p class="stat-description" style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;" id="roastText">
+            <!-- Roast will be populated by JS -->
+          </p>
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+              <line x1="4" y1="22" x2="4" y2="15"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Timeline -->
+      <section class="slide theme-yellow" id="slide-7" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            YOUR YEAR IN CODE
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2.5rem, 7vw, 5rem);">TIMELINE</h2>
+          <p class="title-subtitle">Your monthly commit journey through 2024.</p>
+          
+          <div class="timeline-container" id="timelineContainer">
+            <!-- Timeline will be populated by JS -->
+          </div>
+          
+          <p class="stat-description" style="margin-top: 1.5rem;">
+            Peak month: <span class="highlight-box" id="peakMonth">-</span> with <span id="peakCommits">0</span> commits!
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 8: Your Squad -->
+      <section class="slide theme-purple" id="slide-8" data-theme="purple">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            YOUR GITHUB
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">SQUAD</h2>
+          <p class="title-subtitle">Developers you collaborated with the most in 2024.</p>
+
+          <div class="squad-container" id="squadContainer">
+            <!-- Squad avatars will be populated by JS -->
+          </div>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="11" width="3" height="10" rx="1"/>
+              <rect x="8" y="6" width="3" height="15" rx="1"/>
+              <rect x="13" y="9" width="3" height="12" rx="1"/>
+              <rect x="18" y="3" width="3" height="18" rx="1"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Wise Quote -->
+      <section class="slide theme-green" id="slide-9" data-theme="green">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+            </svg>
+            WORD FROM A WISE CODER
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2rem, 5vw, 3.5rem);">WISDOM</h2>
+          
+          <div class="quote-container">
+            <p class="quote-text" id="wiseQuote">"Touch some grass, dude."</p>
+            <p class="quote-author" id="quoteAuthor">— The Universe</p>
+          </div>
+
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Summary / Share - Discord Checkpoint Style -->
+      <section class="slide theme-pink" id="slide-10" data-theme="pink">
+        <div class="summary-layout">
+          <!-- Left side: Stacked cards -->
+          <div class="summary-cards">
+            <div class="card-stack">
+              <!-- Back card (dark) -->
+              <div class="github-card back">
+                <div class="card-image" style="background: linear-gradient(135deg, rgba(255,92,170,0.3), rgba(255,92,170,0.1));">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--theme-pink);">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </div>
+              </div>
+              <!-- Front card (pink) -->
+              <div class="github-card front">
+                <div class="card-header">
+                  <span>WRAPPED 2024</span>
+                  <span class="card-level" id="cardLevel">LV. 1</span>
+                </div>
+                <div class="card-image">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                  <img id="cardAvatar" class="card-avatar" src="" alt="" style="display: none;">
+                </div>
+                <div class="card-footer">
+                  <div class="card-info">
+                    <div class="card-year">GITHUB WRAPPED 2024 • #1</div>
+                    <div class="card-title" id="cardUsername">Developer</div>
+                  </div>
+                  <div class="card-icons">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="3" height="10" rx="1"/><rect x="8" y="6" width="3" height="15" rx="1"/><rect x="13" y="9" width="3" height="12" rx="1"/><rect x="18" y="3" width="3" height="18" rx="1"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Stats panel -->
+          <div class="summary-stats">
+            <div class="summary-header">
+              <div class="summary-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                YOUR GITHUB WRAPPED
+              </div>
+              <h2 class="summary-title">SUMMARY</h2>
+            </div>
+
+            <div class="stats-grid" id="summaryStatsGrid">
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+                  COMMITS
+                </div>
+                <div class="stat-item-value" id="summaryCommits">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  STREAK
+                </div>
+                <div class="stat-item-value" id="summaryStreak">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  LANGUAGES
+                </div>
+                <div class="stat-item-value" id="summaryLanguages">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  TOP LANGUAGE
+                </div>
+                <div class="stat-item-value small" id="summaryTopLang">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  TOP REPO
+                </div>
+                <div class="stat-item-value small" id="summaryTopRepo">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                  ACHIEVEMENTS
+                </div>
+                <div class="stat-item-value" id="summaryAchievements">0</div>
+              </div>
+            </div>
+
+            <button class="restart-btn" onclick="resetAndRestart()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+              </svg>
+              START OVER
+            </button>
+
+            <button class="share-btn" onclick="shareWrapped()">
+              SHARE
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"/>
+                <polyline points="7 7 17 7 17 17"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
     </div>
 
-    <footer class="footer">
-      <p>Made with 💖 using Motia Framework</p>
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow left" id="navLeft" onclick="prevSlide()" style="display: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="nav-arrow right" id="navRight" onclick="nextSlide()" style="display: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+      Made with 💖 using Motia Framework
     </footer>
   </div>
 
   <script>
     const API_BASE = 'http://localhost:3000';
+    let currentSlide = 0;
+    let totalSlides = 11;
+    let wrappedData = null;
     let pollInterval = null;
+    let isInWrapped = false;
+
+    // Theme colors for dot pattern
+    const themeColors = {
+      green: '#00ff87',
+      pink: '#ff5caa',
+      cyan: '#00ffd5',
+      yellow: '#ffd93d',
+      purple: '#a855f7'
+    };
+
+    // Mock data for demo mode
+    function generateMockData(username) {
+      return {
+        username: username || 'demo_user',
+        year: 2024,
+        status: 'completed',
+        generatedAt: new Date().toISOString(),
+        profile: {
+          username: username || 'demo_user',
+          avatarUrl: `https://api.dicebear.com/7.x/identicon/svg?seed=${username || 'demo'}`,
+          name: username ? username.charAt(0).toUpperCase() + username.slice(1) : 'Demo Developer',
+          bio: 'A passionate developer exploring the world of code',
+          company: 'OpenSource Inc',
+          location: 'The Cloud',
+          joinDate: '2020-01-15T00:00:00Z',
+          followers: 1234,
+          following: 567,
+          publicRepos: 42
+        },
+        stats: {
+          totalCommits: 847,
+          totalPRs: 56,
+          totalPRsMerged: 48,
+          totalIssues: 23,
+          totalReviews: 89,
+          totalStars: 156,
+          longestStreak: 42,
+          currentStreak: 7,
+          mostCommitsDay: { date: '2024-03-15', count: 28 },
+          mostDiverseDay: { date: '2024-06-20', languages: ['TypeScript', 'Python', 'Go'] },
+          daysCodedThisYear: 234
+        },
+        languages: [
+          { name: 'TypeScript', percentage: 35.2, color: '#3178c6', bytes: 450000 },
+          { name: 'Python', percentage: 24.8, color: '#3572A5', bytes: 320000 },
+          { name: 'JavaScript', percentage: 18.5, color: '#f1e05a', bytes: 240000 },
+          { name: 'Go', percentage: 12.1, color: '#00ADD8', bytes: 155000 },
+          { name: 'Rust', percentage: 5.7, color: '#dea584', bytes: 73000 },
+          { name: 'CSS', percentage: 3.7, color: '#563d7c', bytes: 48000 }
+        ],
+        topRepos: [
+          { name: 'awesome-project', fullName: `${username}/awesome-project`, description: 'An awesome open source project that helps developers', stars: 234, forks: 45, language: 'TypeScript', commits: 156, url: '#', isPrivate: false },
+          { name: 'cli-tool', fullName: `${username}/cli-tool`, description: 'A powerful CLI tool for automation', stars: 89, forks: 12, language: 'Go', commits: 78, url: '#', isPrivate: false },
+          { name: 'web-app', fullName: `${username}/web-app`, description: 'Modern web application with React', stars: 56, forks: 8, language: 'JavaScript', commits: 234, url: '#', isPrivate: false }
+        ],
+        timeline: [
+          { month: 'January', year: 2024, commits: 65, prs: 4, issues: 2, highlights: [] },
+          { month: 'February', year: 2024, commits: 78, prs: 6, issues: 1, highlights: [] },
+          { month: 'March', year: 2024, commits: 92, prs: 8, issues: 3, highlights: [] },
+          { month: 'April', year: 2024, commits: 54, prs: 3, issues: 2, highlights: [] },
+          { month: 'May', year: 2024, commits: 87, prs: 7, issues: 4, highlights: [] },
+          { month: 'June', year: 2024, commits: 103, prs: 9, issues: 2, highlights: [] },
+          { month: 'July', year: 2024, commits: 76, prs: 5, issues: 1, highlights: [] },
+          { month: 'August', year: 2024, commits: 68, prs: 4, issues: 3, highlights: [] },
+          { month: 'September', year: 2024, commits: 91, prs: 6, issues: 2, highlights: [] },
+          { month: 'October', year: 2024, commits: 82, prs: 5, issues: 1, highlights: [] },
+          { month: 'November', year: 2024, commits: 73, prs: 4, issues: 2, highlights: [] },
+          { month: 'December', year: 2024, commits: 45, prs: 3, issues: 0, highlights: [] }
+        ],
+        titles: [
+          { id: 'commit-master', title: 'Commit Master', description: '500+ commits this year', icon: '🔥' },
+          { id: 'streak-lord', title: 'Streak Lord', description: '30+ day coding streak', icon: '⚡' },
+          { id: 'polyglot', title: 'Polyglot', description: '5+ programming languages', icon: '🌐' },
+          { id: 'open-sourcerer', title: 'Open Sourcerer', description: 'Active contributor', icon: '✨' }
+        ],
+        squad: [
+          { username: 'alice_dev', avatarUrl: 'https://api.dicebear.com/7.x/identicon/svg?seed=alice', sharedProjects: 5, collaborationType: 'contributor' },
+          { username: 'bob_coder', avatarUrl: 'https://api.dicebear.com/7.x/identicon/svg?seed=bob', sharedProjects: 3, collaborationType: 'reviewer' }
+        ],
+        funFacts: {
+          codingAge: 4,
+          oldestStarredRepoYear: 2018,
+          oldestStarredRepoName: 'linux/linux',
+          favoriteTimeOfDay: 'Night Owl (10PM-2AM)',
+          mostProductiveDay: 'Wednesday',
+          quote: 'Code is poetry',
+          roast: 'You commit more on weekends than weekdays... work-life balance who?'
+        },
+        streak: {
+          longestStreak: 42,
+          longestStreakStart: '2024-02-01',
+          longestStreakEnd: '2024-03-14',
+          currentStreak: 7
+        }
+      };
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDotPatternColor('green');
+      document.getElementById('usernameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') generateWrapped();
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!isInWrapped) return;
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    function updateDotPatternColor(theme) {
+      const dotPattern = document.getElementById('dotPattern');
+      dotPattern.style.color = themeColors[theme] || themeColors.green;
+    }
+
+    function generateProgressNav() {
+      const nav = document.getElementById('progressNav');
+      const icons = [
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>', // Landing
+        '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>', // Commits
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>', // Repos
+        '<svg viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>', // Languages
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>', // Streak
+        '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>', // Achievements
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM8.5 8C9.33 8 10 8.67 10 9.5S9.33 11 8.5 11 7 10.33 7 9.5 7.67 8 8.5 8zm7 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm-3.5 9.5c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/></svg>', // Fun Facts
+        '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', // Timeline
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>', // Squad
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>', // Wisdom
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' // Summary
+      ];
+      
+      nav.innerHTML = icons.map((icon, i) => 
+        `<div class="progress-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})">${icon}</div>`
+      ).join('');
+      nav.style.visibility = 'visible';
+    }
+
+    function updateProgressNav() {
+      const dots = document.querySelectorAll('.progress-dot');
+      const currentTheme = document.querySelectorAll('.slide')[currentSlide]?.dataset.theme || 'green';
+      const activeColor = themeColors[currentTheme];
+      
+      dots.forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        dot.style.backgroundColor = ''; // Reset
+        if (i === currentSlide) {
+          dot.classList.add('active');
+          dot.style.backgroundColor = activeColor;
+        } else if (i < currentSlide) {
+          dot.classList.add('completed');
+        }
+      });
+    }
+
+    function goToSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      
+      const slides = document.querySelectorAll('.slide');
+      const currentSlideEl = slides[currentSlide];
+      const nextSlideEl = slides[index];
+      
+      // Exit current
+      currentSlideEl.classList.remove('active');
+      currentSlideEl.classList.add('exit');
+      
+      // Enter next
+      setTimeout(() => {
+        currentSlideEl.classList.remove('exit');
+        nextSlideEl.classList.add('active');
+        currentSlide = index;
+        
+        // Update theme
+        const theme = nextSlideEl.dataset.theme;
+        updateDotPatternColor(theme);
+        document.querySelectorAll('.nav-arrow').forEach(arrow => {
+          arrow.style.color = themeColors[theme];
+        });
+        
+        updateProgressNav();
+        updateNavButtons();
+      }, 100);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    function updateNavButtons() {
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      
+      leftBtn.disabled = currentSlide === 0;
+      rightBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function showWrappedUI() {
+      isInWrapped = true;
+      document.getElementById('logo').style.visibility = 'visible';
+      document.getElementById('headerControls').style.visibility = 'visible';
+      document.getElementById('navLeft').style.display = 'flex';
+      document.getElementById('navRight').style.display = 'flex';
+      document.getElementById('footer').style.display = 'none';
+      
+      generateProgressNav();
+      updateNavButtons();
+      
+      // Update nav arrow colors
+      const theme = document.getElementById('slide-0').dataset.theme;
+      document.querySelectorAll('.nav-arrow').forEach(arrow => {
+        arrow.style.color = themeColors[theme];
+      });
+    }
+
+    function hideWrappedUI() {
+      isInWrapped = false;
+      document.getElementById('logo').style.visibility = 'hidden';
+      document.getElementById('progressNav').style.visibility = 'hidden';
+      document.getElementById('headerControls').style.visibility = 'hidden';
+      document.getElementById('navLeft').style.display = 'none';
+      document.getElementById('navRight').style.display = 'none';
+      document.getElementById('footer').style.display = 'block';
+    }
 
     async function generateWrapped() {
       const username = document.getElementById('usernameInput').value.trim();
@@ -666,13 +2022,36 @@
         return;
       }
 
-      // Reset UI
+      // Check if demo mode is enabled
+      const demoMode = document.getElementById('demoModeToggle').checked;
+      
+      if (demoMode) {
+        // Demo mode: use mock data without API calls
+        hideError();
+        showLoading();
+        
+        // Simulate loading animation
+        let progress = 0;
+        const loadingInterval = setInterval(() => {
+          progress += 10;
+          updateProgress(Math.min(progress, 100));
+          
+          if (progress >= 100) {
+            clearInterval(loadingInterval);
+            hideLoading();
+            wrappedData = generateMockData(username);
+            displayWrapped(wrappedData);
+          }
+        }, 150);
+        
+        return;
+      }
+
+      // Normal mode: use real API
       hideError();
-      hideWrapped();
       showLoading();
 
       try {
-        // Start generation
         const response = await fetch(`${API_BASE}/wrapped/${username}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -684,7 +2063,6 @@
           throw new Error(data.error || 'Failed to start generation');
         }
 
-        // Poll for status
         pollStatus(username);
       } catch (error) {
         hideLoading();
@@ -734,139 +2112,246 @@
           throw new Error(result.error || 'Failed to fetch data');
         }
 
+        wrappedData = result.data;
         hideLoading();
-        displayWrapped(result.data, username);
+        displayWrapped(wrappedData);
       } catch (error) {
         hideLoading();
         showError(error.message);
       }
     }
 
-    function displayWrapped(data, username) {
-      // Profile
-      document.getElementById('profileHeader').innerHTML = `
-        <img class="avatar" src="${data.profile.avatarUrl}" alt="${username}">
-        <div class="profile-info">
-          <h2>${data.profile.name || username}</h2>
-          <p class="username">@${username}</p>
-          ${data.profile.bio ? `<p class="bio">${data.profile.bio}</p>` : ''}
-        </div>
-      `;
+    function displayWrapped(data) {
+      // Commits
+      document.getElementById('commitsNumber').textContent = formatNumber(data.stats.totalCommits);
+      const commitPercentile = calculatePercentile(data.stats.totalCommits, 'commits');
+      document.getElementById('commitsPercentile').textContent = `Top ${commitPercentile}%`;
+      document.getElementById('commitsDescription').innerHTML = 
+        `You were in the <span class="highlight-box">Top ${commitPercentile}%</span> for commits on GitHub!`;
 
-      // Titles
-      const titlesHtml = data.titles.map(t => `
-        <div class="title-badge">
-          <span class="title-icon">${t.icon}</span>
-          <span>${t.title}</span>
-        </div>
-      `).join('');
-      document.getElementById('titlesGrid').innerHTML = titlesHtml || '<p style="color: #8b949e">Keep coding to earn titles!</p>';
-
-      // Stats
-      document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card">
-          <div class="stat-value">${formatNumber(data.stats.totalCommits)}</div>
-          <div class="stat-label">Total Commits</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${data.stats.totalPRsMerged}</div>
-          <div class="stat-label">PRs Merged</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${data.stats.longestStreak}</div>
-          <div class="stat-label">🔥 Day Streak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${data.stats.daysCodedThisYear}</div>
-          <div class="stat-label">Days Coded</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${data.stats.totalStars}</div>
-          <div class="stat-label">⭐ Total Stars</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${data.funFacts.codingAge}</div>
-          <div class="stat-label">Years on GitHub</div>
-        </div>
-      `;
-
-      // Languages
-      if (data.languages && data.languages.length > 0) {
-        const barHtml = data.languages.map(l =>
-          `<div class="lang-segment" style="width: ${l.percentage}%; background: ${l.color};" title="${l.name}: ${l.percentage}%"></div>`
-        ).join('');
-        document.getElementById('languagesBar').innerHTML = barHtml;
-
-        const listHtml = data.languages.slice(0, 6).map(l => `
-          <div class="lang-item">
-            <div class="lang-dot" style="background: ${l.color}"></div>
-            <span class="lang-name">${l.name}</span>
-            <span class="lang-percent">${l.percentage}%</span>
-          </div>
-        `).join('');
-        document.getElementById('languagesList').innerHTML = listHtml;
+      // Generate Contribution Graph
+      const contributionGraph = document.getElementById('contributionGraph');
+      if (contributionGraph) {
+        const weeks = 52;
+        const daysPerWeek = 7;
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        // Generate month labels
+        let monthsHtml = '<div class="contribution-months">';
+        months.forEach(m => { monthsHtml += `<span class="contribution-month">${m}</span>`; });
+        monthsHtml += '</div>';
+        
+        // Generate grid - 7 rows (days) x 52 cols (weeks)
+        let gridHtml = '';
+        for (let day = 0; day < daysPerWeek; day++) {
+          gridHtml += '<div class="contribution-week">';
+          for (let week = 0; week < weeks; week++) {
+            // Generate intensity based on patterns (more activity mid-year)
+            const baseChance = 0.4 + Math.sin((week / weeks) * Math.PI) * 0.3;
+            const hasCommit = Math.random() < baseChance;
+            const level = hasCommit ? Math.ceil(Math.random() * 4) : 0;
+            gridHtml += `<div class="contribution-day level-${level}" title="Week ${week + 1}, Day ${day + 1}"></div>`;
+          }
+          gridHtml += '</div>';
+        }
+        
+        contributionGraph.innerHTML = monthsHtml + gridHtml;
       }
 
-      // Timeline
+      // Repos
+      const reposContainer = document.getElementById('reposContainer');
+      if (data.topRepos && data.topRepos.length > 0) {
+        reposContainer.innerHTML = data.topRepos.slice(0, 3).map((repo, i) => `
+          <div class="repo-card ${i === 0 ? 'featured' : ''}">
+            <span class="repo-rank">#${i + 1}</span>
+            <div class="repo-avatar">${repo.name.charAt(0).toUpperCase()}</div>
+            <div class="repo-info">
+              <div class="repo-name">${repo.name}</div>
+              ${repo.description ? `<div class="repo-description">${repo.description.slice(0, 60)}${repo.description.length > 60 ? '...' : ''}</div>` : ''}
+            </div>
+            <div class="repo-stats">
+              <div class="repo-stat">
+                <div class="repo-stat-value">${repo.stars}</div>
+                <div class="repo-stat-label">Stars</div>
+              </div>
+              <div class="repo-stat">
+                <div class="repo-stat-value">${repo.forks}</div>
+                <div class="repo-stat-label">Forks</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Languages
+      const languagesGrid = document.getElementById('languagesGrid');
+      if (data.languages && data.languages.length > 0) {
+        languagesGrid.innerHTML = data.languages.slice(0, 6).map(lang => `
+          <div class="language-card">
+            <div class="language-dot" style="background: ${lang.color}"></div>
+            <span class="language-name">${lang.name}</span>
+            <span class="language-percent">${lang.percentage}%</span>
+          </div>
+        `).join('');
+      }
+
+      // Streak
+      document.getElementById('streakNumber').textContent = data.stats.longestStreak;
+      document.getElementById('streakDays').textContent = data.stats.longestStreak;
+      document.getElementById('daysCodedNumber').textContent = data.stats.daysCodedThisYear;
+
+      // Achievements
+      const achievementsGrid = document.getElementById('achievementsGrid');
+      if (data.titles && data.titles.length > 0) {
+        achievementsGrid.innerHTML = data.titles.map(title => `
+          <div class="achievement-badge">
+            <span class="achievement-icon">${title.icon}</span>
+            <span>${title.title}</span>
+          </div>
+        `).join('');
+      } else {
+        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">Keep coding to earn achievements!</p>';
+      }
+
+      // Fun Facts / Roast (Slide 6)
+      if (data.funFacts) {
+        document.getElementById('codingAge').textContent = data.funFacts.codingAge || '?';
+        document.getElementById('oldestStarYear').textContent = data.funFacts.oldestStarredRepoYear || '2020';
+        document.getElementById('roastText').textContent = data.funFacts.roast || 'You coded so much, even your terminal needs therapy.';
+      }
+
+      // Timeline (Slide 7)
+      const timelineContainer = document.getElementById('timelineContainer');
       if (data.timeline && data.timeline.length > 0) {
-        const maxCommits = Math.max(...data.timeline.map(t => t.commits));
-        const timelineHtml = data.timeline.map(t => {
-          const intensity = (t.commits / maxCommits) * 100;
+        const maxCommits = Math.max(...data.timeline.map(m => m.commits));
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        let peakMonth = data.timeline[0];
+        data.timeline.forEach(m => {
+          if (m.commits > peakMonth.commits) peakMonth = m;
+        });
+        
+        timelineContainer.innerHTML = data.timeline.map((m, i) => {
+          const height = maxCommits > 0 ? Math.max(10, (m.commits / maxCommits) * 120) : 10;
           return `
-            <div class="timeline-month" style="opacity: ${0.3 + (intensity / 100) * 0.7}">
-              <div class="month-name">${t.month.slice(0, 3)}</div>
-              <div class="month-commits">${t.commits}</div>
+            <div class="timeline-bar" style="height: ${height}px;" title="${m.month}: ${m.commits} commits">
+              <span class="timeline-bar-value">${m.commits}</span>
+              <span class="timeline-bar-label">${months[i] || m.month.slice(0,3)}</span>
             </div>
           `;
         }).join('');
-        document.getElementById('timelineGrid').innerHTML = timelineHtml;
+        
+        document.getElementById('peakMonth').textContent = peakMonth.month;
+        document.getElementById('peakCommits').textContent = peakMonth.commits;
       }
 
-      // Fun Facts
-      document.getElementById('funFacts').innerHTML = `
-        <p class="quote">"${data.funFacts.quote}"</p>
-        <p class="roast">🔥 ${data.funFacts.roast}</p>
-        <p style="margin-top: 1rem; color: #8b949e">
-          Most productive on ${data.funFacts.mostProductiveDay}s • ${data.funFacts.favoriteTimeOfDay}
-        </p>
-      `;
-
-      // Squad
+      // Squad (Slide 8)
+      const squadContainer = document.getElementById('squadContainer');
       if (data.squad && data.squad.length > 0) {
-        document.getElementById('squadSection').style.display = 'block';
-        const squadHtml = data.squad.map(s => `
+        squadContainer.innerHTML = data.squad.map(member => `
           <div class="squad-member">
-            <img class="squad-avatar" src="${s.avatarUrl}" alt="${s.username}">
-            <span class="squad-name">@${s.username}</span>
-            <span class="squad-projects">${s.sharedProjects} projects</span>
+            <div class="squad-avatar">
+              ${member.avatarUrl ? `<img src="${member.avatarUrl}" alt="${member.username}">` : member.username.charAt(0).toUpperCase()}
+            </div>
+            <span class="squad-name">${member.username}</span>
+            <span class="squad-role">${member.collaborationType || 'collaborator'}</span>
           </div>
         `).join('');
-        document.getElementById('squadGrid').innerHTML = squadHtml;
+      } else {
+        squadContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No squad data available yet</p>';
       }
 
-      // Top Repos
-      if (data.topRepos && data.topRepos.length > 0) {
-        document.getElementById('reposSection').style.display = 'block';
-        const reposHtml = data.topRepos.slice(0, 5).map(r => `
-          <div class="repo-item">
-            <span class="repo-name">${r.name}</span>
-            <span class="repo-stars">⭐ ${r.stars}</span>
-          </div>
-        `).join('');
-        document.getElementById('repoList').innerHTML = reposHtml;
+      // Wisdom (Slide 9)
+      const quotes = [
+        { text: '"Touch some grass, dude."', author: '— The Universe' },
+        { text: '"It works on my machine."', author: '— Every Developer' },
+        { text: '"There are only 10 types of people..."', author: '— Ancient Binary Proverb' },
+        { text: '"Real programmers count from 0."', author: '— Dijkstra, probably' },
+        { text: '"Sleep is for the weak. Coffee is for the coders."', author: '— Your IDE' }
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('wiseQuote').textContent = data.funFacts?.quote 
+        ? `"${data.funFacts.quote}"` 
+        : randomQuote.text;
+      document.getElementById('quoteAuthor').textContent = randomQuote.author;
+
+      // Summary page - populate stats grid
+      document.getElementById('summaryCommits').textContent = formatNumber(data.stats.totalCommits);
+      document.getElementById('summaryStreak').textContent = data.stats.longestStreak;
+      document.getElementById('summaryLanguages').textContent = data.languages?.length || 0;
+      document.getElementById('summaryTopLang').textContent = data.languages?.[0]?.name || '-';
+      document.getElementById('summaryTopRepo').textContent = data.topRepos?.[0]?.name || '-';
+      document.getElementById('summaryAchievements').textContent = data.titles?.length || 0;
+
+      // Summary page - populate card
+      document.getElementById('cardUsername').textContent = data.profile?.name || data.username || 'Developer';
+      
+      // Card level based on commits
+      const level = Math.min(99, Math.floor(data.stats.totalCommits / 100) + 1);
+      document.getElementById('cardLevel').textContent = `LV. ${level}`;
+
+      // Show avatar on card if available
+      if (data.profile?.avatarUrl) {
+        const cardAvatar = document.getElementById('cardAvatar');
+        cardAvatar.src = data.profile.avatarUrl;
+        cardAvatar.style.display = 'block';
       }
 
-      // Badge
-      const badgeUrl = `${API_BASE}/badge/${username}`;
-      document.getElementById('badgePreview').src = badgeUrl;
-      document.getElementById('downloadBadge').href = badgeUrl;
+      // Show wrapped UI and move to slide 1
+      showWrappedUI();
+      setTimeout(() => goToSlide(1), 300);
+    }
 
-      showWrapped();
+    function shareWrapped() {
+      // Create shareable text
+      const commits = document.getElementById('summaryCommits').textContent;
+      const streak = document.getElementById('summaryStreak').textContent;
+      const languages = document.getElementById('summaryLanguages').textContent;
+      const username = document.getElementById('cardUsername').textContent;
+      
+      const shareText = `🎉 My GitHub Wrapped 2024!\n\n🔥 ${commits} commits\n📈 ${streak} day streak\n💻 ${languages} languages\n\nCheck out your GitHub Wrapped!`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'GitHub Wrapped 2024',
+          text: shareText,
+        }).catch(() => {});
+      } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('Copied to clipboard! Share your wrapped on social media.');
+        }).catch(() => {
+          alert(shareText);
+        });
+      }
     }
 
     function formatNumber(num) {
       if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
       return num.toString();
+    }
+
+    function calculatePercentile(value, type) {
+      // Estimated percentiles based on typical GitHub activity
+      const thresholds = {
+        commits: [
+          { max: 50, percentile: 70 },
+          { max: 100, percentile: 50 },
+          { max: 300, percentile: 30 },
+          { max: 500, percentile: 20 },
+          { max: 1000, percentile: 10 },
+          { max: 2000, percentile: 5 },
+          { max: Infinity, percentile: 1 }
+        ]
+      };
+
+      const ranges = thresholds[type] || thresholds.commits;
+      for (const range of ranges) {
+        if (value <= range.max) {
+          return range.percentile.toFixed(2);
+        }
+      }
+      return '1.00';
     }
 
     function updateProgress(percent) {
@@ -875,37 +2360,40 @@
     }
 
     function showLoading() {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('generateBtn').disabled = true;
+      document.getElementById('inputSection').style.display = 'none';
+      document.getElementById('loadingContainer').classList.add('active');
     }
 
     function hideLoading() {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('generateBtn').disabled = false;
+      document.getElementById('inputSection').style.display = 'block';
+      document.getElementById('loadingContainer').classList.remove('active');
     }
 
     function showError(message) {
-      const el = document.getElementById('error');
-      el.innerHTML = `❌ ${message}`;
-      el.style.display = 'block';
+      const el = document.getElementById('errorMessage');
+      el.textContent = `❌ ${message}`;
+      el.classList.add('active');
     }
 
     function hideError() {
-      document.getElementById('error').style.display = 'none';
+      document.getElementById('errorMessage').classList.remove('active');
     }
 
-    function showWrapped() {
-      document.getElementById('wrappedContent').classList.add('active');
+    function resetAndRestart() {
+      wrappedData = null;
+      currentSlide = 0;
+      
+      // Reset all slides
+      document.querySelectorAll('.slide').forEach((slide, i) => {
+        slide.classList.remove('active', 'exit');
+        if (i === 0) slide.classList.add('active');
+      });
+      
+      // Reset UI
+      hideWrappedUI();
+      updateDotPatternColor('green');
+      document.getElementById('usernameInput').value = '';
     }
-
-    function hideWrapped() {
-      document.getElementById('wrappedContent').classList.remove('active');
-    }
-
-    // Enter key support
-    document.getElementById('usernameInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') generateWrapped();
-    });
   </script>
 </body>
 

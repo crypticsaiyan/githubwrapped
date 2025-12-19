@@ -29,9 +29,13 @@ export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger
     logger.info('Fetching GitHub data', { username, year, traceId });
 
     try {
-        // Get stored token if available
+        // Get stored token if available, or fall back to environment variable
         const tokenData = await state.get<{ token: string }>('github-tokens', username);
-        const token = tokenData?.token;
+        const token = tokenData?.token || process.env.GITHUB_TOKEN;
+        
+        if (!token) {
+            logger.warn('No GitHub token available - using unauthenticated API (rate limited to 60 req/hour). Set GITHUB_TOKEN env var for higher limits.');
+        }
 
         // Update progress
         await state.set('wrapped-status', username, {
