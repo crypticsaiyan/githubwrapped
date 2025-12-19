@@ -23,5 +23,46 @@
         "sourceHandlePosition": "right"
       }
     }
+  },
+  {
+    "id": "github-wrapped",
+    "config": {
+      "src/github-wrapped/events/generate-achievements.step.ts": {
+        "x": 1050,
+        "y": 706
+      },
+      "src/github-wrapped/events/finalize-wrapped.step.ts": {
+        "x": 1400,
+        "y": 706
+      },
+      "src/github-wrapped/events/fetch-github-data.step.ts": {
+        "x": 350,
+        "y": 706
+      },
+      "src/github-wrapped/events/calculate-stats.step.ts": {
+        "x": 700,
+        "y": 706
+      },
+      "src/github-wrapped/api/get-wrapped.step.ts": {
+        "x": -4,
+        "y": -109
+      },
+      "src/github-wrapped/api/get-wrapped-status.step.ts": {
+        "x": 0,
+        "y": 224
+      },
+      "src/github-wrapped/api/get-badge.step.ts": {
+        "x": 0,
+        "y": 448
+      },
+      "src/github-wrapped/api/generate-wrapped.step.ts": {
+        "x": 0,
+        "y": 672
+      },
+      "src/github-wrapped/api/serve-frontend.step.ts": {
+        "x": 5,
+        "y": 896
+      }
+    }
   }
 ]

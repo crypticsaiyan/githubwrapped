@@ -16,6 +16,15 @@ declare module 'motia' {
     'ProcessFoodOrder': EventHandler<{ email: string; quantity: number; petId: string }, { topic: 'notification'; data: { templateId: string; email: string; templateData: Record<string, unknown> } }>
     'Notification': EventHandler<{ templateId: string; email: string; templateData: Record<string, unknown> }, never>
     'ApiTrigger': ApiRouteHandler<{ pet: { name: string; photoUrl: string }; foodOrder?: { quantity: number } }, ApiResponse<200, { id: string; name: string; photoUrl: string }>, { topic: 'process-food-order'; data: { email: string; quantity: number; petId: string } }>
+    'GenerateAchievements': EventHandler<{ username: string; year: number; traceId: string }, { topic: 'finalize-wrapped'; data: { username: string; year: number; traceId: string } }>
+    'FinalizeWrapped': EventHandler<{ username: string; year: number; traceId: string }, never>
+    'FetchGitHubData': EventHandler<{ username: string; year: number; traceId: string }, { topic: 'calculate-stats'; data: { username: string; year: number; traceId: string } }>
+    'CalculateStats': EventHandler<{ username: string; year: number; traceId: string }, { topic: 'generate-achievements'; data: { username: string; year: number; traceId: string } }>
+    'ServeFrontend': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown>, never>
+    'GetWrapped': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { data: unknown }> | ApiResponse<202, { status: string; message: string; progress?: number }> | ApiResponse<404, { error: string }>, never>
+    'GetWrappedStatus': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { username: string; status: 'processing' | 'completed' | 'failed' | 'not_found'; progress?: number; error?: string; startedAt?: string; completedAt?: string }>, never>
+    'GetBadge': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
+    'GenerateWrapped': ApiRouteHandler<{ year?: number; token?: string }, ApiResponse<200, { status: string; message: string; traceId: string; username: string }> | ApiResponse<404, { error: string }> | ApiResponse<500, { error: string }>, { topic: 'fetch-github-data'; data: { username: string; year: number; traceId: string } }>
   }
     
 }

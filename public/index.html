@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Wrapped 2024</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --accent-pink: #e94560;
+      --accent-orange: #f39c12;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #a371f7;
+      --accent-cyan: #00d2d3;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --border-color: #30363d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(233, 69, 96, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(88, 166, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(163, 113, 247, 0.08) 0%, transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+    }
+
+    /* Search Form */
+    .search-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      width: 300px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px rgba(233, 69, 96, 0.2);
+    }
+
+    .search-btn {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+    }
+
+    .search-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 4rem;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--bg-tertiary);
+      border-top-color: var(--accent-pink);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .progress-bar {
+      width: 200px;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      margin: 1rem auto;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-pink), var(--accent-orange));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Error */
+    .error {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(233, 69, 96, 0.1);
+      border: 1px solid var(--accent-pink);
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+
+    /* Wrapped Content */
+    .wrapped-content {
+      display: none;
+    }
+
+    .wrapped-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Profile Header */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid var(--accent-pink);
+      box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+    }
+
+    .profile-info h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-info .username {
+      color: var(--accent-blue);
+      font-size: 1.2rem;
+    }
+
+    .profile-info .bio {
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Titles Section */
+    .titles-section {
+      margin-bottom: 2rem;
+    }
+
+    .titles-grid {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(135deg, rgba(233, 69, 96, 0.2), rgba(163, 113, 247, 0.2));
+      border: 1px solid var(--accent-purple);
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .title-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 30px rgba(88, 166, 255, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Languages */
+    .languages-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .languages-bar {
+      display: flex;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .lang-segment {
+      transition: all 0.3s ease;
+    }
+
+    .lang-segment:hover {
+      transform: scaleY(1.5);
+    }
+
+    .languages-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .lang-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lang-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .lang-name {
+      font-weight: 500;
+    }
+
+    .lang-percent {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Timeline */
+    .timeline-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .timeline-month {
+      text-align: center;
+      padding: 1rem 0.5rem;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-month:hover {
+      background: rgba(233, 69, 96, 0.2);
+    }
+
+    .month-name {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .month-commits {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* Squad */
+    .squad-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .squad-grid {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .squad-member {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .squad-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-purple);
+    }
+
+    .squad-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .squad-projects {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Fun Facts */
+    .fun-facts {
+      background: linear-gradient(135deg, rgba(233, 69, 96, 0.1), rgba(163, 113, 247, 0.1));
+      border: 1px solid var(--accent-purple);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .quote {
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .roast {
+      color: var(--accent-orange);
+      font-size: 1.1rem;
+    }
+
+    /* Top Repos */
+    .repos-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .repo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .repo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+    }
+
+    .repo-name {
+      font-weight: 600;
+      color: var(--accent-blue);
+    }
+
+    .repo-stars {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--accent-orange);
+    }
+
+    /* Badge Section */
+    .badge-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .badge-container {
+      display: inline-block;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .badge-preview {
+      max-width: 300px;
+      border-radius: 12px;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-green);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(63, 185, 80, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-animation"></div>
+
+  <div class="container">
+    <header class="header">
+      <h1>✨ GitHub Wrapped</h1>
+      <p>Your year in code, beautifully visualized</p>
+    </header>
+
+    <section class="search-section">
+      <input type="text" class="search-input" id="usernameInput" placeholder="Enter GitHub username" />
+      <button class="search-btn" id="generateBtn" onclick="generateWrapped()">
+        🚀 Generate Wrapped
+      </button>
+    </section>
+
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p class="loading-text">Generating your wrapped...</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <p id="progressText" style="color: #8b949e; margin-top: 0.5rem;">0%</p>
+    </div>
+
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="wrappedContent" class="wrapped-content">
+      <!-- Profile Header -->
+      <section class="profile-header" id="profileHeader"></section>
+
+      <!-- Titles -->
+      <section class="titles-section">
+        <div class="titles-grid" id="titlesGrid"></div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-grid" id="statsGrid"></section>
+
+      <!-- Languages -->
+      <section class="languages-section">
+        <h3 class="section-title">💻 Languages You Spoke</h3>
+        <div class="languages-bar" id="languagesBar"></div>
+        <div class="languages-list" id="languagesList"></div>
+      </section>
+
+      <!-- Timeline -->
+      <section class="timeline-section">
+        <h3 class="section-title">📅 Your Year in Commits</h3>
+        <div class="timeline-grid" id="timelineGrid"></div>
+      </section>
+
+      <!-- Fun Facts -->
+      <section class="fun-facts" id="funFacts"></section>
+
+      <!-- Squad -->
+      <section class="squad-section" id="squadSection" style="display: none;">
+        <h3 class="section-title">👥 Your Squad</h3>
+        <div class="squad-grid" id="squadGrid"></div>
+      </section>
+
+      <!-- Top Repos -->
+      <section class="repos-section" id="reposSection" style="display: none;">
+        <h3 class="section-title">⭐ Top Repositories</h3>
+        <div class="repo-list" id="repoList"></div>
+      </section>
+
+      <!-- Badge -->
+      <section class="badge-section">
+        <h3 class="section-title" style="justify-content: center;">🏆 Your Badge</h3>
+        <div class="badge-container">
+          <img id="badgePreview" class="badge-preview" src="" alt="GitHub Wrapped Badge" />
+          <br>
+          <a id="downloadBadge" class="download-btn" href="" download>📥 Download Badge</a>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>Made with 💖 using Motia Framework</p>
+    </footer>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+    let pollInterval = null;
+
+    async function generateWrapped() {
+      const username = document.getElementById('usernameInput').value.trim();
+      if (!username) {
+        showError('Please enter a GitHub username');
+        return;
+      }
+
+      // Reset UI
+      hideError();
+      hideWrapped();
+      showLoading();
+
+      try {
+        // Start generation
+        const response = await fetch(`${API_BASE}/wrapped/${username}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ year: new Date().getFullYear() })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to start generation');
+        }
+
+        // Poll for status
+        pollStatus(username);
+      } catch (error) {
+        hideLoading();
+        showError(error.message);
+      }
+    }
+
+    function pollStatus(username) {
+      let attempts = 0;
+      const maxAttempts = 60;
+
+      pollInterval = setInterval(async () => {
+        attempts++;
+
+        try {
+          const response = await fetch(`${API_BASE}/wrapped/${username}/status`);
+          const data = await response.json();
+
+          updateProgress(data.progress || Math.min(attempts * 5, 90));
+
+          if (data.status === 'completed') {
+            clearInterval(pollInterval);
+            fetchWrappedData(username);
+          } else if (data.status === 'failed') {
+            clearInterval(pollInterval);
+            hideLoading();
+            showError(data.error || 'Generation failed');
+          } else if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            hideLoading();
+            showError('Generation timed out. Please try again.');
+          }
+        } catch (error) {
+          clearInterval(pollInterval);
+          hideLoading();
+          showError('Failed to check status');
+        }
+      }, 2000);
+    }
+
+    async function fetchWrappedData(username) {
+      try {
+        const response = await fetch(`${API_BASE}/wrapped/${username}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to fetch data');
+        }
+
+        hideLoading();
+        displayWrapped(result.data, username);
+      } catch (error) {
+        hideLoading();
+        showError(error.message);
+      }
+    }
+
+    function displayWrapped(data, username) {
+      // Profile
+      document.getElementById('profileHeader').innerHTML = `
+        <img class="avatar" src="${data.profile.avatarUrl}" alt="${username}">
+        <div class="profile-info">
+          <h2>${data.profile.name || username}</h2>
+          <p class="username">@${username}</p>
+          ${data.profile.bio ? `<p class="bio">${data.profile.bio}</p>` : ''}
+        </div>
+      `;
+
+      // Titles
+      const titlesHtml = data.titles.map(t => `
+        <div class="title-badge">
+          <span class="title-icon">${t.icon}</span>
+          <span>${t.title}</span>
+        </div>
+      `).join('');
+      document.getElementById('titlesGrid').innerHTML = titlesHtml || '<p style="color: #8b949e">Keep coding to earn titles!</p>';
+
+      // Stats
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-value">${formatNumber(data.stats.totalCommits)}</div>
+          <div class="stat-label">Total Commits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.stats.totalPRsMerged}</div>
+          <div class="stat-label">PRs Merged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.stats.longestStreak}</div>
+          <div class="stat-label">🔥 Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.stats.daysCodedThisYear}</div>
+          <div class="stat-label">Days Coded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.stats.totalStars}</div>
+          <div class="stat-label">⭐ Total Stars</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${data.funFacts.codingAge}</div>
+          <div class="stat-label">Years on GitHub</div>
+        </div>
+      `;
+
+      // Languages
+      if (data.languages && data.languages.length > 0) {
+        const barHtml = data.languages.map(l =>
+          `<div class="lang-segment" style="width: ${l.percentage}%; background: ${l.color};" title="${l.name}: ${l.percentage}%"></div>`
+        ).join('');
+        document.getElementById('languagesBar').innerHTML = barHtml;
+
+        const listHtml = data.languages.slice(0, 6).map(l => `
+          <div class="lang-item">
+            <div class="lang-dot" style="background: ${l.color}"></div>
+            <span class="lang-name">${l.name}</span>
+            <span class="lang-percent">${l.percentage}%</span>
+          </div>
+        `).join('');
+        document.getElementById('languagesList').innerHTML = listHtml;
+      }
+
+      // Timeline
+      if (data.timeline && data.timeline.length > 0) {
+        const maxCommits = Math.max(...data.timeline.map(t => t.commits));
+        const timelineHtml = data.timeline.map(t => {
+          const intensity = (t.commits / maxCommits) * 100;
+          return `
+            <div class="timeline-month" style="opacity: ${0.3 + (intensity / 100) * 0.7}">
+              <div class="month-name">${t.month.slice(0, 3)}</div>
+              <div class="month-commits">${t.commits}</div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('timelineGrid').innerHTML = timelineHtml;
+      }
+
+      // Fun Facts
+      document.getElementById('funFacts').innerHTML = `
+        <p class="quote">"${data.funFacts.quote}"</p>
+        <p class="roast">🔥 ${data.funFacts.roast}</p>
+        <p style="margin-top: 1rem; color: #8b949e">
+          Most productive on ${data.funFacts.mostProductiveDay}s • ${data.funFacts.favoriteTimeOfDay}
+        </p>
+      `;
+
+      // Squad
+      if (data.squad && data.squad.length > 0) {
+        document.getElementById('squadSection').style.display = 'block';
+        const squadHtml = data.squad.map(s => `
+          <div class="squad-member">
+            <img class="squad-avatar" src="${s.avatarUrl}" alt="${s.username}">
+            <span class="squad-name">@${s.username}</span>
+            <span class="squad-projects">${s.sharedProjects} projects</span>
+          </div>
+        `).join('');
+        document.getElementById('squadGrid').innerHTML = squadHtml;
+      }
+
+      // Top Repos
+      if (data.topRepos && data.topRepos.length > 0) {
+        document.getElementById('reposSection').style.display = 'block';
+        const reposHtml = data.topRepos.slice(0, 5).map(r => `
+          <div class="repo-item">
+            <span class="repo-name">${r.name}</span>
+            <span class="repo-stars">⭐ ${r.stars}</span>
+          </div>
+        `).join('');
+        document.getElementById('repoList').innerHTML = reposHtml;
+      }
+
+      // Badge
+      const badgeUrl = `${API_BASE}/badge/${username}`;
+      document.getElementById('badgePreview').src = badgeUrl;
+      document.getElementById('downloadBadge').href = badgeUrl;
+
+      showWrapped();
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function updateProgress(percent) {
+      document.getElementById('progressFill').style.width = `${percent}%`;
+      document.getElementById('progressText').textContent = `${Math.round(percent)}%`;
+    }
+
+    function showLoading() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('generateBtn').disabled = true;
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('generateBtn').disabled = false;
+    }
+
+    function showError(message) {
+      const el = document.getElementById('error');
+      el.innerHTML = `❌ ${message}`;
+      el.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('error').style.display = 'none';
+    }
+
+    function showWrapped() {
+      document.getElementById('wrappedContent').classList.add('active');
+    }
+
+    function hideWrapped() {
+      document.getElementById('wrappedContent').classList.remove('active');
+    }
+
+    // Enter key support
+    document.getElementById('usernameInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') generateWrapped();
+    });
+  </script>
+</body>
+
+</html>
