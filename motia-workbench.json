@@ -3,8 +3,8 @@
     "id": "basic-tutorial",
     "config": {
       "src/petstore/state-audit-cron.step.ts": {
-        "x": -287,
-        "y": 222,
+        "x": -369,
+        "y": 247,
         "sourceHandlePosition": "right"
       },
       "src/petstore/process-food-order.step.ts": {
@@ -28,40 +28,44 @@
     "id": "github-wrapped",
     "config": {
       "src/github-wrapped/events/generate-achievements.step.ts": {
-        "x": 1050,
-        "y": 706
+        "x": 1074,
+        "y": 690
       },
       "src/github-wrapped/events/finalize-wrapped.step.ts": {
-        "x": 1400,
-        "y": 706
+        "x": 1495,
+        "y": 695
       },
       "src/github-wrapped/events/fetch-github-data.step.ts": {
-        "x": 350,
-        "y": 706
+        "x": 279,
+        "y": 689
       },
       "src/github-wrapped/events/calculate-stats.step.ts": {
-        "x": 700,
-        "y": 706
+        "x": 679,
+        "y": 688
+      },
+      "src/github-wrapped/api/serve-static.step.ts": {
+        "x": 14,
+        "y": 26
+      },
+      "src/github-wrapped/api/serve-frontend.step.ts": {
+        "x": 5,
+        "y": 896
       },
       "src/github-wrapped/api/get-wrapped.step.ts": {
-        "x": -4,
-        "y": -109
+        "x": 10,
+        "y": -195
       },
       "src/github-wrapped/api/get-wrapped-status.step.ts": {
-        "x": 0,
-        "y": 224
+        "x": -11,
+        "y": 219
       },
       "src/github-wrapped/api/get-badge.step.ts": {
         "x": 0,
         "y": 448
       },
       "src/github-wrapped/api/generate-wrapped.step.ts": {
-        "x": 0,
-        "y": 672
-      },
-      "src/github-wrapped/api/serve-frontend.step.ts": {
-        "x": 5,
-        "y": 896
+        "x": -128,
+        "y": 657
       }
     }
   }

@@ -180,24 +180,624 @@
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      transform: translateX(50px);
+      transform: scale(0.95) translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
-      transform: translateX(0);
+      transform: scale(1) translateY(0);
     }
 
     .slide.exit {
-      transform: translateX(-50px);
+      opacity: 0;
+      transform: scale(1.05) translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .slide.prev {
+      transform: scale(0.95) translateY(-20px);
     }
 
     .slide-content {
       text-align: center;
       max-width: 900px;
       padding: 2rem;
+    }
+
+    /* Staggered element animations */
+    .slide.active .title-label {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    }
+
+    .slide.active .title-main,
+    .slide.active .big-number {
+      animation: scaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    .slide.active .title-subtitle,
+    .slide.active .stat-description {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+    }
+
+    .slide.active .github-3d-frame,
+    .slide.active .contribution-graph,
+    .slide.active .repos-container,
+    .slide.active .languages-grid,
+    .slide.active .achievements-grid,
+    .slide.active .timeline-container,
+    .slide.active .squad-container,
+    .slide.active .quote-container {
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    }
+
+    .slide.active .deco-icons {
+      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+    }
+
+    .slide.active .start-btn,
+    .slide.active .input-section {
+      animation: bounceIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    /* Keyframe animations */
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      60% {
+        transform: scale(1.02) translateY(-5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    }
+
+    /* Progress bar at bottom */
+    .progress-bar-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 1100; /* Above transition overlays */
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: currentColor;
+      width: 0%;
+      transition: none; /* No transition for smooth animation */
+    }
+
+    /* Enhanced theme transitions */
+    .app-container {
+      transition: background-color 0.6s ease;
+    }
+
+    .dot-pattern {
+      transition: color 0.6s ease;
+    }
+
+    /* ============================================
+       CREATIVE PAGE TRANSITIONS
+       ============================================ */
+    
+    /* Transition overlay container */
+    .transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* ---- TILES TRANSITION ---- */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      position: relative;
+    }
+
+    .tiles-grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      z-index: -1;
+    }
+
+    .tile {
+      background: var(--theme-green);
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    .tiles-grid.animate .tile {
+      animation: tileIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .tiles-grid.animate-out .tile {
+      animation: tileOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes tileIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    @keyframes tileOut {
+      0% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* ---- DIAGONAL WIPE TRANSITION ---- */
+    .diagonal-wipe {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -100%;
+      transform: rotate(-45deg) translateX(-100%);
+    }
+
+    .diagonal-wipe.animate {
+      animation: diagonalWipeIn 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .diagonal-wipe.animate-out {
+      animation: diagonalWipeOut 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes diagonalWipeIn {
+      0% { transform: rotate(-45deg) translateX(-100%); }
+      100% { transform: rotate(-45deg) translateX(0%); }
+    }
+
+    @keyframes diagonalWipeOut {
+      0% { transform: rotate(-45deg) translateX(0%); }
+      100% { transform: rotate(-45deg) translateX(100%); }
+    }
+
+    /* ---- BUBBLE/CIRCLE REVEAL ---- */
+    .bubble-reveal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .bubble-reveal.animate {
+      animation: bubbleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .bubble-reveal.animate-out {
+      animation: bubbleOut 0.7s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes bubbleIn {
+      0% { width: 0; height: 0; opacity: 1; }
+      100% { width: 250vmax; height: 250vmax; opacity: 1; }
+    }
+
+    @keyframes bubbleOut {
+      0% { width: 250vmax; height: 250vmax; opacity: 1; }
+      100% { width: 0; height: 0; opacity: 0; }
+    }
+
+    /* ---- SPLIT TRANSITION ---- */
+    .split-transition {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    .split-transition.horizontal {
+      flex-direction: row;
+    }
+
+    .split-transition.vertical {
+      flex-direction: column;
+    }
+
+    .split-half {
+      flex: 1;
+      transform: scaleX(0);
+      transform-origin: center;
+    }
+
+    .split-transition.horizontal .split-half:first-child {
+      transform-origin: right center;
+    }
+
+    .split-transition.horizontal .split-half:last-child {
+      transform-origin: left center;
+    }
+
+    .split-transition.vertical .split-half:first-child {
+      transform-origin: center bottom;
+      transform: scaleY(0);
+    }
+
+    .split-transition.vertical .split-half:last-child {
+      transform-origin: center top;
+      transform: scaleY(0);
+    }
+
+    .split-transition.animate .split-half {
+      animation: splitIn 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.animate-out .split-half {
+      animation: splitOut 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.vertical.animate .split-half {
+      animation: splitInV 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.vertical.animate-out .split-half {
+      animation: splitOutV 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes splitIn {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    @keyframes splitOut {
+      0% { transform: scaleX(1); }
+      100% { transform: scaleX(0); }
+    }
+
+    @keyframes splitInV {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+
+    @keyframes splitOutV {
+      0% { transform: scaleY(1); }
+      100% { transform: scaleY(0); }
+    }
+
+    /* ---- PIXEL DISSOLVE ---- */
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      width: 100%;
+      height: 100%;
+    }
+
+    .pixel {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    .pixel-grid.animate .pixel {
+      animation: pixelIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .pixel-grid.animate-out .pixel {
+      animation: pixelOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes pixelIn {
+      0% { transform: scale(0) rotate(45deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes pixelOut {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: scale(0) rotate(-45deg); opacity: 0; }
+    }
+
+    /* ---- WAVE REVEAL ---- */
+    .wave-reveal {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+
+    .wave-reveal.animate {
+      animation: waveIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .wave-reveal.animate-out {
+      animation: waveOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes waveIn {
+      0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+      50% { clip-path: polygon(0 50%, 50% 30%, 100% 50%, 100% 100%, 0 100%); }
+      100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+    }
+
+    @keyframes waveOut {
+      0% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+      50% { clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 70%, 0 50%); }
+      100% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+    }
+
+    /* ============================================
+       ENHANCED ELEMENT ANIMATIONS
+       ============================================ */
+
+    /* Rotate in */
+    .slide.active .title-main.anim-rotate {
+      animation: rotateIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    @keyframes rotateIn {
+      from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    /* Blur in */
+    .slide.active .title-main.anim-blur {
+      animation: blurIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    @keyframes blurIn {
+      from {
+        opacity: 0;
+        filter: blur(20px);
+        transform: scale(1.2);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+      }
+    }
+
+    /* Typewriter cursor effect for big numbers */
+    .big-number.anim-typewriter::after {
+      content: '|';
+      animation: blink 0.7s steps(1) infinite;
+      margin-left: 0.1em;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* 3D flip */
+    .slide.active .repo-card {
+      animation: flipIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .slide.active .repo-card:nth-child(1) { animation-delay: 0.3s; }
+    .slide.active .repo-card:nth-child(2) { animation-delay: 0.4s; }
+    .slide.active .repo-card:nth-child(3) { animation-delay: 0.5s; }
+
+    @keyframes flipIn {
+      from {
+        opacity: 0;
+        transform: perspective(1000px) rotateX(-30deg) translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg) translateY(0);
+      }
+    }
+
+    /* Pop in for language cards */
+    .slide.active .language-card {
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .slide.active .language-card:nth-child(1) { animation-delay: 0.2s; }
+    .slide.active .language-card:nth-child(2) { animation-delay: 0.3s; }
+    .slide.active .language-card:nth-child(3) { animation-delay: 0.4s; }
+    .slide.active .language-card:nth-child(4) { animation-delay: 0.5s; }
+    .slide.active .language-card:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      70% {
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Slide from sides for stats */
+    .slide.active .repo-stat {
+      animation: slideFromRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Shimmer effect on highlight boxes */
+    .highlight-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    /* Bounce in for achievement badges */
+    .slide.active .achievement-badge {
+      animation: achievementBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .slide.active .achievement-badge:nth-child(1) { animation-delay: 0.2s; }
+    .slide.active .achievement-badge:nth-child(2) { animation-delay: 0.3s; }
+    .slide.active .achievement-badge:nth-child(3) { animation-delay: 0.4s; }
+    .slide.active .achievement-badge:nth-child(4) { animation-delay: 0.5s; }
+
+    @keyframes achievementBounce {
+      0% {
+        opacity: 0;
+        transform: scale(0) translateY(30px);
+      }
+      50% {
+        transform: scale(1.15) translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Draw line for timeline */
+    .timeline-bar {
+      animation: drawLine 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes drawLine {
+      from {
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+      to {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    /* Glow pulse on numbers */
+    .big-number {
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        text-shadow: 0 0 60px currentColor;
+      }
+      50% {
+        text-shadow: 0 0 100px currentColor, 0 0 150px currentColor;
+      }
+    }
+
+    /* Float animation for deco icons */
+    .slide.active .deco-icon:nth-child(1) {
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    .slide.active .deco-icon:nth-child(2) {
+      animation: floatIcon 3s ease-in-out 0.5s infinite;
+    }
+    .slide.active .deco-icon:nth-child(3) {
+      animation: floatIcon 3s ease-in-out 1s infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
     /* Navigation arrows */
@@ -1153,11 +1753,18 @@
       background: var(--bg-dark);
       color: currentColor;
       cursor: pointer;
-      transition: all 0.2s ease;
+      opacity: 0;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .share-btn.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
     }
 
     .share-btn:hover {
-      transform: translateY(-2px);
+      transform: scale(1.05) translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
@@ -1181,14 +1788,21 @@
       background: transparent;
       color: currentColor;
       cursor: pointer;
-      transition: all 0.2s ease;
+      opacity: 0;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .restart-btn.show {
       opacity: 0.7;
+      transform: scale(1) translateY(0);
     }
 
     .restart-btn:hover {
       opacity: 1;
       background: var(--theme-pink);
       color: #000;
+      transform: scale(1.05) translateY(-2px);
     }
 
     /* 3D Geometric decoration */
@@ -1293,6 +1907,11 @@
       </nav>
 
       <div class="header-controls" id="headerControls" style="visibility: hidden;">
+        <button class="control-btn" id="autoPlayBtn" onclick="toggleAutoPlay()" title="Start auto-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </button>
         <button class="control-btn" id="soundBtn" title="Toggle Sound">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -1492,8 +2111,8 @@
         </div>
       </section>
 
-      <!-- Slide 6: Fun Facts / Roast -->
-      <section class="slide theme-pink" id="slide-6" data-theme="pink">
+      <!-- Slide 5: Fun Facts / Roast -->
+      <section class="slide theme-pink" id="slide-5" data-theme="pink">
         <div class="slide-content">
           <div class="title-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1526,8 +2145,8 @@
         </div>
       </section>
 
-      <!-- Slide 7: Timeline -->
-      <section class="slide theme-yellow" id="slide-7" data-theme="yellow">
+      <!-- Slide 6: Timeline -->
+      <section class="slide theme-yellow" id="slide-6" data-theme="yellow">
         <div class="slide-content">
           <div class="title-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1551,8 +2170,8 @@
         </div>
       </section>
 
-      <!-- Slide 8: Your Squad -->
-      <section class="slide theme-purple" id="slide-8" data-theme="purple">
+      <!-- Slide 7: Your Squad -->
+      <section class="slide theme-purple" id="slide-7" data-theme="purple">
         <div class="slide-content">
           <div class="title-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1584,8 +2203,8 @@
         </div>
       </section>
 
-      <!-- Slide 9: Wise Quote -->
-      <section class="slide theme-green" id="slide-9" data-theme="green">
+      <!-- Slide 8: Wise Quote -->
+      <section class="slide theme-green" id="slide-8" data-theme="green">
         <div class="slide-content">
           <div class="title-label">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1617,8 +2236,8 @@
         </div>
       </section>
 
-      <!-- Slide 10: Summary / Share - Discord Checkpoint Style -->
-      <section class="slide theme-pink" id="slide-10" data-theme="pink">
+      <!-- Slide 9: Summary / Share - Discord Checkpoint Style -->
+      <section class="slide theme-pink" id="slide-9" data-theme="pink">
         <div class="summary-layout">
           <!-- Left side: Stacked cards -->
           <div class="summary-cards">
@@ -1750,6 +2369,14 @@
       </svg>
     </button>
 
+    <!-- Transition Overlay -->
+    <div class="transition-overlay" id="transitionOverlay"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container" id="progressBarContainer" style="display: none;">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer" id="footer">
       Made with 💖 using Motia Framework
@@ -1759,10 +2386,15 @@
   <script>
     const API_BASE = 'http://localhost:3000';
     let currentSlide = 0;
-    let totalSlides = 11;
+    let totalSlides = 0; // Will be set dynamically
     let wrappedData = null;
     let pollInterval = null;
     let isInWrapped = false;
+    let autoPlayInterval = null;
+    let autoPlayEnabled = false;
+    const AUTO_PLAY_DELAY = 5000; // 5 seconds per slide
+    let presentationStartTime = null;
+    let progressAnimationFrame = null;
 
     // Theme colors for dot pattern
     const themeColors = {
@@ -1772,6 +2404,111 @@
       yellow: '#ffd93d',
       purple: '#a855f7'
     };
+
+    // Creative transition types for each slide (only diagonal and split)
+    const transitionTypes = [
+      'none',       // Slide 0: Landing (no transition needed)
+      'diagonal',   // Slide 1: Commits
+      'split',      // Slide 2: Repos
+      'diagonal',   // Slide 3: Languages
+      'split',      // Slide 4: Streak
+      'diagonal',   // Slide 5: Fun Facts
+      'split',      // Slide 6: Timeline
+      'diagonal',   // Slide 7: Squad
+      'split',      // Slide 8: Wisdom
+      'diagonal'    // Slide 9: Summary
+    ];
+
+    // Create transition overlay content
+    function createTransitionContent(type, color) {
+      const overlay = document.getElementById('transitionOverlay');
+      overlay.innerHTML = '';
+      
+      switch(type) {
+        case 'tiles':
+          const tilesGrid = document.createElement('div');
+          tilesGrid.className = 'tiles-grid';
+          for (let i = 0; i < 48; i++) { // 8x6 grid
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.style.background = color;
+            // Stagger animation delays based on position
+            const row = Math.floor(i / 8);
+            const col = i % 8;
+            const delay = (row + col) * 30; // diagonal stagger
+            tile.style.animationDelay = delay + 'ms';
+            tilesGrid.appendChild(tile);
+          }
+          overlay.appendChild(tilesGrid);
+          return tilesGrid;
+          
+        case 'diagonal':
+          const diagonal = document.createElement('div');
+          diagonal.className = 'diagonal-wipe';
+          diagonal.style.background = color;
+          overlay.appendChild(diagonal);
+          return diagonal;
+          
+        case 'bubble':
+          const bubble = document.createElement('div');
+          bubble.className = 'bubble-reveal';
+          bubble.style.background = color;
+          overlay.appendChild(bubble);
+          return bubble;
+          
+        case 'split':
+          const split = document.createElement('div');
+          split.className = 'split-transition horizontal';
+          split.innerHTML = `
+            <div class="split-half" style="background: ${color}"></div>
+            <div class="split-half" style="background: ${color}"></div>
+          `;
+          overlay.appendChild(split);
+          return split;
+          
+        case 'wave':
+          const wave = document.createElement('div');
+          wave.className = 'wave-reveal';
+          wave.style.background = color;
+          overlay.appendChild(wave);
+          return wave;
+          
+        default:
+          return null;
+      }
+    }
+
+    // Play transition animation
+    async function playTransition(type, color, isOut = false) {
+      return new Promise((resolve) => {
+        const element = createTransitionContent(type, color);
+        if (!element) {
+          resolve();
+          return;
+        }
+        
+        // Small delay to ensure DOM is ready
+        requestAnimationFrame(() => {
+          element.classList.add(isOut ? 'animate-out' : 'animate');
+          
+          // Determine animation duration based on type (increased for visibility)
+          const durations = {
+            tiles: isOut ? 600 : 1000,
+            diagonal: isOut ? 700 : 1200,
+            bubble: isOut ? 700 : 1200,
+            split: isOut ? 500 : 800,
+            wave: isOut ? 700 : 1200
+          };
+          
+          setTimeout(() => {
+            if (isOut) {
+              document.getElementById('transitionOverlay').innerHTML = '';
+            }
+            resolve();
+          }, durations[type] || 500);
+        });
+      });
+    }
 
     // Mock data for demo mode
     function generateMockData(username) {
@@ -1888,7 +2625,6 @@
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>', // Repos
         '<svg viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>', // Languages
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>', // Streak
-        '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>', // Achievements
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM8.5 8C9.33 8 10 8.67 10 9.5S9.33 11 8.5 11 7 10.33 7 9.5 7.67 8 8.5 8zm7 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm-3.5 9.5c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/></svg>', // Fun Facts
         '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', // Timeline
         '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>', // Squad
@@ -1919,33 +2655,211 @@
       });
     }
 
-    function goToSlide(index) {
-      if (index < 0 || index >= totalSlides) return;
+    let isTransitioning = false;
+
+    async function goToSlide(index) {
+      if (index < 0 || index >= totalSlides || isTransitioning) return;
+      if (index === currentSlide) return;
+      
+      isTransitioning = true;
       
       const slides = document.querySelectorAll('.slide');
       const currentSlideEl = slides[currentSlide];
       const nextSlideEl = slides[index];
+      const isForward = index > currentSlide;
       
-      // Exit current
+      // Get transition type and color for next slide
+      const transitionType = transitionTypes[index] || 'none';
+      const nextTheme = nextSlideEl.dataset.theme;
+      const transitionColor = themeColors[nextTheme];
+      
+      // Reset any existing animations on current slide elements
+      currentSlideEl.querySelectorAll('.title-label, .title-main, .big-number, .title-subtitle, .stat-description, .deco-icons, .start-btn, .input-section, .repo-card, .language-card').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth; // Force reflow
+      });
+      
+      // Start creative transition IN
+      if (transitionType !== 'none' && isInWrapped) {
+        await playTransition(transitionType, transitionColor, false);
+      }
+      
+      // Exit current slide
       currentSlideEl.classList.remove('active');
-      currentSlideEl.classList.add('exit');
+      currentSlideEl.classList.add(isForward ? 'exit' : 'prev');
       
-      // Enter next
-      setTimeout(() => {
-        currentSlideEl.classList.remove('exit');
-        nextSlideEl.classList.add('active');
-        currentSlide = index;
+      // Small delay for slide swap
+      await new Promise(r => setTimeout(r, 50));
+      
+      // Swap slides
+      currentSlideEl.classList.remove('exit', 'prev');
+      nextSlideEl.classList.add('active');
+      currentSlide = index;
+      
+      // Update theme colors
+      updateDotPatternColor(nextTheme);
+      
+      // Update nav arrows color
+      document.querySelectorAll('.nav-arrow').forEach(arrow => {
+        arrow.style.color = themeColors[nextTheme];
+      });
+      
+      // Update progress bar
+      updateProgressBar();
+      updateProgressNav();
+      updateNavButtons();
+      
+      // Transition OUT (after slide is visible)
+      if (transitionType !== 'none' && isInWrapped) {
+        await playTransition(transitionType, transitionColor, true);
+      }
+      
+      // Animate numbers if present
+      animateNumbers(nextSlideEl);
+      
+      isTransitioning = false;
+    }
+
+    function updateProgressBar() {
+      const progressFill = document.getElementById('progressBarFill');
+      
+      // Update progress bar color based on current theme
+      const currentTheme = document.querySelectorAll('.slide')[currentSlide]?.dataset.theme || 'green';
+      const themeColor = themeColors[currentTheme];
+      progressFill.style.color = themeColor;
+      
+      // Only update width if not auto-playing (discrete mode)
+      if (!autoPlayEnabled) {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = progress + '%';
+      }
+      // If auto-playing, the animateProgressBar function handles width updates
+    }
+
+    function animateProgressBar() {
+      if (!autoPlayEnabled || !presentationStartTime) return;
+      
+      const progressFill = document.getElementById('progressBarFill');
+      const totalElapsed = Date.now() - presentationStartTime;
+      const totalDuration = totalSlides * AUTO_PLAY_DELAY;
+      
+      // Calculate progress based on total elapsed time
+      const totalProgress = Math.min((totalElapsed / totalDuration) * 100, 100);
+      progressFill.style.width = totalProgress + '%';
+      
+      // Continue animation until we reach 100%
+      if (totalProgress < 100 && autoPlayEnabled) {
+        progressAnimationFrame = requestAnimationFrame(animateProgressBar);
+      } else if (totalProgress >= 100) {
+        // Ensure we hit exactly 100%
+        progressFill.style.width = '100%';
+        stopAutoPlay();
+        showShareButton();
+      }
+    }
+
+    function animateNumbers(slideEl) {
+      // Find elements with data-count attribute and animate them
+      const countElements = slideEl.querySelectorAll('.big-number[data-count], [data-animate-count]');
+      countElements.forEach(el => {
+        const target = parseInt(el.dataset.count || el.textContent.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(target)) return;
+        animateValue(el, 0, target, 800);
+      });
+    }
+
+    function animateValue(element, start, end, duration) {
+      const startTime = performance.now();
+      const originalText = element.textContent;
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
         
-        // Update theme
-        const theme = nextSlideEl.dataset.theme;
-        updateDotPatternColor(theme);
-        document.querySelectorAll('.nav-arrow').forEach(arrow => {
-          arrow.style.color = themeColors[theme];
-        });
+        // Easing function (ease-out)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (end - start) * easeOut);
         
-        updateProgressNav();
-        updateNavButtons();
-      }, 100);
+        element.textContent = formatNumber(current);
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.textContent = formatNumber(end);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+
+    // Auto-play functions
+    function startAutoPlay() {
+      if (autoPlayInterval) clearInterval(autoPlayInterval);
+      autoPlayEnabled = true;
+      presentationStartTime = Date.now() - (currentSlide * AUTO_PLAY_DELAY); // Account for current position
+      resetTimer();
+      autoPlayInterval = setInterval(() => {
+        if (currentSlide < totalSlides - 1) {
+          nextSlide();
+        }
+        // Don't stop here - let the progress animation reach 100% and stop itself
+      }, AUTO_PLAY_DELAY);
+    }
+
+    function stopAutoPlay() {
+      autoPlayEnabled = false;
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+      pauseTimer();
+      presentationStartTime = null; // Reset for next auto-play session
+    }
+
+    function resetTimer() {
+      if (!presentationStartTime) {
+        presentationStartTime = Date.now();
+      }
+      if (progressAnimationFrame) {
+        cancelAnimationFrame(progressAnimationFrame);
+      }
+      if (autoPlayEnabled) {
+        animateProgressBar();
+      }
+    }
+
+    function pauseTimer() {
+      if (progressAnimationFrame) {
+        cancelAnimationFrame(progressAnimationFrame);
+        progressAnimationFrame = null;
+      }
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayEnabled) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+      updateAutoPlayButton();
+    }
+
+    function updateAutoPlayButton() {
+      const btn = document.getElementById('autoPlayBtn');
+      if (btn) {
+        btn.innerHTML = autoPlayEnabled ? 
+          '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>' :
+          '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+        btn.title = autoPlayEnabled ? 'Pause auto-play' : 'Start auto-play';
+      }
+    }
+
+    // Pause auto-play on user interaction
+    function handleUserInteraction() {
+      if (autoPlayEnabled) {
+        stopAutoPlay();
+        updateAutoPlayButton();
+      }
     }
 
     function nextSlide() {
@@ -1956,6 +2870,7 @@
 
     function prevSlide() {
       if (currentSlide > 0) {
+        handleUserInteraction();
         goToSlide(currentSlide - 1);
       }
     }
@@ -1966,24 +2881,95 @@
       
       leftBtn.disabled = currentSlide === 0;
       rightBtn.disabled = currentSlide === totalSlides - 1;
+      
+      // Only manage display if buttons are visible (after presentation completes)
+      const presentationComplete = leftBtn.style.opacity === '1';
+      
+      if (presentationComplete) {
+        // Presentation has completed, manage button visibility normally
+        if (currentSlide === totalSlides - 1) {
+          rightBtn.style.display = 'none';
+          rightBtn.style.pointerEvents = 'none';
+        } else {
+          rightBtn.style.display = 'flex';
+          rightBtn.style.opacity = '1';
+          rightBtn.style.pointerEvents = 'auto';
+        }
+        
+        // Ensure left button stays functional
+        leftBtn.style.pointerEvents = 'auto';
+      }
+    }
+
+    function showShareButton() {
+      const shareBtn = document.querySelector('.share-btn');
+      const restartBtn = document.querySelector('.restart-btn');
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      
+      setTimeout(() => {
+        if (shareBtn) shareBtn.classList.add('show');
+        if (restartBtn) restartBtn.classList.add('show');
+        
+        // Make navigation buttons visible and enable manual navigation
+        if (leftBtn) {
+          leftBtn.style.opacity = '1';
+          leftBtn.style.pointerEvents = 'auto';
+        }
+        if (rightBtn && currentSlide < totalSlides - 1) {
+          rightBtn.style.opacity = '1';
+          rightBtn.style.display = 'flex';
+          rightBtn.style.pointerEvents = 'auto';
+        }
+        
+        // Update play button to show play icon (since auto-play has stopped)
+        updateAutoPlayButton();
+      }, 300);
     }
 
     function showWrappedUI() {
       isInWrapped = true;
+      
+      // Count actual slides
+      totalSlides = document.querySelectorAll('.slide').length;
+      
       document.getElementById('logo').style.visibility = 'visible';
       document.getElementById('headerControls').style.visibility = 'visible';
-      document.getElementById('navLeft').style.display = 'flex';
-      document.getElementById('navRight').style.display = 'flex';
+      
+      // Show nav buttons but make them invisible during auto-play
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      leftBtn.style.display = 'flex';
+      rightBtn.style.display = 'flex';
+      leftBtn.style.opacity = '0';
+      rightBtn.style.opacity = '0';
+      leftBtn.style.pointerEvents = 'none';
+      rightBtn.style.pointerEvents = 'none';
+      leftBtn.style.transition = 'opacity 0.5s ease';
+      rightBtn.style.transition = 'opacity 0.5s ease';
+      
+      document.getElementById('progressBarContainer').style.display = 'block';
       document.getElementById('footer').style.display = 'none';
       
       generateProgressNav();
       updateNavButtons();
       
-      // Update nav arrow colors
+      // Initialize progress bar at 0% AFTER other updates
+      const progressFill = document.getElementById('progressBarFill');
       const theme = document.getElementById('slide-0').dataset.theme;
+      progressFill.style.width = '0%';
+      progressFill.style.color = themeColors[theme];
+      
+      // Update nav arrow colors
       document.querySelectorAll('.nav-arrow').forEach(arrow => {
         arrow.style.color = themeColors[theme];
       });
+      
+      // Start auto-play by default
+      setTimeout(() => {
+        startAutoPlay();
+        updateAutoPlayButton();
+      }, 500);
     }
 
     function hideWrappedUI() {
@@ -1993,6 +2979,7 @@
       document.getElementById('headerControls').style.visibility = 'hidden';
       document.getElementById('navLeft').style.display = 'none';
       document.getElementById('navRight').style.display = 'none';
+      document.getElementById('progressBarContainer').style.display = 'none';
       document.getElementById('footer').style.display = 'block';
     }
 
@@ -2034,8 +3021,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            year: new Date().getFullYear(),
-            token: token || undefined
+            year: new Date().getFullYear()
           })
         });
 
@@ -2317,8 +3303,10 @@
     }
 
     function updateProgress(percent) {
-      document.getElementById('progressFill').style.width = `${percent}%`;
-      document.getElementById('progressText').textContent = `${Math.round(percent)}%`;
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      if (progressFill) progressFill.style.width = `${percent}%`;
+      if (progressText) progressText.textContent = `${Math.round(percent)}%`;
     }
 
     function showLoading() {
