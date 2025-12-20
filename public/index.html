@@ -1492,25 +1492,6 @@
         </div>
       </section>
 
-      <!-- Slide 5: Achievements -->
-      <section class="slide theme-purple" id="slide-5" data-theme="purple">
-        <div class="slide-content">
-          <div class="title-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="8" r="7"/>
-              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-            </svg>
-            YOUR ACHIEVEMENTS
-          </div>
-          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">TITLES</h2>
-          <p class="title-subtitle">Badges earned through your 2024 coding journey.</p>
-
-          <div class="achievements-grid" id="achievementsGrid">
-            <!-- Achievements will be populated by JS -->
-          </div>
-        </div>
-      </section>
-
       <!-- Slide 6: Fun Facts / Roast -->
       <section class="slide theme-pink" id="slide-6" data-theme="pink">
         <div class="slide-content">
@@ -2199,19 +2180,6 @@
       document.getElementById('streakNumber').textContent = data.stats.longestStreak;
       document.getElementById('streakDays').textContent = data.stats.longestStreak;
       document.getElementById('daysCodedNumber').textContent = data.stats.daysCodedThisYear;
-
-      // Achievements
-      const achievementsGrid = document.getElementById('achievementsGrid');
-      if (data.titles && data.titles.length > 0) {
-        achievementsGrid.innerHTML = data.titles.map(title => `
-          <div class="achievement-badge">
-            <span class="achievement-icon">${title.icon}</span>
-            <span>${title.title}</span>
-          </div>
-        `).join('');
-      } else {
-        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">Keep coding to earn achievements!</p>';
-      }
 
       // Fun Facts / Roast (Slide 6)
       if (data.funFacts) {
