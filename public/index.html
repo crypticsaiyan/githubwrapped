@@ -4,9 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub Wrapped 2024</title>
+  <title>GitHub Wrapped 2025</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
+    * {
+      font-family: 'Tronica Mono';
+    }
     /* Custom font */
     @font-face {
       font-family: 'Tronica Mono';
@@ -42,12 +45,33 @@
       box-sizing: border-box;
     }
 
+    /* CRT screen effect overlay */
+    .crt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999999;
+      display: block;
+      opacity: 0.05;
+    }
+    
+    .crt-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: repeat;
+      image-rendering: pixelated;
+    }
+
     body {
       font-family: var(--font-body);
       background: var(--bg-dark);
       color: var(--text-primary);
       min-height: 100vh;
       overflow: hidden;
+      position: relative;
     }
 
     /* Dot pattern background */
@@ -239,6 +263,34 @@
     .slide.active .start-btn,
     .slide.active .input-section {
       animation: bounceIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    /* Disable default entrance animations when using sequential JS reveal */
+    .slide.sequential-reveal .title-label,
+    .slide.sequential-reveal .title-main,
+    .slide.sequential-reveal .big-number,
+    .slide.sequential-reveal .title-subtitle,
+    .slide.sequential-reveal .stat-description,
+    .slide.sequential-reveal .summary-layout,
+    .slide.sequential-reveal .summary-cards,
+    .slide.sequential-reveal .summary-stats,
+    .slide.sequential-reveal .summary-header,
+    .slide.sequential-reveal .summary-title,
+    .slide.sequential-reveal .stats-grid,
+    .slide.sequential-reveal .stat-item,
+    .slide.sequential-reveal .stat-item-value,
+    .slide.sequential-reveal .github-3d-frame,
+    .slide.sequential-reveal .contribution-graph,
+    .slide.sequential-reveal .repos-container,
+    .slide.sequential-reveal .languages-grid,
+    .slide.sequential-reveal .achievements-grid,
+    .slide.sequential-reveal .timeline-container,
+    .slide.sequential-reveal .squad-container,
+    .slide.sequential-reveal .quote-container,
+    .slide.sequential-reveal .deco-icons,
+    .slide.sequential-reveal .start-btn,
+    .slide.sequential-reveal .input-section {
+      animation: none !important;
     }
 
     /* Keyframe animations */
@@ -1548,25 +1600,26 @@
 
     .card-stack {
       position: relative;
-      width: 280px;
-      height: 380px;
+      width: 300px;
+      height: 450px;
     }
 
     .github-card {
       position: absolute;
-      width: 260px;
-      height: 360px;
-      background: linear-gradient(135deg, #ff5caa, #ff8ecb);
+      width: 280px;
+      height: 405px;
+      background: linear-gradient(145deg, #ff5caa, #ff7eb8);
       border-radius: 16px;
       padding: 16px;
       box-shadow: 0 20px 60px rgba(255, 92, 170, 0.3);
       transition: transform 0.3s ease;
+      border: 2px solid #1a1a2e;
     }
 
     .github-card.back {
       transform: rotate(-8deg) translateX(-20px);
       z-index: 1;
-      background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+      background: linear-gradient(145deg, #1a1a2e, #2d2d44);
       border: 2px solid rgba(255, 92, 170, 0.5);
     }
 
@@ -1582,35 +1635,74 @@
     .card-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 12px;
+      align-items: center;
+      margin-bottom: 10px;
       font-size: 0.7rem;
       font-weight: 700;
-      color: rgba(0, 0, 0, 0.7);
+      color: #1a1a2e;
+      letter-spacing: 0.02em;
+    }
+
+    .card-header-title {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-header-title svg {
+      width: 14px;
+      height: 14px;
     }
 
     .card-level {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 2px 8px;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 3px 8px;
       border-radius: 4px;
+      color: #1a1a2e;
     }
 
     .card-image {
       width: 100%;
-      height: 180px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-      border-radius: 12px;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
       display: flex;
+      flex-direction: row;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
+      justify-content: space-around;
+      padding: 0 12px;
+      margin-bottom: 10px;
       position: relative;
       overflow: hidden;
     }
 
-    .card-image svg {
-      width: 80px;
-      height: 80px;
-      color: rgba(0, 0, 0, 0.6);
+    .card-image .card-profile-img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #1a1a2e;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .card-image .card-vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+      text-align: left;
+      rotate: 180deg;
+    }
+
+    .card-image .card-vertical-text .heart {
+      color: #e25555;
+      font-size: 1.5rem;
+      rotate: 90deg;
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .card-avatar {
@@ -1627,32 +1719,136 @@
     .card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
     .card-info {
-      color: rgba(0, 0, 0, 0.8);
+      color: #1a1a2e;
     }
 
     .card-year {
-      font-size: 0.65rem;
-      opacity: 0.7;
+      font-size: 0.6rem;
+      font-weight: 600;
+      opacity: 0.6;
+      letter-spacing: 0.03em;
     }
 
     .card-title {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
+      color: #1a1a2e;
+      line-height: 1.1;
     }
 
     .card-icons {
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
 
     .card-icons svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
+      color: #1a1a2e;
+      opacity: 0.5;
+    }
+
+    .card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .card-stat {
+      text-align: center;
+      color: #1a1a2e;
+    }
+
+    .card-stat-value {
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #1a1a2e;
+    }
+
+    .card-stat-label {
+      font-size: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #1a1a2e;
       opacity: 0.6;
+      margin-top: 1px;
+    }
+
+    .card-stat.wide {
+      grid-column: span 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding-top: 6px;
+      margin-top: 4px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .card-stat.wide .card-stat-label {
+      font-size: 0.5rem;
+      opacity: 0.6;
+    }
+
+    .card-stat.wide .card-stat-value {
+      font-size: 0.85rem;
+    }
+
+    /* Card zoom overlay */
+    .card-zoom-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card-zoom-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-zoom-overlay .zoomed-card {
+      transform: scale(2.5);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .card-zoom-overlay.active .zoomed-card {
+      transform: scale(2.5);
+    }
+
+    .github-card.front {
+      cursor: pointer;
+    }
+
+    .card-zoom-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      pointer-events: none;
     }
 
     .summary-stats {
@@ -1884,11 +2080,77 @@
       .big-number {
         font-size: clamp(4rem, 18vw, 8rem);
       }
+
+      /* Summary page responsive */
+      .summary-layout {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .summary-cards {
+        padding: 1.5rem;
+        min-height: 300px;
+      }
+
+      .card-stack {
+        width: 240px;
+        height: 370px;
+        transform: scale(0.9);
+      }
+
+      .github-card {
+        width: 220px;
+        height: 320px;
+      }
+
+      .summary-stats {
+        padding: 1.5rem;
+        padding-bottom: 5rem;
+      }
+
+      .summary-title {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .stat-item-value {
+        font-size: 1.5rem;
+      }
+
+      .stat-item-value.small {
+        font-size: 0.9rem;
+      }
+
+      .card-stats {
+        gap: 4px;
+      }
+
+      .card-stat-value {
+        font-size: 0.85rem;
+      }
+
+      .share-btn,
+      .restart-btn {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        margin-top: 1rem;
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- CRT screen overlay -->
+  <div class="crt-overlay" style="background: url('/static/crt.jpg') repeat; background-size: 500px;"></div>
+  
   <!-- Dynamic dot pattern -->
   <div class="dot-pattern" id="dotPattern"></div>
 
@@ -1952,7 +2214,7 @@
             </div>
           </div>
           <h1 class="title-main">WRAPPED</h1>
-          <p class="title-subtitle">Look back at your 2024 on GitHub</p>
+          <p class="title-subtitle">Look back at your 2025 on GitHub</p>
           
           <div class="input-section" id="inputSection">
             <input type="text" class="username-input" id="usernameInput" placeholder="Enter GitHub username" />
@@ -2005,16 +2267,17 @@
           
           <div class="deco-icons">
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="3" y="11" width="3" height="10" rx="1"/>
-              <rect x="8" y="6" width="3" height="15" rx="1"/>
-              <rect x="13" y="9" width="3" height="12" rx="1"/>
-              <rect x="18" y="3" width="3" height="18" rx="1"/>
+              <circle cx="5" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="19" cy="12" r="2"/>
+              <line x1="7" y1="12" x2="10" y2="12" stroke="currentColor" stroke-width="2"/>
+              <line x1="14" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
         </div>
@@ -2030,20 +2293,20 @@
             YOUR TOP REPOSITORIES
           </div>
           <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">REPOS</h2>
-          <p class="title-subtitle">The projects you poured your heart into in 2024.</p>
+          <p class="title-subtitle">The projects you poured your heart into in 2025.</p>
           
           <div class="deco-icons">
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="3" y="3" width="7" height="7" rx="1"/>
-              <rect x="14" y="3" width="7" height="7" rx="1"/>
-              <rect x="3" y="14" width="7" height="7" rx="1"/>
-              <rect x="14" y="14" width="7" height="7" rx="1"/>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              <line x1="6" y1="3" x2="6" y2="15"/>
+              <circle cx="18" cy="6" r="3"/>
+              <circle cx="6" cy="18" r="3"/>
+              <path d="M18 9a9 9 0 0 1-9 9"/>
             </svg>
           </div>
 
@@ -2064,17 +2327,23 @@
             LANGUAGES YOU SPOKE
           </div>
           <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">CODE</h2>
-          <p class="title-subtitle">Your programming languages of 2024.</p>
+          <p class="title-subtitle">Your programming languages of 2025.</p>
 
           <div class="deco-icons">
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
             </svg>
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="3"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
             </svg>
           </div>
 
@@ -2099,13 +2368,17 @@
           </p>
           <div class="deco-icons">
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              <path d="M12 23s-5-5.5-5-11c0-4.4 2.2-8 5-8s5 3.6 5 8c0 5.5-5 11-5 11zm0-16c-1.7 0-3 2.2-3 5 0 3.2 2 6.8 3 8.3 1-1.5 3-5.1 3-8.3 0-2.8-1.3-5-3-5z"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3v18M5.5 8.5l13 7M5.5 15.5l13-7"/>
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <polyline points="9 14 11 16 15 12"/>
             </svg>
           </div>
         </div>
@@ -2131,15 +2404,18 @@
             <!-- Roast will be populated by JS -->
           </p>
           <div class="deco-icons">
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-            </svg>
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
-              <line x1="4" y1="22" x2="4" y2="15"/>
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 1 2 2 6 2s6-1 6-2v-5"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2h10l2 5H5l2-5zm-2 7h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9zm7 2v6m-3-3h6"/>
             </svg>
           </div>
         </div>
@@ -2158,7 +2434,7 @@
             YOUR YEAR IN CODE
           </div>
           <h2 class="title-main" style="font-size: clamp(2.5rem, 7vw, 5rem);">TIMELINE</h2>
-          <p class="title-subtitle">Your monthly commit journey through 2024.</p>
+          <p class="title-subtitle">Your monthly commit journey through 2025.</p>
           
           <div class="timeline-container" id="timelineContainer">
             <!-- Timeline will be populated by JS -->
@@ -2180,21 +2456,21 @@
             YOUR GITHUB
           </div>
           <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">SQUAD</h2>
-          <p class="title-subtitle">Developers you collaborated with the most in 2024.</p>
+          <p class="title-subtitle">Developers you collaborated with the most in 2025.</p>
 
           <div class="squad-container" id="squadContainer">
             <!-- Squad avatars will be populated by JS -->
           </div>
           
           <div class="deco-icons">
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="3" y="11" width="3" height="10" rx="1"/>
-              <rect x="8" y="6" width="3" height="15" rx="1"/>
-              <rect x="13" y="9" width="3" height="12" rx="1"/>
-              <rect x="18" y="3" width="3" height="18" rx="1"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 13h2l2-4 1 6 2-6 1 4h2M6 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -2220,14 +2496,14 @@
           </div>
 
           <div class="deco-icons">
-            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18h6"/>
+              <path d="M10 22h4"/>
+              <path d="M15 2c1 1 1 3 1 5a7 7 0 1 1-8 0c0-2 0-4 1-5h6z"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-              <line x1="9" y1="9" x2="9.01" y2="9"/>
-              <line x1="15" y1="9" x2="15.01" y2="9"/>
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
             </svg>
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
@@ -2245,32 +2521,61 @@
               <!-- Back card (dark) -->
               <div class="github-card back">
                 <div class="card-image" style="background: linear-gradient(135deg, rgba(255,92,170,0.3), rgba(255,92,170,0.1));">
-                  <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--theme-pink);">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                  </svg>
                 </div>
               </div>
               <!-- Front card (pink) -->
               <div class="github-card front">
                 <div class="card-header">
-                  <span>WRAPPED 2024</span>
+                  <span class="card-header-title">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    WRAPPED 2025
+                  </span>
                   <span class="card-level" id="cardLevel">LV. 1</span>
                 </div>
-                <div class="card-image">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                  </svg>
-                  <img id="cardAvatar" class="card-avatar" src="" alt="" style="display: none;">
+                <div class="card-image" id="cardImageContainer">
+                  <img id="cardProfileImg" class="card-profile-img" src="" alt="">
+                  <span class="card-vertical-text">I<span class="heart">♥</span><br>OPEN SOURCE</span>
                 </div>
                 <div class="card-footer">
                   <div class="card-info">
-                    <div class="card-year">GITHUB WRAPPED 2024 • #1</div>
                     <div class="card-title" id="cardUsername">Developer</div>
                   </div>
                   <div class="card-icons">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                     <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="3" height="10" rx="1"/><rect x="8" y="6" width="3" height="15" rx="1"/><rect x="13" y="9" width="3" height="12" rx="1"/><rect x="18" y="3" width="3" height="18" rx="1"/></svg>
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  </div>
+                </div>
+                <div class="card-stats">
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardCommits">0</div>
+                    <div class="card-stat-label">Commits</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardPRs">0</div>
+                    <div class="card-stat-label">PRs</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardStreak">0</div>
+                    <div class="card-stat-label">Streak</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardStars">0</div>
+                    <div class="card-stat-label">Stars</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardLanguages">0</div>
+                    <div class="card-stat-label">Languages</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardAchievements">0</div>
+                    <div class="card-stat-label">Badges</div>
+                  </div>
+                  <div class="card-stat wide">
+                    <div class="card-stat-label">Top Lang:</div>
+                    <div class="card-stat-value" id="cardTopLang">-</div>
+                  </div>
+                  <div class="card-stat wide">
+                    <div class="card-stat-label">Top Repo:</div>
+                    <div class="card-stat-value" id="cardTopRepo">-</div>
                   </div>
                 </div>
               </div>
@@ -2305,6 +2610,20 @@
                   STREAK
                 </div>
                 <div class="stat-item-value" id="summaryStreak">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 21H6a2 2 0 0 1-2-2V7l4-4h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2zM8 3v4H4"/></svg>
+                  PULL REQUESTS
+                </div>
+                <div class="stat-item-value" id="summaryPRs">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  STARS EARNED
+                </div>
+                <div class="stat-item-value" id="summaryStars">0</div>
               </div>
               <div class="stat-item">
                 <div class="stat-item-label">
@@ -2390,9 +2709,13 @@
     let wrappedData = null;
     let pollInterval = null;
     let isInWrapped = false;
-    let autoPlayInterval = null;
+    let autoPlayInterval = null; // legacy; replaced by timeout for dynamic durations
+    let autoPlayTimeout = null;  // dynamic per-slide scheduling
     let autoPlayEnabled = false;
-    const AUTO_PLAY_DELAY = 5000; // 5 seconds per slide
+    const AUTO_PLAY_BASE_DELAY = 2000; // base buffer after reveals, before transition
+    const REVEAL_STEP_DELAY = 1000;   // per-element delay in sequential reveal
+    let autoPlayDurations = [];       // per-slide durations (computed)
+    let totalAutoPlayDuration = 0;    // sum of durations for progress bar
     let presentationStartTime = null;
     let progressAnimationFrame = null;
 
@@ -2514,7 +2837,7 @@
     function generateMockData(username) {
       return {
         username: username || 'demo_user',
-        year: 2024,
+        year: 2025,
         status: 'completed',
         generatedAt: new Date().toISOString(),
         profile: {
@@ -2538,8 +2861,8 @@
           totalStars: 156,
           longestStreak: 42,
           currentStreak: 7,
-          mostCommitsDay: { date: '2024-03-15', count: 28 },
-          mostDiverseDay: { date: '2024-06-20', languages: ['TypeScript', 'Python', 'Go'] },
+          mostCommitsDay: { date: '2025-03-15', count: 28 },
+          mostDiverseDay: { date: '2025-06-20', languages: ['TypeScript', 'Python', 'Go'] },
           daysCodedThisYear: 234
         },
         languages: [
@@ -2556,18 +2879,18 @@
           { name: 'web-app', fullName: `${username}/web-app`, description: 'Modern web application with React', stars: 56, forks: 8, language: 'JavaScript', commits: 234, url: '#', isPrivate: false }
         ],
         timeline: [
-          { month: 'January', year: 2024, commits: 65, prs: 4, issues: 2, highlights: [] },
-          { month: 'February', year: 2024, commits: 78, prs: 6, issues: 1, highlights: [] },
-          { month: 'March', year: 2024, commits: 92, prs: 8, issues: 3, highlights: [] },
-          { month: 'April', year: 2024, commits: 54, prs: 3, issues: 2, highlights: [] },
-          { month: 'May', year: 2024, commits: 87, prs: 7, issues: 4, highlights: [] },
-          { month: 'June', year: 2024, commits: 103, prs: 9, issues: 2, highlights: [] },
-          { month: 'July', year: 2024, commits: 76, prs: 5, issues: 1, highlights: [] },
-          { month: 'August', year: 2024, commits: 68, prs: 4, issues: 3, highlights: [] },
-          { month: 'September', year: 2024, commits: 91, prs: 6, issues: 2, highlights: [] },
-          { month: 'October', year: 2024, commits: 82, prs: 5, issues: 1, highlights: [] },
-          { month: 'November', year: 2024, commits: 73, prs: 4, issues: 2, highlights: [] },
-          { month: 'December', year: 2024, commits: 45, prs: 3, issues: 0, highlights: [] }
+          { month: 'January', year: 2025, commits: 65, prs: 4, issues: 2, highlights: [] },
+          { month: 'February', year: 2025, commits: 78, prs: 6, issues: 1, highlights: [] },
+          { month: 'March', year: 2025, commits: 92, prs: 8, issues: 3, highlights: [] },
+          { month: 'April', year: 2025, commits: 54, prs: 3, issues: 2, highlights: [] },
+          { month: 'May', year: 2025, commits: 87, prs: 7, issues: 4, highlights: [] },
+          { month: 'June', year: 2025, commits: 103, prs: 9, issues: 2, highlights: [] },
+          { month: 'July', year: 2025, commits: 76, prs: 5, issues: 1, highlights: [] },
+          { month: 'August', year: 2025, commits: 68, prs: 4, issues: 3, highlights: [] },
+          { month: 'September', year: 2025, commits: 91, prs: 6, issues: 2, highlights: [] },
+          { month: 'October', year: 2025, commits: 82, prs: 5, issues: 1, highlights: [] },
+          { month: 'November', year: 2025, commits: 73, prs: 4, issues: 2, highlights: [] },
+          { month: 'December', year: 2025, commits: 45, prs: 3, issues: 0, highlights: [] }
         ],
         titles: [
           { id: 'commit-master', title: 'Commit Master', description: '500+ commits this year', icon: '🔥' },
@@ -2590,8 +2913,8 @@
         },
         streak: {
           longestStreak: 42,
-          longestStreakStart: '2024-02-01',
-          longestStreakEnd: '2024-03-14',
+          longestStreakStart: '2025-02-01',
+          longestStreakEnd: '2025-03-14',
           currentStreak: 7
         }
       };
@@ -2684,6 +3007,9 @@
         await playTransition(transitionType, transitionColor, false);
       }
       
+      // Ensure current slide doesn't carry sequential override
+      currentSlideEl.classList.remove('sequential-reveal');
+
       // Exit current slide
       currentSlideEl.classList.remove('active');
       currentSlideEl.classList.add(isForward ? 'exit' : 'prev');
@@ -2691,8 +3017,13 @@
       // Small delay for slide swap
       await new Promise(r => setTimeout(r, 50));
       
+      // Prepare next slide elements to be hidden before activation
+      prepareSlideForReveal(nextSlideEl);
+
       // Swap slides
       currentSlideEl.classList.remove('exit', 'prev');
+      // Apply sequential reveal behavior to next slide
+      nextSlideEl.classList.add('sequential-reveal');
       nextSlideEl.classList.add('active');
       currentSlide = index;
       
@@ -2714,8 +3045,10 @@
         await playTransition(transitionType, transitionColor, true);
       }
       
-      // Animate numbers if present
-      animateNumbers(nextSlideEl);
+      // Reveal text content sequentially
+      revealSlideContent(nextSlideEl);
+
+      // Numbers animate within reveal sequence only (after visible)
       
       isTransitioning = false;
     }
@@ -2741,7 +3074,7 @@
       
       const progressFill = document.getElementById('progressBarFill');
       const totalElapsed = Date.now() - presentationStartTime;
-      const totalDuration = totalSlides * AUTO_PLAY_DELAY;
+      const totalDuration = totalAutoPlayDuration || (totalSlides * REVEAL_STEP_DELAY);
       
       // Calculate progress based on total elapsed time
       const totalProgress = Math.min((totalElapsed / totalDuration) * 100, 100);
@@ -2764,13 +3097,14 @@
       countElements.forEach(el => {
         const target = parseInt(el.dataset.count || el.textContent.replace(/[^0-9]/g, ''), 10);
         if (isNaN(target)) return;
+        if (el.dataset.animated === 'true') return;
+        el.dataset.animated = 'true';
         animateValue(el, 0, target, 800);
       });
     }
 
     function animateValue(element, start, end, duration) {
       const startTime = performance.now();
-      const originalText = element.textContent;
       
       function update(currentTime) {
         const elapsed = currentTime - startTime;
@@ -2792,26 +3126,138 @@
       requestAnimationFrame(update);
     }
 
+    function setAnimatedCount(elementId, value) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.dataset.count = value;
+      el.dataset.animateCount = 'true';
+      el.dataset.animated = 'false';
+      el.textContent = formatNumber(0);
+    }
+
+    function getRevealElements(slideEl) {
+      // Collect in DOM (top-to-bottom) order; include all major slide elements, plus summary
+      return Array.from(slideEl.querySelectorAll([
+        '.title-label',
+        '.title-main',
+        '.big-number',
+        '.title-subtitle',
+        '.stat-description',
+        // Content containers
+        '.github-3d-frame',
+        '.contribution-graph',
+        '.repos-container',
+        '.languages-grid',
+        '.achievements-grid',
+        '.timeline-container',
+        '.squad-container',
+        '.quote-container',
+        // Summary page elements
+        '.summary-layout',
+        '.summary-header',
+        '.summary-title',
+        '.summary-stats',
+        '.stats-grid',
+        '.stat-item',
+        '.stat-item-value',
+        // UI bits
+        '.deco-icons',
+        '.start-btn',
+        '.input-section'
+      ].join(', ')));
+    }
+
+    function prepareSlideForReveal(slideEl) {
+      const elements = getRevealElements(slideEl);
+
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+        el.style.transition = 'opacity 400ms ease, transform 400ms ease';
+      });
+    }
+
+    function revealSlideContent(slideEl) {
+      // Reveal elements strictly in DOM order (top-to-bottom)
+      const elements = getRevealElements(slideEl);
+
+      // Stagger reveal
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const slideIndex = slides.indexOf(slideEl);
+      const isLastSlide = (slideIndex === slides.length - 1);
+      let delay = 0;
+      const step = isLastSlide ? 300 : REVEAL_STEP_DELAY; // faster on last slide
+      elements.forEach((el, index) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+
+          // Trigger number animation when element appears and for any nested targets
+          const candidates = [el, ...Array.from(el.querySelectorAll('[data-animate-count="true"]'))];
+          candidates.forEach(node => {
+            const nodeTarget = parseInt((node.dataset && node.dataset.count) || node.textContent.replace(/[^0-9]/g, ''), 10);
+            const shouldAnimate = (!isNaN(nodeTarget)) && (
+              (node.dataset && node.dataset.animateCount) === 'true' || node.classList.contains('big-number')
+            );
+            if (shouldAnimate && node.dataset.animated !== 'true') {
+              node.dataset.animated = 'true';
+              animateValue(node, 0, nodeTarget, 800);
+            }
+          });
+
+          // Show buttons after last element on last slide
+          if (isLastSlide && index === elements.length - 1) {
+            setTimeout(() => {
+              showShareButton();
+            }, 500); // small delay after last element
+          }
+        }, delay);
+        delay += step;
+      });
+    }
+
     // Auto-play functions
     function startAutoPlay() {
+      // Clear any existing scheduling
       if (autoPlayInterval) clearInterval(autoPlayInterval);
+      if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+
+      // Compute dynamic durations based on reveal element counts per slide
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      autoPlayDurations = slides.map((slide, idx) => {
+        const count = getRevealElements(slide).length;
+        // duration = count * step + base buffer; extra pause on last slide
+        const isLastSlide = (idx === slides.length - 1);
+        const stepDelay = isLastSlide ? 300 : REVEAL_STEP_DELAY; // faster on last slide
+        const bufferTime = isLastSlide ? 1000 : AUTO_PLAY_BASE_DELAY;
+        return (count * stepDelay) + bufferTime;
+      });
+      totalAutoPlayDuration = autoPlayDurations.reduce((a, b) => a + b, 0);
+
+      // Presentation start time should account for elapsed of previous slides
+      const elapsedBefore = autoPlayDurations.slice(0, currentSlide).reduce((a, b) => a + b, 0);
       autoPlayEnabled = true;
-      presentationStartTime = Date.now() - (currentSlide * AUTO_PLAY_DELAY); // Account for current position
+      presentationStartTime = Date.now() - elapsedBefore; // Account for current position
       resetTimer();
-      autoPlayInterval = setInterval(() => {
+
+      const scheduleNext = () => {
+        if (!autoPlayEnabled) return;
         if (currentSlide < totalSlides - 1) {
-          nextSlide();
+          const duration = autoPlayDurations[currentSlide] || (3 * REVEAL_STEP_DELAY);
+          autoPlayTimeout = setTimeout(() => {
+            nextSlide();
+            scheduleNext();
+          }, duration);
         }
-        // Don't stop here - let the progress animation reach 100% and stop itself
-      }, AUTO_PLAY_DELAY);
+        // Don't show buttons here; let animateProgressBar show them at 100%
+      };
+      scheduleNext();
     }
 
     function stopAutoPlay() {
       autoPlayEnabled = false;
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-      }
+      if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval = null; }
+      if (autoPlayTimeout) { clearTimeout(autoPlayTimeout); autoPlayTimeout = null; }
       pauseTimer();
       presentationStartTime = null; // Reset for next auto-play session
     }
@@ -3083,7 +3529,7 @@
 
     function displayWrapped(data) {
       // Commits
-      document.getElementById('commitsNumber').textContent = formatNumber(data.stats.totalCommits);
+      setAnimatedCount('commitsNumber', data.stats.totalCommits);
       const commitPercentile = calculatePercentile(data.stats.totalCommits, 'commits');
       document.getElementById('commitsPercentile').textContent = `Top ${commitPercentile}%`;
       document.getElementById('commitsDescription').innerHTML = 
@@ -3156,9 +3602,9 @@
       }
 
       // Streak
-      document.getElementById('streakNumber').textContent = data.stats.longestStreak;
-      document.getElementById('streakDays').textContent = data.stats.longestStreak;
-      document.getElementById('daysCodedNumber').textContent = data.stats.daysCodedThisYear;
+      setAnimatedCount('streakNumber', data.stats.longestStreak);
+      setAnimatedCount('streakDays', data.stats.longestStreak);
+      setAnimatedCount('daysCodedNumber', data.stats.daysCodedThisYear);
 
       // Fun Facts / Roast (Slide 6)
       if (data.funFacts) {
@@ -3189,7 +3635,7 @@
         }).join('');
         
         document.getElementById('peakMonth').textContent = peakMonth.month;
-        document.getElementById('peakCommits').textContent = peakMonth.commits;
+        setAnimatedCount('peakCommits', peakMonth.commits);
       }
 
       // Squad (Slide 8)
@@ -3223,12 +3669,14 @@
       document.getElementById('quoteAuthor').textContent = randomQuote.author;
 
       // Summary page - populate stats grid
-      document.getElementById('summaryCommits').textContent = formatNumber(data.stats.totalCommits);
-      document.getElementById('summaryStreak').textContent = data.stats.longestStreak;
-      document.getElementById('summaryLanguages').textContent = data.languages?.length || 0;
+      setAnimatedCount('summaryCommits', data.stats.totalCommits);
+      setAnimatedCount('summaryPRs', data.stats.totalPRs || 0);
+      setAnimatedCount('summaryStreak', data.stats.longestStreak);
+      setAnimatedCount('summaryStars', data.stats.totalStars || 0);
+      setAnimatedCount('summaryLanguages', data.languages?.length || 0);
+      setAnimatedCount('summaryAchievements', data.titles?.length || 0);
       document.getElementById('summaryTopLang').textContent = data.languages?.[0]?.name || '-';
       document.getElementById('summaryTopRepo').textContent = data.topRepos?.[0]?.name || '-';
-      document.getElementById('summaryAchievements').textContent = data.titles?.length || 0;
 
       // Summary page - populate card
       document.getElementById('cardUsername').textContent = data.profile?.name || data.username || 'Developer';
@@ -3237,11 +3685,20 @@
       const level = Math.min(99, Math.floor(data.stats.totalCommits / 100) + 1);
       document.getElementById('cardLevel').textContent = `LV. ${level}`;
 
-      // Show avatar on card if available
+      // Card stats - all values
+      document.getElementById('cardCommits').textContent = formatNumber(data.stats.totalCommits);
+      document.getElementById('cardPRs').textContent = formatNumber(data.stats.totalPRs || 0);
+      document.getElementById('cardStreak').textContent = formatNumber(data.stats.longestStreak);
+      document.getElementById('cardStars').textContent = formatNumber(data.stats.totalStars || 0);
+      document.getElementById('cardLanguages').textContent = formatNumber(data.languages?.length || 0);
+      document.getElementById('cardAchievements').textContent = formatNumber(data.titles?.length || 0);
+      document.getElementById('cardTopLang').textContent = data.languages?.[0]?.name || '-';
+      document.getElementById('cardTopRepo').textContent = data.topRepos?.[0]?.name || '-';
+
+      // Show profile image as circular overlay on GitHub logo
       if (data.profile?.avatarUrl) {
-        const cardAvatar = document.getElementById('cardAvatar');
-        cardAvatar.src = data.profile.avatarUrl;
-        cardAvatar.style.display = 'block';
+        const cardProfileImg = document.getElementById('cardProfileImg');
+        cardProfileImg.src = data.profile.avatarUrl;
       }
 
       // Show wrapped UI and move to slide 1
@@ -3256,11 +3713,11 @@
       const languages = document.getElementById('summaryLanguages').textContent;
       const username = document.getElementById('cardUsername').textContent;
       
-      const shareText = `🎉 My GitHub Wrapped 2024!\n\n🔥 ${commits} commits\n📈 ${streak} day streak\n💻 ${languages} languages\n\nCheck out your GitHub Wrapped!`;
+      const shareText = `🎉 My GitHub Wrapped 2025!\n\n🔥 ${commits} commits\n📈 ${streak} day streak\n💻 ${languages} languages\n\nCheck out your GitHub Wrapped!`;
       
       if (navigator.share) {
         navigator.share({
-          title: 'GitHub Wrapped 2024',
+          title: 'GitHub Wrapped 2025',
           text: shareText,
         }).catch(() => {});
       } else {
@@ -3342,6 +3799,52 @@
       updateDotPatternColor('green');
       document.getElementById('usernameInput').value = '';
     }
+
+    // Card zoom functionality
+    function initCardZoom() {
+      const frontCard = document.querySelector('.github-card.front');
+      if (!frontCard) return;
+
+      // Create zoom overlay
+      let overlay = document.querySelector('.card-zoom-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'card-zoom-overlay';
+        overlay.innerHTML = '<div class="card-zoom-hint">Click anywhere to close</div>';
+        document.body.appendChild(overlay);
+      }
+
+      // Click on card to zoom
+      frontCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cardClone = frontCard.cloneNode(true);
+        cardClone.className = 'github-card zoomed-card';
+        cardClone.style.position = 'relative';
+        cardClone.style.transform = 'scale(1.8)';
+        
+        // Clear previous clone
+        const existingClone = overlay.querySelector('.zoomed-card');
+        if (existingClone) existingClone.remove();
+        
+        overlay.insertBefore(cardClone, overlay.firstChild);
+        overlay.classList.add('active');
+      });
+
+      // Click overlay to close
+      overlay.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+
+      // ESC key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          overlay.classList.remove('active');
+        }
+      });
+    }
+
+    // Initialize card zoom when DOM is ready
+    document.addEventListener('DOMContentLoaded', initCardZoom);
   </script>
 </body>
 </html>
