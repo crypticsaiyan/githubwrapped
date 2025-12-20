@@ -2670,7 +2670,7 @@
             Oldest starred repo: <span class="highlight-box" id="oldestStarYear">2020</span> — <span id="oldestStarName">-</span>
           </p>
           <p class="stat-description" style="margin-top: 1rem;">
-            Most productive day: <span class="highlight-box" id="mostProductiveDay">-</span> · Favorite time: <span class="highlight-box" id="favoriteTime">-</span>
+            Most productive day: <span class="highlight-box" id="mostProductiveDay">-</span>
           </p>
           <p class="stat-description" style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;" id="roastText">
             <!-- Roast will be populated by JS -->
@@ -2922,7 +2922,7 @@
               <div class="stat-item">
                 <div class="stat-item-label">
                   <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-                  ACHIEVEMENTS
+                  BADGES EARNED
                 </div>
                 <div class="stat-item-value" id="summaryAchievements">0</div>
               </div>
@@ -3861,10 +3861,8 @@
         
         // Build a map of date -> count for quick lookup
         const contributionMap = {};
-        let maxCount = 0;
         data.contributionDays.forEach(day => {
           contributionMap[day.date] = day.count;
-          if (day.count > maxCount) maxCount = day.count;
         });
         
         // Generate grid - 7 rows (days) x 52 cols (weeks)
@@ -3886,15 +3884,12 @@
             // Get contribution count for this date
             const count = contributionMap[dateStr] || 0;
             
-            // Calculate intensity level (0-4)
+            // GitHub-style intensity levels (fixed thresholds)
             let level = 0;
-            if (count > 0 && maxCount > 0) {
-              const ratio = count / maxCount;
-              if (ratio > 0.75) level = 4;
-              else if (ratio > 0.5) level = 3;
-              else if (ratio > 0.25) level = 2;
-              else level = 1;
-            }
+            if (count >= 10) level = 4;
+            else if (count >= 5) level = 3;
+            else if (count >= 2) level = 2;
+            else if (count >= 1) level = 1;
             
             gridHtml += `<div class="contribution-day level-${level}" title="${dateStr}: ${count} contributions"></div>`;
           }
@@ -3957,17 +3952,17 @@
       setAnimatedCount('streakDays', data.stats.longestStreak);
       setAnimatedCount('daysCodedNumber', data.stats.daysCodedThisYear);
 
-      // Achievements/Titles
+      // Badges/Titles earned based on activity
       const achievementsGrid = document.getElementById('achievementsGrid');
       if (data.titles && data.titles.length > 0) {
-        achievementsGrid.innerHTML = data.titles.slice(0, 4).map(title => `
-          <div class="achievement-badge">
+        achievementsGrid.innerHTML = data.titles.slice(0, 6).map(title => `
+          <div class="achievement-badge" title="${title.description}">
             <span class="achievement-icon">${title.icon}</span>
             <span>${title.title}</span>
           </div>
         `).join('');
       } else {
-        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No achievements yet</p>';
+        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No badges earned yet</p>';
       }
 
       // Fun Facts / Roast (Slide 6)
@@ -3978,7 +3973,6 @@
         document.getElementById('oldestStarYear').textContent = data.funFacts.oldestStarredRepoYear || '?';
         document.getElementById('oldestStarName').textContent = data.funFacts.oldestStarredRepoName || 'unknown';
         document.getElementById('mostProductiveDay').textContent = data.funFacts.mostProductiveDay || '-';
-        document.getElementById('favoriteTime').textContent = data.funFacts.favoriteTimeOfDay?.split(' ')[0] || '-';
         document.getElementById('roastText').textContent = data.funFacts.roast || 'You coded so much, even your terminal needs therapy.';
       }
 
@@ -4050,8 +4044,20 @@
       // Summary page - populate card
       document.getElementById('cardUsername').textContent = data.profile?.name || data.username || 'Developer';
       
-      // Card level based on commits
-      const level = Math.min(99, Math.floor(data.stats.totalCommits / 100) + 1);
+      // Card level - comprehensive formula considering multiple factors
+      // Factors: commits, PRs, streak, stars, languages, account age, achievements
+      const commitScore = Math.min(40, Math.floor(data.stats.totalCommits / 50)); // max 40 points
+      const prScore = Math.min(15, Math.floor((data.stats.totalPRs || 0) / 5)); // max 15 points
+      const streakScore = Math.min(10, Math.floor(data.stats.longestStreak / 7)); // max 10 points
+      const starScore = Math.min(10, Math.floor((data.stats.totalStars || 0) / 20)); // max 10 points
+      const langScore = Math.min(5, (data.languages?.length || 0)); // max 5 points
+      const achievementScore = Math.min(10, (data.titles?.length || 0) * 2); // max 10 points
+      // Account age bonus (years on GitHub)
+      const accountAge = data.funFacts?.codingAge || 0;
+      const ageScore = Math.min(10, accountAge); // max 10 points for 10+ years
+      
+      const totalScore = commitScore + prScore + streakScore + starScore + langScore + achievementScore + ageScore;
+      const level = Math.max(1, Math.min(99, totalScore));
       document.getElementById('cardLevel').textContent = `LV. ${level}`;
 
       // Card stats - all values

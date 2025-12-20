@@ -490,19 +490,12 @@ export function generateFunFacts(
     predictedAgeReason: string,
     contributions: ContributionDay[]
 ): FunFacts {
-    // Determine favorite time (mock - would need commit timestamps)
-    const timeOptions = [
-        'Early Bird (6AM - 9AM) 🌅',
-        'Morning Person (9AM - 12PM) ☀️',
-        'Afternoon Coder (12PM - 5PM) �️',
-        'Evening Developer (5PM - 9PM) 🌆',
-        'Night Owl (9PM - 12AM) 🌙',
-        'Vampire Coder (12AM - 4AM) 🧛',
-    ];
-    const favoriteTimeOfDay = timeOptions[Math.floor(Math.random() * timeOptions.length)];
-
-    // Most productive day of week
+    // Most productive day of week (this IS accurate - calculated from contribution data)
     const mostProductiveDay = calculateMostProductiveWeekday(contributions);
+
+    // Favorite time - we can't determine this accurately without fetching individual commits
+    // GitHub contribution API only provides dates, not times
+    const favoriteTimeOfDay = 'Unknown';
 
     // Random quote
     const quote = CODER_QUOTES[Math.floor(Math.random() * CODER_QUOTES.length)];
