@@ -391,11 +391,19 @@ export async function fetchTotalCommits(
 
 export async function fetchCollaborators(
     username: string,
+    year: number,
     token?: string
 ): Promise<SquadMember[]> {
-    const repos = await fetchUserRepos(username, token)
-    const collaboratorCounts: Record<string, { count: number; avatar: string }> = {}
+    const squadScores: Record<string, { 
+        score: number
+        avatar: string
+        sharedProjects: number
+        contributedTo: number
+        collaborationType: 'maintainer' | 'contributor' | 'reviewer'
+    }> = {}
 
+    // 1. Get contributors on user's own repos
+    const repos = await fetchUserRepos(username, token)
     for (const repo of repos.slice(0, 10)) {
         try {
             const response = await fetch(
@@ -408,13 +416,17 @@ export async function fetchCollaborators(
                 if (Array.isArray(contributors)) {
                     for (const contributor of contributors) {
                         if (contributor.login !== username) {
-                            if (!collaboratorCounts[contributor.login]) {
-                                collaboratorCounts[contributor.login] = {
-                                    count: 0,
+                            if (!squadScores[contributor.login]) {
+                                squadScores[contributor.login] = {
+                                    score: 0,
                                     avatar: contributor.avatar_url,
+                                    sharedProjects: 0,
+                                    contributedTo: 0,
+                                    collaborationType: 'contributor',
                                 }
                             }
-                            collaboratorCounts[contributor.login].count++
+                            squadScores[contributor.login].sharedProjects++
+                            squadScores[contributor.login].score += 1 // 1 point per shared project
                         }
                     }
                 }
@@ -424,14 +436,73 @@ export async function fetchCollaborators(
         }
     }
 
-    const squad: SquadMember[] = Object.entries(collaboratorCounts)
+    // 2. Find repo owners the user has contributed to via PRs
+    try {
+        const prQuery = `author:${username} created:${year}-01-01..${year}-12-31 type:pr is:merged`
+        const prResponse = await fetch(
+            `${GITHUB_API_BASE}/search/issues?q=${encodeURIComponent(prQuery)}&per_page=50`,
+            { headers: getHeaders(token) }
+        )
+
+        if (prResponse.ok) {
+            const prData = await prResponse.json()
+            const prs = prData.items || []
+
+            for (const pr of prs) {
+                // Extract repo owner from repository_url
+                const repoUrl = pr.repository_url || ''
+                const repoMatch = repoUrl.match(/repos\/([^/]+)\//)
+                if (repoMatch) {
+                    const repoOwner = repoMatch[1]
+                    if (repoOwner !== username) {
+                        if (!squadScores[repoOwner]) {
+                            // Fetch avatar for this user
+                            try {
+                                const userResponse = await fetch(
+                                    `${GITHUB_API_BASE}/users/${repoOwner}`,
+                                    { headers: getHeaders(token) }
+                                )
+                                if (userResponse.ok) {
+                                    const userData = await userResponse.json()
+                                    squadScores[repoOwner] = {
+                                        score: 0,
+                                        avatar: userData.avatar_url,
+                                        sharedProjects: 0,
+                                        contributedTo: 0,
+                                        collaborationType: 'maintainer',
+                                    }
+                                }
+                            } catch {
+                                // Skip if can't fetch user
+                                continue
+                            }
+                        }
+                        if (squadScores[repoOwner]) {
+                            squadScores[repoOwner].contributedTo++
+                            squadScores[repoOwner].score += 3 // 3 points per PR contribution (higher weight!)
+                            squadScores[repoOwner].collaborationType = 'maintainer'
+                        }
+                    }
+                }
+            }
+        }
+    } catch {
+        // Skip PR analysis on error
+    }
+
+    // Build squad sorted by score
+    const squad: SquadMember[] = Object.entries(squadScores)
         .map(([login, data]) => ({
             username: login,
             avatarUrl: data.avatar,
-            sharedProjects: data.count,
-            collaborationType: 'contributor' as const,
+            sharedProjects: data.sharedProjects + data.contributedTo,
+            collaborationType: data.collaborationType,
         }))
-        .sort((a, b) => b.sharedProjects - a.sharedProjects)
+        .sort((a, b) => {
+            const scoreA = squadScores[a.username].score
+            const scoreB = squadScores[b.username].score
+            return scoreB - scoreA
+        })
         .slice(0, 5)
 
     return squad
@@ -508,141 +579,155 @@ interface RepoWithDate {
     pushed_at?: string
     language?: string
     topics?: string[]
+    stargazers_count?: number
+    forks_count?: number
 }
 
-// Predict "GitHub age" based on starred repos, languages, topics, and repo creation dates
+// Predict how old someone "feels" based on their tech taste and interests
+// This is meant to be fun and relatable - like a personality quiz
 function predictGitHubAge(languages: string[], topics: string[], repos: unknown[]): { predictedAge: number; ageReason: string } {
-    let score = 25 // Base age
-    const reasons: string[] = []
     const currentYear = new Date().getFullYear()
     const typedRepos = repos as RepoWithDate[]
-
-    // Analyze repo creation dates - this is key!
-    const repoYears = typedRepos
-        .filter(r => r.created_at)
-        .map(r => new Date(r.created_at!).getFullYear())
     
-    if (repoYears.length > 0) {
-        const avgRepoYear = Math.round(repoYears.reduce((a, b) => a + b, 0) / repoYears.length)
-        const oldestRepoYear = Math.min(...repoYears)
-        const repoAgeAvg = currentYear - avgRepoYear
-
-        // Stars repos from ancient times (high priority reason)
-        if (oldestRepoYear <= 2010) {
-            score += 20
-            reasons.unshift(`Stars repos from ${oldestRepoYear} (GitHub archaeologist)`)
-        } else if (oldestRepoYear <= 2014) {
-            score += 12
-            reasons.unshift(`Stars repos from ${oldestRepoYear} (vintage collector)`)
-        } else if (oldestRepoYear >= 2022) {
-            score -= 8
-            reasons.push(`Only stars recent repos (${oldestRepoYear}+)`)
-        }
-
-        // Average age of starred repos
-        if (repoAgeAvg > 8) {
-            score += 10
-            reasons.push(`Avg starred repo is ${repoAgeAvg} years old`)
-        } else if (repoAgeAvg < 3) {
-            score -= 5
-            reasons.push(`Prefers fresh repos (avg ${repoAgeAvg}y old)`)
-        }
-
-        // Count how many "ancient" repos (pre-2012)
-        const ancientRepos = repoYears.filter(y => y <= 2012).length
-        if (ancientRepos >= 5) {
-            score += 15
-            reasons.unshift(`${ancientRepos} starred repos from pre-2012 era`)
-        }
-    }
-
-    // Ancient languages add years
-    const ancientLangs = ['C', 'Fortran', 'COBOL', 'Lisp', 'Assembly', 'Pascal', 'Perl']
-    const veteranLangs = ['Java', 'C++', 'PHP', 'Ruby', 'Objective-C']
-    const modernLangs = ['Rust', 'Go', 'Kotlin', 'Swift', 'TypeScript']
-    const trendyLangs = ['Zig', 'Gleam', 'Mojo', 'Carbon']
+    // Start at age 25 (neutral developer age)
+    let age = 25
+    let reason = ''
 
     const langCounts = languages.reduce((acc, l) => {
         acc[l] = (acc[l] || 0) + 1
         return acc
     }, {} as Record<string, number>)
+    
+    const topicSet = new Set(topics.map(t => t.toLowerCase()))
 
-    for (const lang of ancientLangs) {
-        if (langCounts[lang]) {
-            score += 15
-            reasons.push(`Stars ${lang} repos (ancient tech)`)
-            break
+    // === REPO CREATION DATES - When were the repos you star created? ===
+    const repoYears = typedRepos.filter(r => r.created_at).map(r => new Date(r.created_at!).getFullYear())
+    
+    if (repoYears.length > 0) {
+        const oldestYear = Math.min(...repoYears)
+        const avgYear = Math.round(repoYears.reduce((a, b) => a + b, 0) / repoYears.length)
+        
+        // Starring very old repos = old soul
+        if (oldestYear <= 2009) {
+            age += 25
+            reason = `You star repos from ${oldestYear}... mass respect 🧓`
+        } else if (oldestYear <= 2012) {
+            age += 15
+            reason = `Repos from ${oldestYear}? You've seen things.`
+        } else if (oldestYear <= 2015) {
+            age += 8
+            reason = `Your oldest starred repo is from ${oldestYear}`
+        } else if (oldestYear >= 2023) {
+            age -= 8
+            reason = `Only stars fresh repos (${oldestYear}+) - zoomer energy`
+        }
+
+        // Average repo age
+        const avgAge = currentYear - avgYear
+        if (avgAge > 10 && !reason) {
+            age += 12
+            reason = `Avg starred repo is ${avgAge} years old - vintage taste`
+        } else if (avgAge < 2 && !reason) {
+            age -= 5
+            reason = `Chasing the new hotness (avg repo < 2 years old)`
         }
     }
 
-    for (const lang of veteranLangs) {
-        if (langCounts[lang] > 3) {
-            score += 8
-            reasons.push(`Heavy ${lang} enthusiast`)
-            break
-        }
+    // === LANGUAGE VIBES ===
+    // Boomer languages
+    if (langCounts['COBOL'] || langCounts['Fortran'] || langCounts['Pascal']) {
+        age += 30
+        if (!reason) reason = `COBOL/Fortran? Are you a time traveler? 👴`
+    }
+    if (langCounts['Perl']) {
+        age += 15
+        if (!reason) reason = `Perl lover - you've seen the regex wars`
+    }
+    if (langCounts['PHP'] && langCounts['PHP'] > 5) {
+        age += 10
+        if (!reason) reason = `Heavy PHP energy - WordPress flashbacks?`
+    }
+    
+    // Millennial languages
+    if (langCounts['Ruby'] && langCounts['Ruby'] > 3) {
+        age += 5
+        if (!reason) reason = `Ruby fan - 2010 called, they want their gems back`
+    }
+    if (langCounts['Java'] && langCounts['Java'] > 5) {
+        age += 8
+        if (!reason) reason = `Java enthusiast - enterprise soul`
+    }
+    if (langCounts['Objective-C']) {
+        age += 10
+        if (!reason) reason = `Objective-C? Pre-Swift iOS veteran`
     }
 
-    for (const lang of modernLangs) {
-        if (langCounts[lang] > 5) {
-            score -= 5
-            reasons.push(`Into modern langs like ${lang}`)
-            break
-        }
+    // Zoomer/modern languages
+    if (langCounts['Zig'] || langCounts['Gleam'] || langCounts['Mojo']) {
+        age -= 10
+        if (!reason) reason = `${langCounts['Zig'] ? 'Zig' : langCounts['Gleam'] ? 'Gleam' : 'Mojo'}? Bleeding edge zoomer`
+    }
+    if (langCounts['Rust'] && langCounts['Rust'] > 5) {
+        age -= 3
+        if (!reason) reason = `Rust evangelist energy 🦀`
+    }
+    if (langCounts['TypeScript'] && langCounts['TypeScript'] > 10) {
+        age -= 2
+        if (!reason) reason = `TypeScript maximalist`
     }
 
-    for (const lang of trendyLangs) {
-        if (langCounts[lang]) {
-            score -= 8
-            reasons.push(`Following bleeding edge (${lang})`)
-            break
-        }
+    // === TOPIC VIBES ===
+    // Old school
+    if (topicSet.has('vim') || topicSet.has('emacs')) {
+        age += 12
+        if (!reason) reason = `${topicSet.has('vim') ? 'Vim' : 'Emacs'} user - a person of culture`
+    }
+    if (topicSet.has('jquery')) {
+        age += 15
+        if (!reason) reason = `jQuery in 2024? Respect the classics 📜`
+    }
+    if (topicSet.has('xml') || topicSet.has('soap')) {
+        age += 18
+        if (!reason) reason = `XML/SOAP enthusiast - enterprise PTSD`
     }
 
-    // Topics analysis
-    const oldSchoolTopics = ['vim', 'emacs', 'linux', 'unix', 'kernel', 'embedded', 'systems-programming']
-    const hipsterTopics = ['blockchain', 'web3', 'ai', 'machine-learning', 'llm', 'gpt']
-    const boomerTopics = ['jquery', 'wordpress', 'lamp', 'xml']
-
-    for (const topic of oldSchoolTopics) {
-        if (topics.includes(topic)) {
-            score += 10
-            reasons.push(`Into ${topic} (old school)`)
-            break
-        }
+    // Modern/trendy
+    if (topicSet.has('web3') || topicSet.has('blockchain') || topicSet.has('nft')) {
+        age -= 5
+        if (!reason) reason = `Web3 interests - wagmi energy`
+    }
+    if (topicSet.has('ai') || topicSet.has('llm') || topicSet.has('gpt') || topicSet.has('machine-learning')) {
+        age -= 3
+        if (!reason) reason = `AI/ML hypetrain passenger 🚂`
+    }
+    if (topicSet.has('tiktok') || topicSet.has('discord-bot')) {
+        age -= 8
+        if (!reason) reason = `TikTok/Discord era developer`
     }
 
-    for (const topic of boomerTopics) {
-        if (topics.includes(topic)) {
-            score += 12
-            reasons.push(`Still using ${topic}`)
-            break
-        }
+    // Neutral/timeless
+    if (topicSet.has('linux') || topicSet.has('kernel')) {
+        age += 5
+        if (!reason) reason = `Linux/kernel interest - respects the foundations`
     }
 
-    for (const topic of hipsterTopics) {
-        if (topics.includes(topic)) {
-            score -= 3
-            reasons.push(`Chasing ${topic} trends`)
-            break
-        }
-    }
-
-    // Starred count affects age
+    // === STAR COUNT VIBES ===
     if (repos.length > 500) {
-        score += 10
-        reasons.push('Star hoarder (500+ repos)')
-    } else if (repos.length < 10) {
-        score -= 5
-        reasons.push('Selective starrer')
+        age += 8
+        if (!reason) reason = `${repos.length} starred repos - you've been around`
+    } else if (repos.length < 5) {
+        age -= 5
+        if (!reason) reason = `Minimalist starrer - just got here?`
     }
 
-    // Clamp age between 12 and 99
-    score = Math.max(12, Math.min(99, score))
+    // Clamp between 16 and 70
+    age = Math.max(16, Math.min(70, age))
+    
+    if (!reason) {
+        reason = repos.length > 0 ? `Based on your ${repos.length} starred repos` : `Not enough data to judge you 😅`
+    }
 
-    const reason = reasons.length > 0 ? reasons[0] : 'Based on your taste in repos'
-
-    return { predictedAge: score, ageReason: reason }
+    return { predictedAge: age, ageReason: reason }
 }
 
 export const githubService = {

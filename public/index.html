@@ -453,26 +453,23 @@
         </div>
       `;
 
-      // Coding Age Banner - show both real and predicted age
-      const predictedAge = data.funFacts.predictedAge || (data.funFacts.codingAge + 18);
-      const predictedReason = data.funFacts.predictedAgeReason || 'Based on your starred repos';
+      // Vibe Age Banner - how old do you "feel" based on your tech taste
+      const vibeAge = data.funFacts.predictedAge || 25;
+      const vibeReason = data.funFacts.predictedAgeReason || 'Based on your starred repos';
       
       document.getElementById('codingAgeBanner').innerHTML = `
-        <p class="coding-age-label">🎂 Age is just a number... so don't take this personally</p>
+        <p class="coding-age-label">🎂 Based on your mass and stars, you mass like a...</p>
         <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin: 1rem 0;">
           <div>
             <div class="coding-age-number">${data.funFacts.codingAge}</div>
             <p class="coding-age-label">years on GitHub</p>
           </div>
           <div>
-            <div class="coding-age-number" style="color: var(--accent-orange);">${predictedAge}</div>
-            <p class="coding-age-label">your "GitHub Age" 👴</p>
+            <div class="coding-age-number" style="color: var(--accent-orange);">${vibeAge}</div>
+            <p class="coding-age-label">year old 👀</p>
           </div>
         </div>
-        <p class="coding-age-roast">"${predictedReason}"</p>
-        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
-          (We predicted your age based on the repos you star and contribute to)
-        </p>
+        <p class="coding-age-roast">"${vibeReason}"</p>
       `;
 
       // Titles
@@ -632,16 +629,23 @@
         `;
       }
 
-      // Squad
+      // Squad - shows collaborators and maintainers you've contributed to
       if (data.squad && data.squad.length > 0) {
         document.getElementById('squadSection').style.display = 'block';
-        const squadHtml = data.squad.map((s, i) => `
-          <div class="squad-member">
-            <img class="squad-avatar" src="${s.avatarUrl}" alt="${s.username}">
-            <span class="squad-name">${i === 0 ? '👑 ' : ''}@${s.username}</span>
-            <span class="squad-projects">${s.sharedProjects} shared projects</span>
-          </div>
-        `).join('');
+        const squadHtml = data.squad.map((s, i) => {
+          const typeLabel = s.collaborationType === 'maintainer' 
+            ? '🎯 You contributed to their repos' 
+            : '🤝 Collaborated on your repos';
+          const badge = i === 0 ? '👑 ' : '';
+          return `
+            <div class="squad-member">
+              <img class="squad-avatar" src="${s.avatarUrl}" alt="${s.username}">
+              <span class="squad-name">${badge}@${s.username}</span>
+              <span class="squad-projects">${s.sharedProjects} interactions</span>
+              <span style="font-size: 0.7rem; color: var(--text-secondary);">${typeLabel}</span>
+            </div>
+          `;
+        }).join('');
         document.getElementById('squadGrid').innerHTML = squadHtml;
       }
 
