@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Wrapped 2025</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
     * {
@@ -228,6 +229,7 @@
       text-align: center;
       max-width: 900px;
       padding: 2rem;
+      position: relative;
     }
 
     /* Staggered element animations */
@@ -1141,6 +1143,10 @@
     /* Input section */
     .input-section {
       margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
     }
 
     /* Demo mode toggle */
@@ -1149,7 +1155,6 @@
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
-      margin-top: 1.5rem;
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
@@ -1197,23 +1202,67 @@
       color: var(--text-secondary);
     }
 
+    .token-input {
+      font-size: 0.95rem;
+      padding: 0.75rem 1.25rem;
+    }
+
+    .demo-toggle {
+      margin-top: 0.5rem;
+    }
+
     /* Loading state */
     .loading-container {
       display: none;
     }
 
     .loading-container.active {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      min-height: 400px;
     }
 
     .loading-spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top-color: currentColor;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loading-spinner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .loading-spinner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid transparent;
+      border-top-color: var(--theme-green);
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto 1.5rem;
+    }
+
+    .loading-github-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      color: var(--theme-green);
+      animation: pulse-icon 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
     }
 
     @keyframes spin {
@@ -1225,20 +1274,53 @@
       color: var(--text-secondary);
     }
 
+    .loading-status {
+      font-size: 0.9rem;
+      color: var(--theme-green);
+      animation: blink-status 1s ease-in-out infinite;
+    }
+
+    @keyframes blink-status {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
     .loading-progress {
-      width: 200px;
-      height: 4px;
+      width: 240px;
+      height: 6px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
-      margin: 1rem auto;
+      border-radius: 3px;
       overflow: hidden;
+      position: relative;
+    }
+
+    .loading-progress::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: shimmer-progress 1.5s infinite;
+    }
+
+    @keyframes shimmer-progress {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .loading-progress-fill {
       height: 100%;
-      background: var(--theme-green);
-      border-radius: 2px;
+      background: linear-gradient(90deg, var(--theme-green), var(--theme-cyan));
+      border-radius: 3px;
       transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--theme-green);
+    }
+
+    .loading-percentage {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--theme-green);
+      text-shadow: 0 0 20px var(--theme-green);
     }
 
     /* Error message */
@@ -2342,10 +2424,15 @@
             <polygon points="5 3 19 12 5 21 5 3"/>
           </svg>
         </button>
-        <button class="control-btn" id="soundBtn" title="Toggle Sound">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="control-btn" id="soundBtn" onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+          <svg id="soundOnIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg id="soundOffIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
           </svg>
         </button>
         <button class="control-btn" id="closeBtn" title="Close">
@@ -2386,7 +2473,7 @@
           
           <div class="input-section" id="inputSection">
             <input type="text" class="username-input" id="usernameInput" placeholder="Enter GitHub username" />
-            <br>
+            <input type="password" class="username-input token-input" id="tokenInput" placeholder="GitHub token (optional)" />
             <button class="start-btn" id="startBtn" onclick="generateWrapped()">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -2402,12 +2489,17 @@
           </div>
 
           <div class="loading-container" id="loadingContainer">
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Generating your wrapped...</p>
+            <div class="loading-spinner">
+              <svg class="loading-github-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </div>
+            <p class="loading-text">Generating your wrapped</p>
+            <p class="loading-status" id="loadingStatus">Fetching GitHub data...</p>
             <div class="loading-progress">
               <div class="loading-progress-fill" id="progressFill" style="width: 0%"></div>
             </div>
-            <p class="loading-text" id="progressText">0%</p>
+            <p class="loading-percentage" id="progressText">0%</p>
           </div>
         </div>
       </section>
@@ -3217,6 +3309,14 @@
       // Reveal text content sequentially
       revealSlideContent(nextSlideEl);
 
+      // Start background music when moving to slide 1
+      if (index === 1 && !isMusicPlaying) {
+        bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        isMusicPlaying = true;
+        document.getElementById('soundOnIcon').style.display = 'block';
+        document.getElementById('soundOffIcon').style.display = 'none';
+      }
+
       // Numbers animate within reveal sequence only (after visible)
       
       isTransitioning = false;
@@ -3632,9 +3732,15 @@
       showLoading();
 
       try {
+        const token = document.getElementById('tokenInput').value.trim();
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${API_BASE}/wrapped/${username}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           body: JSON.stringify({ 
             year: new Date().getFullYear()
           })
@@ -4081,11 +4187,26 @@
     }
 
     function showLoading() {
-      document.getElementById('inputSection').style.display = 'none';
+      // Hide all landing page content
+      const slide0 = document.getElementById('slide-0');
+      slide0.querySelectorAll('.title-label, .title-main, .github-3d-frame, .title-subtitle, .input-section').forEach(el => {
+        el.style.display = 'none';
+      });
       document.getElementById('loadingContainer').classList.add('active');
     }
     function hideLoading() {
-      document.getElementById('inputSection').style.display = 'block';
+      // Show all landing page content
+      const slide0 = document.getElementById('slide-0');
+      slide0.querySelectorAll('.title-label, .title-subtitle').forEach(el => {
+        el.style.display = 'inline-flex';
+      });
+      slide0.querySelectorAll('.title-main').forEach(el => {
+        el.style.display = 'block';
+      });
+      slide0.querySelectorAll('.github-3d-frame').forEach(el => {
+        el.style.display = 'block';
+      });
+      document.getElementById('inputSection').style.display = 'flex';
       document.getElementById('loadingContainer').classList.remove('active');
     }
     function showError(message) {
@@ -4159,6 +4280,28 @@
 
     // Initialize card zoom when DOM is ready
     document.addEventListener('DOMContentLoaded', initCardZoom);
+
+    // Background music functionality
+    const bgMusic = new Audio('/static/bg.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+    let isMusicPlaying = false;
+
+    function toggleBackgroundMusic() {
+      const soundOnIcon = document.getElementById('soundOnIcon');
+      const soundOffIcon = document.getElementById('soundOffIcon');
+      
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        soundOnIcon.style.display = 'none';
+        soundOffIcon.style.display = 'block';
+      } else {
+        bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        soundOnIcon.style.display = 'block';
+        soundOffIcon.style.display = 'none';
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
   </script>
 </body>
 </html>
