@@ -79,12 +79,20 @@ export interface StreakData {
 
 export interface FunFacts {
     codingAge: number; // years since account creation
+    predictedAge: number; // predicted "GitHub age" based on starred repos
+    predictedAgeReason: string; // why we predicted this age
     oldestStarredRepoYear: number | null;
     oldestStarredRepoName: string | null;
     favoriteTimeOfDay: string; // "Night Owl (2AM-4AM)" etc.
     mostProductiveDay: string; // "Saturday"
     quote: string;
     roast: string; // Funny roast based on stats
+}
+
+export interface MusicTrack {
+    title: string;
+    artist: string;
+    vibe: string;
 }
 
 export interface DayRecord {

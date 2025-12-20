@@ -59,9 +59,9 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
         const languages = await githubService.fetchLanguageStats(username, token);
         await state.set('github-raw', `${username}-languages`, languages);
 
-        // Fetch collaborators (squad)
+        // Fetch collaborators (squad) - includes people whose repos you contributed to
         logger.info('Fetching collaborators', { username });
-        const squad = await githubService.fetchCollaborators(username, token);
+        const squad = await githubService.fetchCollaborators(username, year, token);
         await state.set('github-raw', `${username}-squad`, squad);
 
         // Fetch starred repos for fun facts
@@ -83,8 +83,8 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
         const streak = analyticsService.calculateStreak(contributions);
         await state.set('github-calculated', `${username}-streak`, streak);
 
-        // Generate timeline
-        const timeline = analyticsService.generateTimeline(contributions, year);
+        // Generate timeline with accurate commit counts
+        const timeline = analyticsService.generateTimeline(contributions, year, totalCommitsData.count);
         await state.set('github-calculated', `${username}-timeline`, timeline);
 
         // Sort repos by stars for top repos

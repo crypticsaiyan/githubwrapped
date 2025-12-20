@@ -1998,10 +1998,7 @@
 
     async function generateWrapped() {
       const username = document.getElementById('usernameInput').value.trim();
-      if (!username) {
-        showError('Please enter a GitHub username');
-        return;
-      }
+      if (!username) { showError('Please enter a GitHub username'); return; }
 
       // Check if demo mode is enabled
       const demoMode = document.getElementById('demoModeToggle').checked;
@@ -2036,7 +2033,10 @@
         const response = await fetch(`${API_BASE}/wrapped/${username}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ year: new Date().getFullYear() })
+          body: JSON.stringify({ 
+            year: new Date().getFullYear(),
+            token: token || undefined
+          })
         });
 
         if (!response.ok) {
@@ -2046,8 +2046,7 @@
 
         pollStatus(username);
       } catch (error) {
-        hideLoading();
-        showError(error.message);
+        hideLoading(); showError(error.message);
       }
     }
 
@@ -2057,28 +2056,23 @@
 
       pollInterval = setInterval(async () => {
         attempts++;
-
         try {
           const response = await fetch(`${API_BASE}/wrapped/${username}/status`);
           const data = await response.json();
-
           updateProgress(data.progress || Math.min(attempts * 5, 90));
 
           if (data.status === 'completed') {
             clearInterval(pollInterval);
             fetchWrappedData(username);
           } else if (data.status === 'failed') {
-            clearInterval(pollInterval);
-            hideLoading();
+            clearInterval(pollInterval); hideLoading();
             showError(data.error || 'Generation failed');
           } else if (attempts >= maxAttempts) {
-            clearInterval(pollInterval);
-            hideLoading();
+            clearInterval(pollInterval); hideLoading();
             showError('Generation timed out. Please try again.');
           }
         } catch (error) {
-          clearInterval(pollInterval);
-          hideLoading();
+          clearInterval(pollInterval); hideLoading();
           showError('Failed to check status');
         }
       }, 2000);
@@ -2097,8 +2091,7 @@
         hideLoading();
         displayWrapped(wrappedData);
       } catch (error) {
-        hideLoading();
-        showError(error.message);
+        hideLoading(); showError(error.message);
       }
     }
 
@@ -2295,6 +2288,7 @@
     }
 
     function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
       if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
       return num.toString();
     }
@@ -2331,12 +2325,10 @@
       document.getElementById('inputSection').style.display = 'none';
       document.getElementById('loadingContainer').classList.add('active');
     }
-
     function hideLoading() {
       document.getElementById('inputSection').style.display = 'block';
       document.getElementById('loadingContainer').classList.remove('active');
     }
-
     function showError(message) {
       const el = document.getElementById('errorMessage');
       el.textContent = `❌ ${message}`;
@@ -2364,5 +2356,4 @@
     }
   </script>
 </body>
-
 </html>
