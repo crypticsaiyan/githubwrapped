@@ -130,6 +130,7 @@ export interface WrappedData {
     squad: SquadMember[];
     funFacts: FunFacts;
     streak: StreakData;
+    contributionDays: ContributionDay[];
 }
 
 // API Request/Response types

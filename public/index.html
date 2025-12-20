@@ -2626,6 +2626,12 @@
           <p class="stat-description">
             <span id="streakDays">0</span> days straight! Plus, you coded on <span class="highlight-box" id="daysCodedNumber">0</span> days this year.
           </p>
+          
+          <!-- Achievements badges -->
+          <div class="achievements-grid" id="achievementsGrid">
+            <!-- Achievements will be populated by JS -->
+          </div>
+          
           <div class="deco-icons">
             <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 23s-5-5.5-5-11c0-4.4 2.2-8 5-8s5 3.6 5 8c0 5.5-5 11-5 11zm0-16c-1.7 0-3 2.2-3 5 0 3.2 2 6.8 3 8.3 1-1.5 3-5.1 3-8.3 0-2.8-1.3-5-3-5z"/>
@@ -2655,10 +2661,16 @@
           </div>
           <h2 class="title-main" style="font-size: clamp(2rem, 6vw, 4rem);">FUN FACTS</h2>
           <p class="stat-description" id="codingAgeText">
-            Your coding age is <span class="highlight-box" id="codingAge">0</span> years old!
+            Your GitHub age is <span class="highlight-box" id="codingAge">0</span> years, but we think you're <span class="highlight-box" id="predictedAge">25</span>
+          </p>
+          <p class="stat-description" style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;" id="predictedAgeReason">
+            <!-- Reason will be populated by JS -->
           </p>
           <p class="stat-description" style="margin-top: 1rem;" id="oldestRepoText">
-            You've starred repos from <span class="highlight-box" id="oldestStarYear">2020</span>... vintage taste!
+            Oldest starred repo: <span class="highlight-box" id="oldestStarYear">2020</span> — <span id="oldestStarName">-</span>
+          </p>
+          <p class="stat-description" style="margin-top: 1rem;">
+            Most productive day: <span class="highlight-box" id="mostProductiveDay">-</span> · Favorite time: <span class="highlight-box" id="favoriteTime">-</span>
           </p>
           <p class="stat-description" style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;" id="roastText">
             <!-- Roast will be populated by JS -->
@@ -3165,8 +3177,10 @@
         ],
         funFacts: {
           codingAge: 4,
+          predictedAge: 28,
+          predictedAgeReason: 'TypeScript maximalist energy detected',
           oldestStarredRepoYear: 2018,
-          oldestStarredRepoName: 'linux/linux',
+          oldestStarredRepoName: 'torvalds/linux',
           favoriteTimeOfDay: 'Night Owl (10PM-2AM)',
           mostProductiveDay: 'Wednesday',
           quote: 'Code is poetry',
@@ -3177,8 +3191,33 @@
           longestStreakStart: '2025-02-01',
           longestStreakEnd: '2025-03-14',
           currentStreak: 7
-        }
+        },
+        contributionDays: generateMockContributionDays()
       };
+    }
+
+    // Generate mock contribution days for demo mode
+    function generateMockContributionDays() {
+      const days = [];
+      const startDate = new Date('2025-01-01');
+      for (let i = 0; i < 365; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        // Generate realistic-looking contribution pattern
+        const dayOfWeek = date.getDay();
+        const weekOfYear = Math.floor(i / 7);
+        // More activity mid-year, less on weekends
+        const baseChance = 0.3 + Math.sin((weekOfYear / 52) * Math.PI) * 0.3;
+        const weekendPenalty = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.5 : 1;
+        const hasCommit = Math.random() < (baseChance * weekendPenalty);
+        const count = hasCommit ? Math.floor(Math.random() * 12) + 1 : 0;
+        days.push({
+          date: date.toISOString().split('T')[0],
+          count: count,
+          weekday: dayOfWeek
+        });
+      }
+      return days;
     }
 
     // Initialize
@@ -3810,11 +3849,9 @@
       document.getElementById('commitsDescription').innerHTML = 
         `You were in the <span class="highlight-box">Top ${commitPercentile}%</span> for commits on GitHub!`;
 
-      // Generate Contribution Graph
+      // Generate Contribution Graph from real data
       const contributionGraph = document.getElementById('contributionGraph');
-      if (contributionGraph) {
-        const weeks = 52;
-        const daysPerWeek = 7;
+      if (contributionGraph && data.contributionDays && data.contributionDays.length > 0) {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         
         // Generate month labels
@@ -3822,21 +3859,52 @@
         months.forEach(m => { monthsHtml += `<span class="contribution-month">${m}</span>`; });
         monthsHtml += '</div>';
         
+        // Build a map of date -> count for quick lookup
+        const contributionMap = {};
+        let maxCount = 0;
+        data.contributionDays.forEach(day => {
+          contributionMap[day.date] = day.count;
+          if (day.count > maxCount) maxCount = day.count;
+        });
+        
         // Generate grid - 7 rows (days) x 52 cols (weeks)
+        // Start from first day of the year
+        const year = data.year || 2025;
+        const startDate = new Date(`${year}-01-01`);
+        const startDayOfWeek = startDate.getDay(); // 0 = Sunday
+        
         let gridHtml = '';
-        for (let day = 0; day < daysPerWeek; day++) {
+        for (let day = 0; day < 7; day++) {
           gridHtml += '<div class="contribution-week">';
-          for (let week = 0; week < weeks; week++) {
-            // Generate intensity based on patterns (more activity mid-year)
-            const baseChance = 0.4 + Math.sin((week / weeks) * Math.PI) * 0.3;
-            const hasCommit = Math.random() < baseChance;
-            const level = hasCommit ? Math.ceil(Math.random() * 4) : 0;
-            gridHtml += `<div class="contribution-day level-${level}" title="Week ${week + 1}, Day ${day + 1}"></div>`;
+          for (let week = 0; week < 52; week++) {
+            // Calculate the actual date for this cell
+            const daysFromStart = week * 7 + day - startDayOfWeek;
+            const cellDate = new Date(startDate);
+            cellDate.setDate(startDate.getDate() + daysFromStart);
+            const dateStr = cellDate.toISOString().split('T')[0];
+            
+            // Get contribution count for this date
+            const count = contributionMap[dateStr] || 0;
+            
+            // Calculate intensity level (0-4)
+            let level = 0;
+            if (count > 0 && maxCount > 0) {
+              const ratio = count / maxCount;
+              if (ratio > 0.75) level = 4;
+              else if (ratio > 0.5) level = 3;
+              else if (ratio > 0.25) level = 2;
+              else level = 1;
+            }
+            
+            gridHtml += `<div class="contribution-day level-${level}" title="${dateStr}: ${count} contributions"></div>`;
           }
           gridHtml += '</div>';
         }
         
         contributionGraph.innerHTML = monthsHtml + gridHtml;
+      } else if (contributionGraph) {
+        // Fallback: show empty graph with message
+        contributionGraph.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">No contribution data available</p>';
       }
 
       // Repos
@@ -3889,10 +3957,28 @@
       setAnimatedCount('streakDays', data.stats.longestStreak);
       setAnimatedCount('daysCodedNumber', data.stats.daysCodedThisYear);
 
+      // Achievements/Titles
+      const achievementsGrid = document.getElementById('achievementsGrid');
+      if (data.titles && data.titles.length > 0) {
+        achievementsGrid.innerHTML = data.titles.slice(0, 4).map(title => `
+          <div class="achievement-badge">
+            <span class="achievement-icon">${title.icon}</span>
+            <span>${title.title}</span>
+          </div>
+        `).join('');
+      } else {
+        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No achievements yet</p>';
+      }
+
       // Fun Facts / Roast (Slide 6)
       if (data.funFacts) {
         document.getElementById('codingAge').textContent = data.funFacts.codingAge || '?';
-        document.getElementById('oldestStarYear').textContent = data.funFacts.oldestStarredRepoYear || '2020';
+        document.getElementById('predictedAge').textContent = data.funFacts.predictedAge || '25';
+        document.getElementById('predictedAgeReason').textContent = data.funFacts.predictedAgeReason || '';
+        document.getElementById('oldestStarYear').textContent = data.funFacts.oldestStarredRepoYear || '?';
+        document.getElementById('oldestStarName').textContent = data.funFacts.oldestStarredRepoName || 'unknown';
+        document.getElementById('mostProductiveDay').textContent = data.funFacts.mostProductiveDay || '-';
+        document.getElementById('favoriteTime').textContent = data.funFacts.favoriteTimeOfDay?.split(' ')[0] || '-';
         document.getElementById('roastText').textContent = data.funFacts.roast || 'You coded so much, even your terminal needs therapy.';
       }
 

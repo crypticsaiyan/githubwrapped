@@ -15,6 +15,7 @@ import {
     SquadMember,
     FunFacts,
     StreakData,
+    ContributionDay,
 } from '../types';
 
 const inputSchema = z.object({
@@ -49,6 +50,7 @@ export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, stat
         const titles = await state.get<AchievementTitle[]>('github-achievements', `${username}-titles`) || [];
         const squad = await state.get<SquadMember[]>('github-raw', `${username}-squad`) || [];
         const funFacts = await state.get<FunFacts>('github-achievements', `${username}-fun-facts`);
+        const contributionDays = await state.get<ContributionDay[]>('github-raw', `${username}-contributions`) || [];
 
         if (!profile || !stats || !streak || !funFacts) {
             throw new Error('Missing required data for wrapped');
@@ -69,6 +71,7 @@ export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, stat
             titles,
             squad,
             funFacts,
+            contributionDays,
         };
 
         // Store the complete wrapped data

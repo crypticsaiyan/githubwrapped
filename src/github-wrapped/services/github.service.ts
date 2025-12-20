@@ -389,6 +389,71 @@ export async function fetchTotalCommits(
     return data.total_count || 0
 }
 
+// Fetch repos the user has contributed to via merged PRs
+export async function fetchContributedRepos(
+    username: string,
+    year: number,
+    token?: string
+): Promise<Repository[]> {
+    const contributedRepos: Repository[] = []
+    const seenRepos = new Set<string>()
+
+    try {
+        const prQuery = `author:${username} created:${year}-01-01..${year}-12-31 type:pr is:merged`
+        const prResponse = await fetch(
+            `${GITHUB_API_BASE}/search/issues?q=${encodeURIComponent(prQuery)}&per_page=50`,
+            { headers: getHeaders(token) }
+        )
+
+        if (prResponse.ok) {
+            const prData = await prResponse.json()
+            const prs = prData.items || []
+
+            for (const pr of prs) {
+                const repoUrl = pr.repository_url || ''
+                const repoMatch = repoUrl.match(/repos\/([^/]+\/[^/]+)$/)
+
+                if (repoMatch && !seenRepos.has(repoMatch[1])) {
+                    const repoFullName = repoMatch[1]
+                    seenRepos.add(repoFullName)
+
+                    // Fetch repo details
+                    try {
+                        const repoResponse = await fetch(
+                            `${GITHUB_API_BASE}/repos/${repoFullName}`,
+                            { headers: getHeaders(token) }
+                        )
+
+                        if (repoResponse.ok) {
+                            const repoData = await repoResponse.json()
+                            // Only include repos not owned by the user
+                            if (repoData.owner?.login !== username) {
+                                contributedRepos.push({
+                                    name: repoData.name,
+                                    fullName: repoData.full_name,
+                                    description: repoData.description,
+                                    stars: repoData.stargazers_count,
+                                    forks: repoData.forks_count,
+                                    language: repoData.language,
+                                    commits: 0,
+                                    url: repoData.html_url,
+                                    isPrivate: repoData.private,
+                                })
+                            }
+                        }
+                    } catch {
+                        // Skip on error
+                    }
+                }
+            }
+        }
+    } catch {
+        // Skip on error
+    }
+
+    return contributedRepos
+}
+
 export async function fetchCollaborators(
     username: string,
     year: number,
@@ -437,6 +502,9 @@ export async function fetchCollaborators(
     }
 
     // 2. Find repo owners the user has contributed to via PRs
+    // AND find co-contributors (other people who contributed to the same repos)
+    const contributedRepos: Set<string> = new Set()
+    
     try {
         const prQuery = `author:${username} created:${year}-01-01..${year}-12-31 type:pr is:merged`
         const prResponse = await fetch(
@@ -449,11 +517,17 @@ export async function fetchCollaborators(
             const prs = prData.items || []
 
             for (const pr of prs) {
-                // Extract repo owner from repository_url
+                // Extract repo info from repository_url
                 const repoUrl = pr.repository_url || ''
-                const repoMatch = repoUrl.match(/repos\/([^/]+)\//)
+                const repoMatch = repoUrl.match(/repos\/([^/]+\/[^/]+)/)
+                const ownerMatch = repoUrl.match(/repos\/([^/]+)\//)
+                
                 if (repoMatch) {
-                    const repoOwner = repoMatch[1]
+                    contributedRepos.add(repoMatch[1]) // Store full repo name for co-contributor lookup
+                }
+                
+                if (ownerMatch) {
+                    const repoOwner = ownerMatch[1]
                     if (repoOwner !== username) {
                         if (!squadScores[repoOwner]) {
                             // Fetch avatar for this user
@@ -488,6 +562,39 @@ export async function fetchCollaborators(
         }
     } catch {
         // Skip PR analysis on error
+    }
+
+    // 3. Find co-contributors: other people who contributed to repos the user also contributed to
+    for (const repoFullName of Array.from(contributedRepos).slice(0, 5)) {
+        try {
+            const response = await fetch(
+                `${GITHUB_API_BASE}/repos/${repoFullName}/contributors?per_page=15`,
+                { headers: getHeaders(token) }
+            )
+
+            if (response.ok) {
+                const contributors = await response.json()
+                if (Array.isArray(contributors)) {
+                    for (const contributor of contributors) {
+                        if (contributor.login !== username) {
+                            if (!squadScores[contributor.login]) {
+                                squadScores[contributor.login] = {
+                                    score: 0,
+                                    avatar: contributor.avatar_url,
+                                    sharedProjects: 0,
+                                    contributedTo: 0,
+                                    collaborationType: 'contributor',
+                                }
+                            }
+                            squadScores[contributor.login].sharedProjects++
+                            squadScores[contributor.login].score += 2 // 2 points for co-contributor
+                        }
+                    }
+                }
+            }
+        } catch {
+            // Skip on error
+        }
     }
 
     // Build squad sorted by score
@@ -738,6 +845,7 @@ export const githubService = {
     fetchPRStats,
     fetchIssueStats,
     fetchTotalCommits,
+    fetchContributedRepos,
     fetchCollaborators,
     fetchStarredRepos,
 }

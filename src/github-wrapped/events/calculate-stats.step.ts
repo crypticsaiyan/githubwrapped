@@ -87,8 +87,13 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
         const timeline = analyticsService.generateTimeline(contributions, year, totalCommitsData.count);
         await state.set('github-calculated', `${username}-timeline`, timeline);
 
-        // Sort repos by stars for top repos
-        const topRepos = [...repos]
+        // Fetch repos the user contributed to via merged PRs
+        logger.info('Fetching contributed repos', { username });
+        const contributedRepos = await githubService.fetchContributedRepos(username, year, token);
+
+        // Combine own repos and contributed repos, sort by stars, take top 5
+        const allRepos = [...repos, ...contributedRepos];
+        const topRepos = allRepos
             .sort((a, b) => b.stars - a.stars)
             .slice(0, 5);
         await state.set('github-calculated', `${username}-top-repos`, topRepos);
