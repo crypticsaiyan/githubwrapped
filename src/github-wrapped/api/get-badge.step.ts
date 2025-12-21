@@ -23,6 +23,7 @@ export const config: ApiRouteConfig = {
         }),
     },
     emits: [],
+    virtualSubscribes: ['wrapped-complete'],
 };
 
 export const handler: Handlers['GetBadge'] = async (req, { logger, state }) => {

@@ -20,6 +20,7 @@ declare module 'motia' {
     'FinalizeWrapped': EventHandler<{ username: string; year: number; traceId: string }, never>
     'FetchGitHubData': EventHandler<{ username: string; year: number; traceId: string }, { topic: 'calculate-stats'; data: { username: string; year: number; traceId: string } }>
     'CalculateStats': EventHandler<{ username: string; year: number; traceId: string }, { topic: 'generate-achievements'; data: { username: string; year: number; traceId: string } }>
+    'ScheduleGenerateWrapped': CronHandler<{ topic: 'fetch-github-data'; data: { username: string; year: number; traceId: string } }>
     'ServeStatic': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
     'ServeStaticJS': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
     'ServeStaticCSS': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>

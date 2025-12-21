@@ -21,6 +21,8 @@ export const config: EventConfig = {
     subscribes: ['fetch-github-data'],
     emits: ['calculate-stats'],
     input: inputSchema,
+    virtualSubscribes: ['fetch-github-data'],
+    virtualEmits: [{ topic: 'calculate-stats', label: 'Raw Data Ready' }],
 };
 
 export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger, state }) => {

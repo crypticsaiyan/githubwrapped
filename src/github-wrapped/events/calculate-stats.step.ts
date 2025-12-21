@@ -23,6 +23,8 @@ export const config: EventConfig = {
     subscribes: ['calculate-stats'],
     emits: ['generate-achievements'],
     input: inputSchema,
+    virtualSubscribes: ['calculate-stats'],
+    virtualEmits: [{ topic: 'generate-achievements', label: 'Stats Calculated' }],
 };
 
 export const handler: Handlers['CalculateStats'] = async (input, { emit, logger, state }) => {

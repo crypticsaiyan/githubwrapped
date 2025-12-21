@@ -33,6 +33,7 @@ export const config: ApiRouteConfig = {
         }),
     },
     emits: ['fetch-github-data'],
+    virtualEmits: [{ topic: 'fetch-github-data', label: 'Start Pipeline' }],
 };
 
 export const handler: Handlers['GenerateWrapped'] = async (req, { emit, logger, state, traceId }) => {

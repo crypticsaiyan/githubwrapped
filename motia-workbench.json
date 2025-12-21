@@ -47,6 +47,14 @@
         "x": 14,
         "y": 26
       },
+      "src/github-wrapped/api/serve-static-js.step.ts": {
+        "x": 22,
+        "y": 204
+      },
+      "src/github-wrapped/api/serve-static-css.step.ts": {
+        "x": 11,
+        "y": 408
+      },
       "src/github-wrapped/api/serve-frontend.step.ts": {
         "x": 5,
         "y": 896
@@ -66,6 +74,10 @@
       "src/github-wrapped/api/generate-wrapped.step.ts": {
         "x": -128,
         "y": 657
+      }
+      ,"src/github-wrapped/cron/schedule-generate.step.ts": {
+        "x": -350,
+        "y": 650
       }
     }
   }

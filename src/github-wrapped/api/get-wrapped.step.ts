@@ -26,6 +26,7 @@ export const config: ApiRouteConfig = {
         }),
     },
     emits: [],
+    virtualSubscribes: ['wrapped-complete'],
 };
 
 export const handler: Handlers['GetWrapped'] = async (req, { logger, state }) => {

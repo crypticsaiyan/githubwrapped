@@ -32,6 +32,8 @@ export const config: EventConfig = {
     subscribes: ['finalize-wrapped'],
     emits: [],
     input: inputSchema,
+    virtualSubscribes: ['finalize-wrapped'],
+    virtualEmits: [{ topic: 'wrapped-complete', label: 'Data Ready' }],
 };
 
 export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, state }) => {

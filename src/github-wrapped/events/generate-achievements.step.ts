@@ -28,6 +28,8 @@ export const config: EventConfig = {
     subscribes: ['generate-achievements'],
     emits: ['finalize-wrapped'],
     input: inputSchema,
+    virtualSubscribes: ['generate-achievements'],
+    virtualEmits: [{ topic: 'finalize-wrapped', label: 'Achievements Ready' }],
 };
 
 export const handler: Handlers['GenerateAchievements'] = async (input, { emit, logger, state }) => {
