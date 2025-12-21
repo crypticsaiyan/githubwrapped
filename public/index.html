@@ -4048,7 +4048,7 @@
       document.getElementById('summaryTopRepo').textContent = data.topRepos?.[0]?.name || '-';
 
       // Summary page - populate card
-      document.getElementById('cardUsername').textContent = data.profile?.name || data.username || 'Developer';
+      document.getElementById('cardUsername').textContent = data.username || 'Developer';
       
       // Card level based on commits
       const level = Math.min(99, Math.floor(data.stats.totalCommits / 100) + 1);
