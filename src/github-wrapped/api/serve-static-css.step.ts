@@ -21,11 +21,26 @@ export const config: ApiRouteConfig = {
 export const handler: Handlers['ServeStaticCSS'] = async (req, { logger }) => {
     const { filename } = req.pathParams
     const sanitized = path.basename(filename)
-    const filePath = path.resolve(process.cwd(), 'public', 'css', sanitized)
+    const cwd = process.cwd() || '/app'
+    
+    const possiblePaths = [
+        path.resolve(cwd, 'public', 'css', sanitized),
+        path.resolve(cwd, '..', 'public', 'css', sanitized),
+        path.resolve('/app', 'public', 'css', sanitized),
+    ]
 
     logger.info('Serving CSS file', { filename: sanitized })
 
-    if (!fs.existsSync(filePath)) {
+    let filePath: string | null = null
+    for (const testPath of possiblePaths) {
+        if (fs.existsSync(testPath)) {
+            filePath = testPath
+            break
+        }
+    }
+
+    if (!filePath) {
+        logger.warn('CSS file not found', { filename: sanitized, triedPaths: possiblePaths })
         return { status: 404, body: { error: `File "${sanitized}" not found` } }
     }
 

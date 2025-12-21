@@ -15,7 +15,7 @@ export const config: ApiRouteConfig = {
     method: 'GET',
     path: '/app',
     responseSchema: {
-        200: z.any(),
+        200: { type: 'string' },
     },
     emits: [],
 }
@@ -24,18 +24,34 @@ export const handler: Handlers['ServeFrontend'] = async (req, { logger }) => {
     logger.info('Serving frontend')
 
     try {
-        // Get the directory of this file
-        const __filename = fileURLToPath(import.meta.url)
-        const __dirname = path.dirname(__filename)
+        // Try multiple path resolution strategies for different environments
+        const cwd = process.cwd() || '/app'
+        const __dirname = path.dirname(fileURLToPath(import.meta.url))
+        const possiblePaths = [
+            path.resolve(cwd, 'public', 'index.html'),
+            path.resolve(cwd, '..', 'public', 'index.html'),
+            path.resolve('/app', 'public', 'index.html'),
+            path.resolve(__dirname, '..', '..', '..', 'public', 'index.html'),
+        ]
 
-        // Navigate to public folder from the compiled location
-        const htmlPath = path.resolve(process.cwd(), 'public', 'index.html')
-        logger.info('Looking for HTML at', { htmlPath })
+        let htmlPath: string | null = null
+        for (const testPath of possiblePaths) {
+            if (fs.existsSync(testPath)) {
+                htmlPath = testPath
+                break
+            }
+        }
+
+        if (!htmlPath) {
+            throw new Error(`Could not find index.html. Tried paths: ${possiblePaths.join(', ')}`)
+        }
+
+        logger.info('Found HTML at', { htmlPath })
 
         const html = fs.readFileSync(htmlPath, 'utf-8')
 
         return {
-            status: 200,
+            status: 200 as const,
             headers: {
                 'Content-Type': 'text/html; charset=utf-8',
             },
@@ -44,8 +60,9 @@ export const handler: Handlers['ServeFrontend'] = async (req, { logger }) => {
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         logger.error('Failed to serve frontend', { error: errorMessage })
+        // Return 200 with error page so the handler signature stays simple
         return {
-            status: 500,
+            status: 200 as const,
             headers: {
                 'Content-Type': 'text/html',
             },

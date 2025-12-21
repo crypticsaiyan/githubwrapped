@@ -20,7 +20,7 @@ declare module 'motia' {
     'ServeStatic': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
     'ServeStaticJS': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
     'ServeStaticCSS': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>
-    'ServeFrontend': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown>, never>
+    'ServeFrontend': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, string>, never>
     'GetWrapped': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { data: unknown }> | ApiResponse<202, { status: string; message: string; progress?: number }> | ApiResponse<404, { error: string }>, never>
     'GetWrappedStatus': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { username: string; status: 'processing' | 'completed' | 'failed' | 'not_found'; progress?: number; error?: string; startedAt?: string; completedAt?: string }>, never>
     'GetBadge': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, unknown> | ApiResponse<404, { error: string }>, never>

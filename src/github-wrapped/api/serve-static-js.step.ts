@@ -21,11 +21,26 @@ export const config: ApiRouteConfig = {
 export const handler: Handlers['ServeStaticJS'] = async (req, { logger }) => {
     const { filename } = req.pathParams
     const sanitized = path.basename(filename)
-    const filePath = path.resolve(process.cwd(), 'public', 'js', sanitized)
+    const cwd = process.cwd() || '/app'
+    
+    const possiblePaths = [
+        path.resolve(cwd, 'public', 'js', sanitized),
+        path.resolve(cwd, '..', 'public', 'js', sanitized),
+        path.resolve('/app', 'public', 'js', sanitized),
+    ]
 
     logger.info('Serving JS file', { filename: sanitized })
 
-    if (!fs.existsSync(filePath)) {
+    let filePath: string | null = null
+    for (const testPath of possiblePaths) {
+        if (fs.existsSync(testPath)) {
+            filePath = testPath
+            break
+        }
+    }
+
+    if (!filePath) {
+        logger.warn('JS file not found', { filename: sanitized, triedPaths: possiblePaths })
         return { status: 404, body: { error: `File "${sanitized}" not found` } }
     }
 

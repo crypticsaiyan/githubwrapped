@@ -46,7 +46,30 @@ export const handler: Handlers['ServeStatic'] = async (req, { logger }) => {
 
     try {
         const sanitizedFilename = path.basename(filename)
-        const filePath = path.resolve(process.cwd(), 'public', sanitizedFilename)
+        const cwd = process.cwd() || '/app'
+        
+        // Try multiple locations
+        const possiblePaths = [
+            path.resolve(cwd, 'public', sanitizedFilename),
+            path.resolve(cwd, '..', 'public', sanitizedFilename),
+            path.resolve('/app', 'public', sanitizedFilename),
+        ]
+
+        let filePath: string | null = null
+        for (const testPath of possiblePaths) {
+            if (fs.existsSync(testPath)) {
+                filePath = testPath
+                break
+            }
+        }
+
+        if (!filePath) {
+            logger.warn('File not found', { filename, triedPaths: possiblePaths })
+            return {
+                status: 404,
+                body: { error: 'File not found' },
+            }
+        }
 
         // Check if file exists
         if (!fs.existsSync(filePath)) {
