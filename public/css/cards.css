@@ -1,0 +1,387 @@
+/* Repos grid */
+.repos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.repo-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-align: left;
+  position: relative;
+}
+
+.repo-card.featured {
+  border-color: currentColor;
+  box-shadow: 0 0 30px rgba(var(--current-rgb), 0.2);
+}
+
+.repo-rank {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: var(--theme-cyan);
+  color: #000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.repo-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.repo-info {
+  flex: 1;
+}
+
+.repo-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: currentColor;
+}
+
+.repo-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.repo-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.repo-stat {
+  text-align: center;
+}
+
+.repo-stat-value {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: currentColor;
+}
+
+.repo-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+/* Languages section */
+.languages-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.language-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.language-card:hover {
+  transform: translateX(5px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.language-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--lang-color, rgba(255, 255, 255, 0.1));
+  opacity: 0.15;
+  width: var(--lang-percent, 0%);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.language-rank {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  min-width: 24px;
+}
+
+.language-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px var(--lang-color, currentColor);
+}
+
+.language-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.language-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.language-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.language-percent {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: currentColor;
+}
+
+.language-bar-container {
+  width: 60px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.language-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Achievements */
+.achievements-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(255, 92, 170, 0.2));
+  border: 1px solid currentColor;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.achievement-icon {
+  font-size: 1.3rem;
+}
+
+/* GitHub Contribution Graph */
+.contribution-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 1rem;
+  margin: 1.5rem auto;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.contribution-week {
+  display: flex;
+  gap: 3px;
+}
+
+.contribution-day {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.contribution-day:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Intensity levels - pink theme */
+.contribution-day.level-1 { background: rgba(255, 92, 170, 0.25); }
+.contribution-day.level-2 { background: rgba(255, 92, 170, 0.5); }
+.contribution-day.level-3 { background: rgba(255, 92, 170, 0.75); }
+.contribution-day.level-4 { background: rgba(255, 92, 170, 1); }
+
+.contribution-months {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+.contribution-month {
+  flex: 1;
+  text-align: center;
+}
+
+/* Timeline styles */
+.timeline-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 2rem;
+  height: 150px;
+  padding: 0 1rem;
+}
+
+.timeline-bar {
+  flex: 1;
+  max-width: 50px;
+  min-width: 30px;
+  background: linear-gradient(180deg, currentColor, rgba(255,255,255,0.3));
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.timeline-bar:hover {
+  filter: brightness(1.2);
+}
+
+.timeline-bar-label {
+  position: absolute;
+  bottom: -25px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.timeline-bar-value {
+  position: absolute;
+  top: -20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* Squad styles */
+.squad-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.squad-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.squad-member:nth-child(2) { animation-delay: 0.5s; }
+.squad-member:nth-child(3) { animation-delay: 1s; }
+.squad-member:nth-child(4) { animation-delay: 1.5s; }
+.squad-member:nth-child(5) { animation-delay: 2s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.squad-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  overflow: hidden;
+}
+
+.squad-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.squad-name {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.squad-role {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+/* Quote styles */
+.quote-container {
+  margin-top: 3rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quote-text {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  font-style: italic;
+  color: currentColor;
+  line-height: 1.4;
+}
+
+.quote-author {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-top: 1.5rem;
+}

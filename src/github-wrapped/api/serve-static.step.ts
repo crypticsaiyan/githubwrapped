@@ -43,7 +43,6 @@ export const handler: Handlers['ServeStatic'] = async (req, { logger }) => {
     logger.info('Serving static file', { filename })
 
     try {
-        // Sanitize filename to prevent directory traversal
         const sanitizedFilename = path.basename(filename)
         const filePath = path.resolve(process.cwd(), 'public', sanitizedFilename)
 

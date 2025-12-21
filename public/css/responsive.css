@@ -1,0 +1,115 @@
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .progress-nav {
+    display: none;
+  }
+
+  .nav-arrow {
+    bottom: 1rem;
+  }
+
+  .nav-arrow.left {
+    left: 1rem;
+  }
+
+  .nav-arrow.right {
+    right: 1rem;
+  }
+
+  .slide-content {
+    padding: 1rem;
+  }
+
+  .username-input {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .repos-container {
+    padding: 0 1rem;
+  }
+
+  .title-main {
+    font-size: clamp(3rem, 15vw, 6rem);
+  }
+
+  .big-number {
+    font-size: clamp(4rem, 18vw, 8rem);
+  }
+
+  /* Summary page responsive */
+  .summary-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .summary-cards {
+    padding: 1.5rem;
+    min-height: 300px;
+  }
+
+  .card-stack {
+    width: 240px;
+    height: 370px;
+    transform: scale(0.9);
+  }
+
+  .github-card {
+    width: 220px;
+    height: 320px;
+  }
+
+  .summary-stats {
+    padding: 1.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .summary-title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .stat-item-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-item-value.small {
+    font-size: 0.9rem;
+  }
+
+  .card-stats {
+    gap: 4px;
+  }
+
+  .card-stat-value {
+    font-size: 0.85rem;
+  }
+
+  .share-btn,
+  .restart-btn {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .share-card-container {
+    transform: scale(0.9);
+    margin: 1rem 0;
+  }
+  
+  .share-actions {
+    flex-direction: column;
+  }
+}

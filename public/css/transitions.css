@@ -1,0 +1,253 @@
+/* ============================================
+   CREATIVE PAGE TRANSITIONS
+   ============================================ */
+
+/* Transition overlay container */
+.transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---- TILES TRANSITION ---- */
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  position: relative;
+}
+
+.tiles-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  z-index: -1;
+}
+
+.tile {
+  background: var(--theme-green);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.tiles-grid.animate .tile {
+  animation: tileIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.tiles-grid.animate-out .tile {
+  animation: tileOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes tileIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes tileOut {
+  0% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* ---- DIAGONAL WIPE TRANSITION ---- */
+.diagonal-wipe {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -100%;
+  transform: rotate(-45deg) translateX(-100%);
+}
+
+.diagonal-wipe.animate {
+  animation: diagonalWipeIn 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.diagonal-wipe.animate-out {
+  animation: diagonalWipeOut 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes diagonalWipeIn {
+  0% { transform: rotate(-45deg) translateX(-100%); }
+  100% { transform: rotate(-45deg) translateX(0%); }
+}
+
+@keyframes diagonalWipeOut {
+  0% { transform: rotate(-45deg) translateX(0%); }
+  100% { transform: rotate(-45deg) translateX(100%); }
+}
+
+/* ---- BUBBLE/CIRCLE REVEAL ---- */
+.bubble-reveal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bubble-reveal.animate {
+  animation: bubbleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.bubble-reveal.animate-out {
+  animation: bubbleOut 0.7s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes bubbleIn {
+  0% { width: 0; height: 0; opacity: 1; }
+  100% { width: 250vmax; height: 250vmax; opacity: 1; }
+}
+
+@keyframes bubbleOut {
+  0% { width: 250vmax; height: 250vmax; opacity: 1; }
+  100% { width: 0; height: 0; opacity: 0; }
+}
+
+/* ---- SPLIT TRANSITION ---- */
+.split-transition {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.split-transition.horizontal {
+  flex-direction: row;
+}
+
+.split-transition.vertical {
+  flex-direction: column;
+}
+
+.split-half {
+  flex: 1;
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+.split-transition.horizontal .split-half:first-child {
+  transform-origin: right center;
+}
+
+.split-transition.horizontal .split-half:last-child {
+  transform-origin: left center;
+}
+
+.split-transition.vertical .split-half:first-child {
+  transform-origin: center bottom;
+  transform: scaleY(0);
+}
+
+.split-transition.vertical .split-half:last-child {
+  transform-origin: center top;
+  transform: scaleY(0);
+}
+
+.split-transition.animate .split-half {
+  animation: splitIn 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.split-transition.animate-out .split-half {
+  animation: splitOut 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.split-transition.vertical.animate .split-half {
+  animation: splitInV 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.split-transition.vertical.animate-out .split-half {
+  animation: splitOutV 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes splitIn {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes splitOut {
+  0% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+@keyframes splitInV {
+  0% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes splitOutV {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+/* ---- PIXEL DISSOLVE ---- */
+.pixel-grid {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.pixel {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.pixel-grid.animate .pixel {
+  animation: pixelIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.pixel-grid.animate-out .pixel {
+  animation: pixelOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes pixelIn {
+  0% { transform: scale(0) rotate(45deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes pixelOut {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(0) rotate(-45deg); opacity: 0; }
+}
+
+/* ---- WAVE REVEAL ---- */
+.wave-reveal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+}
+
+.wave-reveal.animate {
+  animation: waveIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.wave-reveal.animate-out {
+  animation: waveOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes waveIn {
+  0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  50% { clip-path: polygon(0 50%, 50% 30%, 100% 50%, 100% 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+@keyframes waveOut {
+  0% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  50% { clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 70%, 0 50%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+}

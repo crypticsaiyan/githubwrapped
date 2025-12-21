@@ -1,0 +1,259 @@
+/* ============================================
+   ENHANCED ELEMENT ANIMATIONS
+   ============================================ */
+
+/* Rotate in */
+.slide.active .title-main.anim-rotate {
+  animation: rotateIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* Blur in */
+.slide.active .title-main.anim-blur {
+  animation: blurIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(20px);
+    transform: scale(1.2);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* Typewriter cursor effect for big numbers */
+.big-number.anim-typewriter::after {
+  content: '|';
+  animation: blink 0.7s steps(1) infinite;
+  margin-left: 0.1em;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 3D flip */
+.slide.active .repo-card {
+  animation: flipIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.slide.active .repo-card:nth-child(1) { animation-delay: 0.3s; }
+.slide.active .repo-card:nth-child(2) { animation-delay: 0.4s; }
+.slide.active .repo-card:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes flipIn {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(-30deg) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) translateY(0);
+  }
+}
+
+/* Pop in for language cards */
+.slide.active .language-card {
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.slide.active .language-card:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .language-card:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .language-card:nth-child(3) { animation-delay: 0.4s; }
+.slide.active .language-card:nth-child(4) { animation-delay: 0.5s; }
+.slide.active .language-card:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide from sides for stats */
+.slide.active .repo-stat {
+  animation: slideFromRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Shimmer effect on highlight boxes */
+.highlight-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.highlight-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* Bounce in for achievement badges */
+.slide.active .achievement-badge {
+  animation: achievementBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.slide.active .achievement-badge:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .achievement-badge:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .achievement-badge:nth-child(3) { animation-delay: 0.4s; }
+.slide.active .achievement-badge:nth-child(4) { animation-delay: 0.5s; }
+
+@keyframes achievementBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0) translateY(30px);
+  }
+  50% {
+    transform: scale(1.15) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Draw line for timeline */
+.timeline-bar {
+  animation: drawLine 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.3s;
+}
+
+@keyframes drawLine {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Glow pulse on numbers */
+.big-number {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 60px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 100px currentColor, 0 0 150px currentColor;
+  }
+}
+
+/* Float animation for deco icons */
+.slide.active .deco-icon:nth-child(1) {
+  animation: floatIcon 3s ease-in-out infinite;
+}
+.slide.active .deco-icon:nth-child(2) {
+  animation: floatIcon 3s ease-in-out 0.5s infinite;
+}
+.slide.active .deco-icon:nth-child(3) {
+  animation: floatIcon 3s ease-in-out 1s infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Glitch effect for WRAPPED title */
+.glitch-text {
+  position: relative;
+  font-size: clamp(2rem, 6vw, 4rem) !important;
+  animation: glitch 2s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: 'WRAPPED';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: #ff00ff;
+  animation: glitch-1 0.3s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-2px, -2px);
+  opacity: 0.8;
+}
+
+.glitch-text::after {
+  color: #00ffff;
+  animation: glitch-2 0.3s infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  transform: translate(2px, 2px);
+  opacity: 0.8;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% { opacity: 1; }
+  91% { opacity: 0.8; }
+  92% { opacity: 1; }
+  93% { opacity: 0.9; }
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(-2px, -2px); }
+  20% { transform: translate(2px, 0); }
+  40% { transform: translate(-2px, 2px); }
+  60% { transform: translate(3px, -1px); }
+  80% { transform: translate(-1px, 2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(2px, 2px); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-3px, 0); }
+  80% { transform: translate(1px, -1px); }
+}

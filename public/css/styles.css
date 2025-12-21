@@ -1,0 +1,385 @@
+* {
+  font-family: 'Tronica Mono';
+}
+
+/* Custom font */
+@font-face {
+  font-family: 'Tronica Mono';
+  src: url('/static/Tronica-Mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Theme colors */
+  --theme-green: #00ff87;
+  --theme-pink: #ff5caa;
+  --theme-cyan: #00ffd5;
+  --theme-yellow: #ffd93d;
+  --theme-purple: #a855f7;
+  
+  /* Base colors */
+  --bg-dark: #0a0a0a;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  
+  /* Font families */
+  --font-display: 'Tronica Mono', 'JetBrains Mono', monospace;
+  --font-mono: 'Tronica Mono', 'JetBrains Mono', monospace;
+  --font-body: 'Tronica Mono', 'JetBrains Mono', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CRT screen effect overlay */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999999;
+  display: block;
+  opacity: 0.05;
+}
+
+.crt-overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: repeat;
+  image-rendering: pixelated;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Dot pattern background */
+.dot-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Main container */
+.app-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.logo svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Progress nav */
+.progress-nav {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.progress-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-dot svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+}
+
+.progress-dot.active svg {
+  opacity: 1;
+  color: var(--bg-dark);
+}
+
+.progress-dot.completed {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Header controls */
+.header-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Slides container */
+.slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95) translateY(20px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+.slide.exit {
+  opacity: 0;
+  transform: scale(1.05) translateY(-20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.slide.prev {
+  transform: scale(0.95) translateY(-20px);
+}
+
+.slide-content {
+  text-align: center;
+  max-width: 900px;
+  padding: 2rem;
+  position: relative;
+}
+
+
+/* Staggered element animations */
+.slide.active .title-label {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.slide.active .title-main,
+.slide.active .big-number {
+  animation: scaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.slide.active .title-subtitle,
+.slide.active .stat-description {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.slide.active .github-3d-frame,
+.slide.active .contribution-graph,
+.slide.active .repos-container,
+.slide.active .languages-grid,
+.slide.active .achievements-grid,
+.slide.active .timeline-container,
+.slide.active .squad-container,
+.slide.active .quote-container {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.slide.active .deco-icons {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+.slide.active .start-btn,
+.slide.active .input-section {
+  animation: bounceIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+/* Disable default entrance animations when using sequential JS reveal */
+.slide.sequential-reveal .title-label,
+.slide.sequential-reveal .title-main,
+.slide.sequential-reveal .big-number,
+.slide.sequential-reveal .title-subtitle,
+.slide.sequential-reveal .stat-description,
+.slide.sequential-reveal .summary-layout,
+.slide.sequential-reveal .summary-cards,
+.slide.sequential-reveal .summary-stats,
+.slide.sequential-reveal .summary-header,
+.slide.sequential-reveal .summary-title,
+.slide.sequential-reveal .stats-grid,
+.slide.sequential-reveal .stat-item,
+.slide.sequential-reveal .stat-item-value,
+.slide.sequential-reveal .github-3d-frame,
+.slide.sequential-reveal .contribution-graph,
+.slide.sequential-reveal .repos-container,
+.slide.sequential-reveal .languages-grid,
+.slide.sequential-reveal .achievements-grid,
+.slide.sequential-reveal .timeline-container,
+.slide.sequential-reveal .squad-container,
+.slide.sequential-reveal .quote-container,
+.slide.sequential-reveal .deco-icons,
+.slide.sequential-reveal .start-btn,
+.slide.sequential-reveal .input-section {
+  animation: none !important;
+}
+
+/* Keyframe animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  60% {
+    transform: scale(1.02) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Progress bar at bottom */
+.progress-bar-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: currentColor;
+  width: 0%;
+  transition: none;
+}
+
+/* Enhanced theme transitions */
+.app-container {
+  transition: background-color 0.6s ease;
+}
+
+.dot-pattern {
+  transition: color 0.6s ease;
+}

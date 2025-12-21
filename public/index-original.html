@@ -1,0 +1,4484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Wrapped 2025</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Tronica Mono';
+    }
+    /* Custom font */
+    @font-face {
+      font-family: 'Tronica Mono';
+      src: url('/static/Tronica-Mono.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      /* Theme colors */
+      --theme-green: #00ff87;
+      --theme-pink: #ff5caa;
+      --theme-cyan: #00ffd5;
+      --theme-yellow: #ffd93d;
+      --theme-purple: #a855f7;
+      
+      /* Base colors */
+      --bg-dark: #0a0a0a;
+      --bg-card: rgba(255, 255, 255, 0.05);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      
+      /* Font families */
+      --font-display: 'Tronica Mono', 'JetBrains Mono', monospace;
+      --font-mono: 'Tronica Mono', 'JetBrains Mono', monospace;
+      --font-body: 'Tronica Mono', 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* CRT screen effect overlay */
+    .crt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999999;
+      display: block;
+      opacity: 0.05;
+    }
+    
+    .crt-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: repeat;
+      image-rendering: pixelated;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Dot pattern background */
+    .dot-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Main container */
+    .app-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Progress nav */
+    .progress-nav {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .progress-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .progress-dot.active {
+      /* Background color set dynamically by JavaScript */
+    }
+
+    .progress-dot svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
+    }
+
+    .progress-dot.active svg {
+      opacity: 1;
+      color: var(--bg-dark);
+    }
+
+    .progress-dot.completed {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Header controls */
+    .header-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Slides container */
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.95) translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: scale(1.05) translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    .slide.prev {
+      transform: scale(0.95) translateY(-20px);
+    }
+
+    .slide-content {
+      text-align: center;
+      max-width: 900px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* Staggered element animations */
+    .slide.active .title-label {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    }
+
+    .slide.active .title-main,
+    .slide.active .big-number {
+      animation: scaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    .slide.active .title-subtitle,
+    .slide.active .stat-description {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+    }
+
+    .slide.active .github-3d-frame,
+    .slide.active .contribution-graph,
+    .slide.active .repos-container,
+    .slide.active .languages-grid,
+    .slide.active .achievements-grid,
+    .slide.active .timeline-container,
+    .slide.active .squad-container,
+    .slide.active .quote-container {
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    }
+
+    .slide.active .deco-icons {
+      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+    }
+
+    .slide.active .start-btn,
+    .slide.active .input-section {
+      animation: bounceIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    /* Disable default entrance animations when using sequential JS reveal */
+    .slide.sequential-reveal .title-label,
+    .slide.sequential-reveal .title-main,
+    .slide.sequential-reveal .big-number,
+    .slide.sequential-reveal .title-subtitle,
+    .slide.sequential-reveal .stat-description,
+    .slide.sequential-reveal .summary-layout,
+    .slide.sequential-reveal .summary-cards,
+    .slide.sequential-reveal .summary-stats,
+    .slide.sequential-reveal .summary-header,
+    .slide.sequential-reveal .summary-title,
+    .slide.sequential-reveal .stats-grid,
+    .slide.sequential-reveal .stat-item,
+    .slide.sequential-reveal .stat-item-value,
+    .slide.sequential-reveal .github-3d-frame,
+    .slide.sequential-reveal .contribution-graph,
+    .slide.sequential-reveal .repos-container,
+    .slide.sequential-reveal .languages-grid,
+    .slide.sequential-reveal .achievements-grid,
+    .slide.sequential-reveal .timeline-container,
+    .slide.sequential-reveal .squad-container,
+    .slide.sequential-reveal .quote-container,
+    .slide.sequential-reveal .deco-icons,
+    .slide.sequential-reveal .start-btn,
+    .slide.sequential-reveal .input-section {
+      animation: none !important;
+    }
+
+    /* Keyframe animations */
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      60% {
+        transform: scale(1.02) translateY(-5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+    }
+
+    /* Progress bar at bottom */
+    .progress-bar-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 1100; /* Above transition overlays */
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: currentColor;
+      width: 0%;
+      transition: none; /* No transition for smooth animation */
+    }
+
+    /* Enhanced theme transitions */
+    .app-container {
+      transition: background-color 0.6s ease;
+    }
+
+    .dot-pattern {
+      transition: color 0.6s ease;
+    }
+
+    /* ============================================
+       CREATIVE PAGE TRANSITIONS
+       ============================================ */
+    
+    /* Transition overlay container */
+    .transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* ---- TILES TRANSITION ---- */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      position: relative;
+    }
+
+    .tiles-grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      z-index: -1;
+    }
+
+    .tile {
+      background: var(--theme-green);
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    .tiles-grid.animate .tile {
+      animation: tileIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .tiles-grid.animate-out .tile {
+      animation: tileOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes tileIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    @keyframes tileOut {
+      0% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* ---- DIAGONAL WIPE TRANSITION ---- */
+    .diagonal-wipe {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -100%;
+      transform: rotate(-45deg) translateX(-100%);
+    }
+
+    .diagonal-wipe.animate {
+      animation: diagonalWipeIn 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .diagonal-wipe.animate-out {
+      animation: diagonalWipeOut 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes diagonalWipeIn {
+      0% { transform: rotate(-45deg) translateX(-100%); }
+      100% { transform: rotate(-45deg) translateX(0%); }
+    }
+
+    @keyframes diagonalWipeOut {
+      0% { transform: rotate(-45deg) translateX(0%); }
+      100% { transform: rotate(-45deg) translateX(100%); }
+    }
+
+    /* ---- BUBBLE/CIRCLE REVEAL ---- */
+    .bubble-reveal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .bubble-reveal.animate {
+      animation: bubbleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .bubble-reveal.animate-out {
+      animation: bubbleOut 0.7s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes bubbleIn {
+      0% { width: 0; height: 0; opacity: 1; }
+      100% { width: 250vmax; height: 250vmax; opacity: 1; }
+    }
+
+    @keyframes bubbleOut {
+      0% { width: 250vmax; height: 250vmax; opacity: 1; }
+      100% { width: 0; height: 0; opacity: 0; }
+    }
+
+    /* ---- SPLIT TRANSITION ---- */
+    .split-transition {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    .split-transition.horizontal {
+      flex-direction: row;
+    }
+
+    .split-transition.vertical {
+      flex-direction: column;
+    }
+
+    .split-half {
+      flex: 1;
+      transform: scaleX(0);
+      transform-origin: center;
+    }
+
+    .split-transition.horizontal .split-half:first-child {
+      transform-origin: right center;
+    }
+
+    .split-transition.horizontal .split-half:last-child {
+      transform-origin: left center;
+    }
+
+    .split-transition.vertical .split-half:first-child {
+      transform-origin: center bottom;
+      transform: scaleY(0);
+    }
+
+    .split-transition.vertical .split-half:last-child {
+      transform-origin: center top;
+      transform: scaleY(0);
+    }
+
+    .split-transition.animate .split-half {
+      animation: splitIn 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.animate-out .split-half {
+      animation: splitOut 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.vertical.animate .split-half {
+      animation: splitInV 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    .split-transition.vertical.animate-out .split-half {
+      animation: splitOutV 0.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+    }
+
+    @keyframes splitIn {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    @keyframes splitOut {
+      0% { transform: scaleX(1); }
+      100% { transform: scaleX(0); }
+    }
+
+    @keyframes splitInV {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+
+    @keyframes splitOutV {
+      0% { transform: scaleY(1); }
+      100% { transform: scaleY(0); }
+    }
+
+    /* ---- PIXEL DISSOLVE ---- */
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      width: 100%;
+      height: 100%;
+    }
+
+    .pixel {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    .pixel-grid.animate .pixel {
+      animation: pixelIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .pixel-grid.animate-out .pixel {
+      animation: pixelOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes pixelIn {
+      0% { transform: scale(0) rotate(45deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes pixelOut {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: scale(0) rotate(-45deg); opacity: 0; }
+    }
+
+    /* ---- WAVE REVEAL ---- */
+    .wave-reveal {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+
+    .wave-reveal.animate {
+      animation: waveIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .wave-reveal.animate-out {
+      animation: waveOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes waveIn {
+      0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+      50% { clip-path: polygon(0 50%, 50% 30%, 100% 50%, 100% 100%, 0 100%); }
+      100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+    }
+
+    @keyframes waveOut {
+      0% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+      50% { clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 70%, 0 50%); }
+      100% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+    }
+
+    /* ============================================
+       ENHANCED ELEMENT ANIMATIONS
+       ============================================ */
+
+    /* Rotate in */
+    .slide.active .title-main.anim-rotate {
+      animation: rotateIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    @keyframes rotateIn {
+      from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    /* Blur in */
+    .slide.active .title-main.anim-blur {
+      animation: blurIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    @keyframes blurIn {
+      from {
+        opacity: 0;
+        filter: blur(20px);
+        transform: scale(1.2);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+      }
+    }
+
+    /* Typewriter cursor effect for big numbers */
+    .big-number.anim-typewriter::after {
+      content: '|';
+      animation: blink 0.7s steps(1) infinite;
+      margin-left: 0.1em;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* 3D flip */
+    .slide.active .repo-card {
+      animation: flipIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .slide.active .repo-card:nth-child(1) { animation-delay: 0.3s; }
+    .slide.active .repo-card:nth-child(2) { animation-delay: 0.4s; }
+    .slide.active .repo-card:nth-child(3) { animation-delay: 0.5s; }
+
+    @keyframes flipIn {
+      from {
+        opacity: 0;
+        transform: perspective(1000px) rotateX(-30deg) translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg) translateY(0);
+      }
+    }
+
+    /* Pop in for language cards */
+    .slide.active .language-card {
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .slide.active .language-card:nth-child(1) { animation-delay: 0.2s; }
+    .slide.active .language-card:nth-child(2) { animation-delay: 0.3s; }
+    .slide.active .language-card:nth-child(3) { animation-delay: 0.4s; }
+    .slide.active .language-card:nth-child(4) { animation-delay: 0.5s; }
+    .slide.active .language-card:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      70% {
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Slide from sides for stats */
+    .slide.active .repo-stat {
+      animation: slideFromRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Shimmer effect on highlight boxes */
+    .highlight-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    /* Bounce in for achievement badges */
+    .slide.active .achievement-badge {
+      animation: achievementBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .slide.active .achievement-badge:nth-child(1) { animation-delay: 0.2s; }
+    .slide.active .achievement-badge:nth-child(2) { animation-delay: 0.3s; }
+    .slide.active .achievement-badge:nth-child(3) { animation-delay: 0.4s; }
+    .slide.active .achievement-badge:nth-child(4) { animation-delay: 0.5s; }
+
+    @keyframes achievementBounce {
+      0% {
+        opacity: 0;
+        transform: scale(0) translateY(30px);
+      }
+      50% {
+        transform: scale(1.15) translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Draw line for timeline */
+    .timeline-bar {
+      animation: drawLine 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes drawLine {
+      from {
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+      to {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    /* Glow pulse on numbers */
+    .big-number {
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        text-shadow: 0 0 60px currentColor;
+      }
+      50% {
+        text-shadow: 0 0 100px currentColor, 0 0 150px currentColor;
+      }
+    }
+
+    /* Float animation for deco icons */
+    .slide.active .deco-icon:nth-child(1) {
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    .slide.active .deco-icon:nth-child(2) {
+      animation: floatIcon 3s ease-in-out 0.5s infinite;
+    }
+    .slide.active .deco-icon:nth-child(3) {
+      animation: floatIcon 3s ease-in-out 1s infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Navigation arrows */
+    .nav-arrow {
+      position: fixed;
+      bottom: 2rem;
+      width: 48px;
+      height: 48px;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+
+    .nav-arrow:hover {
+      background: inherit;
+      background-color: currentColor;
+    }
+
+    .nav-arrow:hover svg {
+      color: var(--bg-dark);
+    }
+
+    .nav-arrow svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-arrow.left {
+      left: 2rem;
+    }
+
+    .nav-arrow.right {
+      right: 2rem;
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Typography */
+    .title-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      color: currentColor;
+    }
+
+    .title-main {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 8vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+      color: currentColor;
+      text-shadow: 0 0 80px currentColor;
+    }
+
+    .title-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-top: 1.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .big-number {
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 20vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.85;
+      color: currentColor;
+      text-shadow: 0 0 100px currentColor;
+    }
+
+    .stat-description {
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+    }
+
+    .highlight-box {
+      display: inline-block;
+      background: var(--theme-pink);
+      color: #000;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Theme-specific highlight colors */
+    .theme-green .highlight-box { background: var(--theme-green); }
+    .theme-pink .highlight-box { background: var(--theme-pink); }
+    .theme-cyan .highlight-box { background: var(--theme-cyan); }
+    .theme-yellow .highlight-box { background: var(--theme-yellow); }
+    .theme-purple .highlight-box { background: var(--theme-purple); }
+
+    /* Decorative icons row */
+    .deco-icons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      opacity: 0.6;
+    }
+
+    .deco-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* 3D GitHub Icon Frame */
+    .github-3d-frame {
+      perspective: 1000px;
+      margin: 1rem auto;
+      width: 250px;
+      height: 250px;
+    }
+
+    .github-3d-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: float3d 12s ease-in-out infinite;
+    }
+
+    @keyframes float3d {
+      0%, 100% {
+        transform: rotateY(-15deg) rotateX(10deg) translateY(0);
+      }
+      25% {
+        transform: rotateY(15deg) rotateX(-5deg) translateY(-10px);
+      }
+      50% {
+        transform: rotateY(-10deg) rotateX(5deg) translateY(0);
+      }
+      75% {
+        transform: rotateY(10deg) rotateX(-10deg) translateY(-5px);
+      }
+    }
+
+    .github-3d-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid currentColor;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(0, 255, 135, 0.1), rgba(0, 255, 135, 0.02));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      box-shadow: 
+        0 0 30px rgba(0, 255, 135, 0.2),
+        inset 0 0 30px rgba(0, 255, 135, 0.05);
+    }
+
+    .github-3d-face svg {
+      width: 120px;
+      height: 120px;
+      color: currentColor;
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+
+    .github-3d-frame::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 280px;
+      height: 280px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(0, 255, 135, 0.15), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Glitch effect for WRAPPED title */
+    .glitch-text {
+      position: relative;
+      font-size: clamp(2rem, 6vw, 4rem) !important;
+      animation: glitch 2s infinite;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: 'WRAPPED';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-text::before {
+      color: #ff00ff;
+      animation: glitch-1 0.3s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+      transform: translate(-2px, -2px);
+      opacity: 0.8;
+    }
+
+    .glitch-text::after {
+      color: #00ffff;
+      animation: glitch-2 0.3s infinite;
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+      transform: translate(2px, 2px);
+      opacity: 0.8;
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% { opacity: 1; }
+      91% { opacity: 0.8; }
+      92% { opacity: 1; }
+      93% { opacity: 0.9; }
+    }
+
+    @keyframes glitch-1 {
+      0%, 100% { transform: translate(-2px, -2px); }
+      20% { transform: translate(2px, 0); }
+      40% { transform: translate(-2px, 2px); }
+      60% { transform: translate(3px, -1px); }
+      80% { transform: translate(-1px, 2px); }
+    }
+
+    @keyframes glitch-2 {
+      0%, 100% { transform: translate(2px, 2px); }
+      20% { transform: translate(-2px, 1px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-3px, 0); }
+      80% { transform: translate(1px, -1px); }
+    }
+
+    .github-3d-frame::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(0, 255, 135, 0.15), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Start button */
+    .start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      background: var(--bg-dark);
+      color: currentColor;
+      cursor: pointer;
+      margin-top: 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .start-btn:hover {
+      background: var(--theme-green);
+      color: #000;
+    }
+
+    .start-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Input section */
+    .input-section {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Demo mode toggle */
+    .demo-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .demo-toggle input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--theme-green);
+      cursor: pointer;
+    }
+
+    .demo-toggle label {
+      cursor: pointer;
+    }
+
+    .demo-badge {
+      background: rgba(0, 255, 135, 0.2);
+      color: var(--theme-green);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .username-input {
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      font-family: inherit;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      width: 320px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .username-input:focus {
+      outline: none;
+      border-color: currentColor;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .username-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .token-input {
+      font-size: 0.95rem;
+      padding: 0.75rem 1.25rem;
+    }
+
+    .demo-toggle {
+      margin-top: 0.5rem;
+    }
+
+    /* Loading state */
+    .loading-container {
+      display: none;
+    }
+
+    .loading-container.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      min-height: 400px;
+    }
+
+    .loading-spinner {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .loading-spinner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .loading-spinner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid transparent;
+      border-top-color: var(--theme-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-github-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      color: var(--theme-green);
+      animation: pulse-icon 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .loading-status {
+      font-size: 0.9rem;
+      color: var(--theme-green);
+      animation: blink-status 1s ease-in-out infinite;
+    }
+
+    @keyframes blink-status {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .loading-progress {
+      width: 240px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-progress::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: shimmer-progress 1.5s infinite;
+    }
+
+    @keyframes shimmer-progress {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .loading-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--theme-green), var(--theme-cyan));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--theme-green);
+    }
+
+    .loading-percentage {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--theme-green);
+      text-shadow: 0 0 20px var(--theme-green);
+    }
+
+    /* Error message */
+    .error-message {
+      display: none;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 92, 92, 0.1);
+      border: 1px solid rgba(255, 92, 92, 0.3);
+      border-radius: 10px;
+      color: #ff5c5c;
+      margin-top: 1.5rem;
+    }
+
+    .error-message.active {
+      display: block;
+    }
+
+    /* Repos grid */
+    .repos-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .repo-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      text-align: left;
+      position: relative;
+    }
+
+    .repo-card.featured {
+      border-color: currentColor;
+      box-shadow: 0 0 30px rgba(var(--current-rgb), 0.2);
+    }
+
+    .repo-rank {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: var(--theme-cyan);
+      color: #000;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .repo-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .repo-info {
+      flex: 1;
+    }
+
+    .repo-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: currentColor;
+    }
+
+    .repo-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .repo-stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .repo-stat {
+      text-align: center;
+    }
+
+    .repo-stat-value {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: currentColor;
+    }
+
+    .repo-stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    /* Languages section */
+    .languages-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .language-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.875rem 1.25rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .language-card:hover {
+      transform: translateX(5px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .language-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--lang-color, rgba(255, 255, 255, 0.1));
+      opacity: 0.15;
+      width: var(--lang-percent, 0%);
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .language-rank {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      min-width: 24px;
+    }
+
+    .language-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px var(--lang-color, currentColor);
+    }
+
+    .language-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .language-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .language-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .language-percent {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: currentColor;
+    }
+
+    .language-bar-container {
+      width: 60px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .language-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Achievements */
+    .achievements-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .achievement-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(255, 92, 170, 0.2));
+      border: 1px solid currentColor;
+      border-radius: 50px;
+      font-weight: 600;
+    }
+
+    .achievement-icon {
+      font-size: 1.3rem;
+    }
+
+    /* GitHub Contribution Graph */
+    .contribution-graph {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 1rem;
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .contribution-week {
+      display: flex;
+      gap: 3px;
+    }
+
+    .contribution-day {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .contribution-day:hover {
+      transform: scale(1.3);
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    /* Intensity levels - pink theme */
+    .contribution-day.level-1 { background: rgba(255, 92, 170, 0.25); }
+    .contribution-day.level-2 { background: rgba(255, 92, 170, 0.5); }
+    .contribution-day.level-3 { background: rgba(255, 92, 170, 0.75); }
+    .contribution-day.level-4 { background: rgba(255, 92, 170, 1); }
+
+    .contribution-months {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0.5rem;
+      font-size: 0.65rem;
+      opacity: 0.6;
+    }
+
+    .contribution-month {
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Timeline styles */
+    .timeline-container {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      align-items: flex-end;
+      margin-top: 2rem;
+      height: 150px;
+      padding: 0 1rem;
+    }
+
+    .timeline-bar {
+      flex: 1;
+      max-width: 50px;
+      min-width: 30px;
+      background: linear-gradient(180deg, currentColor, rgba(255,255,255,0.3));
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-bar:hover {
+      filter: brightness(1.2);
+    }
+
+    .timeline-bar-label {
+      position: absolute;
+      bottom: -25px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    .timeline-bar-value {
+      position: absolute;
+      top: -20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* Squad styles */
+    .squad-container {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .squad-member {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .squad-member:nth-child(2) { animation-delay: 0.5s; }
+    .squad-member:nth-child(3) { animation-delay: 1s; }
+    .squad-member:nth-child(4) { animation-delay: 1.5s; }
+    .squad-member:nth-child(5) { animation-delay: 2s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .squad-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid currentColor;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      overflow: hidden;
+    }
+
+    .squad-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .squad-name {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .squad-role {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    /* Quote styles */
+    .quote-container {
+      margin-top: 3rem;
+      padding: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .quote-text {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      font-style: italic;
+      color: currentColor;
+      line-height: 1.4;
+    }
+
+    .quote-author {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-top: 1.5rem;
+    }
+
+    /* Summary page - Discord Checkpoint style */
+    .summary-layout {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+      align-items: stretch;
+    }
+
+    .summary-cards {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .card-stack {
+      position: relative;
+      width: 300px;
+      height: 450px;
+    }
+
+    .github-card {
+      position: absolute;
+      width: 280px;
+      height: 405px;
+      background: linear-gradient(145deg, #ff5caa, #ff7eb8);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(255, 92, 170, 0.3);
+      transition: transform 0.3s ease;
+      border: 2px solid #1a1a2e;
+    }
+
+    .github-card.back {
+      transform: rotate(-8deg) translateX(-20px);
+      z-index: 1;
+      background: linear-gradient(145deg, #1a1a2e, #2d2d44);
+      border: 2px solid rgba(255, 92, 170, 0.5);
+    }
+
+    .github-card.front {
+      transform: rotate(4deg) translateX(20px);
+      z-index: 2;
+    }
+
+    .github-card:hover {
+      transform: rotate(0deg) translateX(0) scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 0.02em;
+    }
+
+    .card-header-title {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-header-title svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .card-level {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #1a1a2e;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 12px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-image .card-profile-img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #1a1a2e;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .card-image .card-vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+      text-align: left;
+      rotate: 180deg;
+    }
+
+    .card-image .card-vertical-text .heart {
+      color: #e25555;
+      font-size: 1.5rem;
+      rotate: 90deg;
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      border: 3px solid currentColor;
+      background: var(--bg-dark);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-info {
+      color: #1a1a2e;
+    }
+
+    .card-year {
+      font-size: 0.6rem;
+      font-weight: 600;
+      opacity: 0.6;
+      letter-spacing: 0.03em;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      line-height: 1.1;
+    }
+
+    .card-icons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .card-icons svg {
+      width: 18px;
+      height: 18px;
+      color: #1a1a2e;
+      opacity: 0.5;
+    }
+
+    .card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .card-stat {
+      text-align: center;
+      color: #1a1a2e;
+    }
+
+    .card-stat-value {
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #1a1a2e;
+    }
+
+    .card-stat-label {
+      font-size: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #1a1a2e;
+      opacity: 0.6;
+      margin-top: 1px;
+    }
+
+    .card-stat.wide {
+      grid-column: span 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding-top: 6px;
+      margin-top: 4px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .card-stat.wide .card-stat-label {
+      font-size: 0.5rem;
+      opacity: 0.6;
+    }
+
+    .card-stat.wide .card-stat-value {
+      font-size: 0.85rem;
+    }
+
+    /* Card zoom overlay */
+    .card-zoom-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card-zoom-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-zoom-overlay .zoomed-card {
+      transform: scale(2.5);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .card-zoom-overlay.active .zoomed-card {
+      transform: scale(2.5);
+    }
+
+    .github-card.front {
+      cursor: pointer;
+    }
+
+    .card-zoom-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    /* Share overlay styles */
+    .share-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      overflow: auto;
+      padding: 2rem;
+    }
+
+    .share-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .share-modal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      max-height: 100%;
+    }
+
+    .share-card-container {
+      transform: scale(1.2);
+      margin: 2rem 0;
+    }
+
+    .share-card-preview {
+      box-shadow: 0 30px 80px rgba(255, 92, 170, 0.4);
+    }
+
+    .share-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .download-btn,
+    .close-share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .download-btn {
+      background: var(--theme-pink);
+      color: #000;
+      border: 2px solid var(--theme-pink);
+    }
+
+    .download-btn:hover {
+      background: #ff7eb8;
+      border-color: #ff7eb8;
+      transform: translateY(-2px);
+    }
+
+    .download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .close-share-btn {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .close-share-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .share-card-container {
+        transform: scale(0.9);
+        margin: 1rem 0;
+      }
+      
+      .share-actions {
+        flex-direction: column;
+      }
+    }
+
+    .summary-stats {
+      flex: 1;
+      background: rgba(128, 0, 80, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+    }
+
+    .summary-header {
+      margin-bottom: 2rem;
+    }
+
+    .summary-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      color: currentColor;
+    }
+
+    .summary-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: currentColor;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-item-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: currentColor;
+      opacity: 0.8;
+    }
+
+    .stat-item-label svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .stat-item-value {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 800;
+      color: currentColor;
+    }
+
+    .stat-item-value.small {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-item-value img {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+    }
+
+    .share-btn {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      background: var(--bg-dark);
+      color: currentColor;
+      cursor: pointer;
+      opacity: 0;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .share-btn.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .share-btn:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .share-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .restart-btn {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      color: currentColor;
+      cursor: pointer;
+      opacity: 0;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .restart-btn.show {
+      opacity: 0.7;
+      transform: scale(1) translateY(0);
+    }
+
+    .restart-btn:hover {
+      opacity: 1;
+      background: var(--theme-pink);
+      color: #000;
+      transform: scale(1.05) translateY(-2px);
+    }
+
+    /* 3D Geometric decoration */
+    .geometric-deco {
+      position: absolute;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .geometric-deco.left {
+      left: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .geometric-deco.right {
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      z-index: 50;
+    }
+
+    /* Theme classes */
+    .theme-green { color: var(--theme-green); }
+    .theme-pink { color: var(--theme-pink); }
+    .theme-cyan { color: var(--theme-cyan); }
+    .theme-yellow { color: var(--theme-yellow); }
+    .theme-purple { color: var(--theme-purple); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+      }
+
+      .progress-nav {
+        display: none;
+      }
+
+      .nav-arrow {
+        bottom: 1rem;
+      }
+
+      .nav-arrow.left {
+        left: 1rem;
+      }
+
+      .nav-arrow.right {
+        right: 1rem;
+      }
+
+      .slide-content {
+        padding: 1rem;
+      }
+
+      .username-input {
+        width: 100%;
+        max-width: 280px;
+      }
+
+      .repos-container {
+        padding: 0 1rem;
+      }
+
+      .title-main {
+        font-size: clamp(3rem, 15vw, 6rem);
+      }
+
+      .big-number {
+        font-size: clamp(4rem, 18vw, 8rem);
+      }
+
+      /* Summary page responsive */
+      .summary-layout {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .summary-cards {
+        padding: 1.5rem;
+        min-height: 300px;
+      }
+
+      .card-stack {
+        width: 240px;
+        height: 370px;
+        transform: scale(0.9);
+      }
+
+      .github-card {
+        width: 220px;
+        height: 320px;
+      }
+
+      .summary-stats {
+        padding: 1.5rem;
+        padding-bottom: 5rem;
+      }
+
+      .summary-title {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .stat-item-value {
+        font-size: 1.5rem;
+      }
+
+      .stat-item-value.small {
+        font-size: 0.9rem;
+      }
+
+      .card-stats {
+        gap: 4px;
+      }
+
+      .card-stat-value {
+        font-size: 0.85rem;
+      }
+
+      .share-btn,
+      .restart-btn {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        margin-top: 1rem;
+        width: 100%;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+</head>
+
+<body>
+  <!-- CRT screen overlay -->
+  <div class="crt-overlay" style="background: url('/static/crt.jpg') repeat; background-size: 500px;"></div>
+  
+  <!-- Dynamic dot pattern -->
+  <div class="dot-pattern" id="dotPattern"></div>
+
+  <div class="app-container" id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo" id="logo" style="visibility: hidden;">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        <span>GitHub Wrapped</span>
+      </div>
+
+      <nav class="progress-nav" id="progressNav" style="visibility: hidden;">
+        <!-- Progress dots will be generated by JS -->
+      </nav>
+
+      <div class="header-controls" id="headerControls" style="visibility: hidden;">
+        <button class="control-btn" id="autoPlayBtn" onclick="toggleAutoPlay()" title="Start auto-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </button>
+        <button class="control-btn" id="soundBtn" onclick="toggleBackgroundMusic()" title="Toggle Background Music">
+          <svg id="soundOnIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg id="soundOffIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+        <button class="control-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+          <svg id="fullscreenEnterIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+          <svg id="fullscreenExitIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Slides -->
+    <div class="slides-container" id="slidesContainer">
+      
+      <!-- Slide 0: Landing / Start -->
+      <section class="slide theme-green active" id="slide-0" data-theme="green">
+        <div class="slide-content">
+
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Your Year in Code
+          </div>
+          <h1 class="title-main">
+          <!-- 3D GitHub Icon Frame -->
+          <div class="github-3d-frame">
+            <div class="github-3d-inner">
+              <div class="github-3d-face">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <h1 class="title-main">WRAPPED</h1>
+          <p class="title-subtitle">Look back at your 2025 on GitHub</p>
+          
+          <div class="input-section" id="inputSection">
+            <input type="text" class="username-input" id="usernameInput" placeholder="Enter GitHub username" />
+            <input type="password" class="username-input token-input" id="tokenInput" placeholder="GitHub token (optional)" />
+            <button class="start-btn" id="startBtn" onclick="generateWrapped()">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              START
+            </button>
+            <div class="demo-toggle">
+              <input type="checkbox" id="demoModeToggle" checked />
+              <label for="demoModeToggle">Demo Mode</label>
+              <span class="demo-badge">NO API</span>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+          </div>
+
+          <div class="loading-container" id="loadingContainer">
+            <div class="loading-spinner">
+              <svg class="loading-github-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </div>
+            <p class="loading-text">Generating your wrapped</p>
+            <p class="loading-status" id="loadingStatus">Fetching GitHub data...</p>
+            <div class="loading-progress">
+              <div class="loading-progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p class="loading-percentage" id="progressText">0%</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 1: Total Commits -->
+      <section class="slide theme-pink" id="slide-1" data-theme="pink">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="4"/>
+              <line x1="1.05" y1="12" x2="7" y2="12" stroke="currentColor" stroke-width="2"/>
+              <line x1="17.01" y1="12" x2="22.96" y2="12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            COMMITS THIS YEAR
+          </div>
+          <div class="big-number" id="commitsNumber">0</div>
+          <p class="stat-description" id="commitsDescription">
+            <span class="highlight-box" id="commitsVerdict">Loading...</span>
+          </p>
+          
+          <!-- GitHub-style Contribution Graph -->
+          <div class="contribution-graph" id="contributionGraph">
+            <!-- Will be populated by JavaScript -->
+          </div>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="5" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="19" cy="12" r="2"/>
+              <line x1="7" y1="12" x2="10" y2="12" stroke="currentColor" stroke-width="2"/>
+              <line x1="14" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Top Repositories -->
+      <section class="slide theme-cyan" id="slide-2" data-theme="cyan">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            YOUR TOP REPOSITORIES
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">REPOS</h2>
+          <p class="title-subtitle">The projects you poured your heart into in 2025.</p>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="6" y1="3" x2="6" y2="15"/>
+              <circle cx="18" cy="6" r="3"/>
+              <circle cx="6" cy="18" r="3"/>
+              <path d="M18 9a9 9 0 0 1-9 9"/>
+            </svg>
+          </div>
+
+          <div class="repos-container" id="reposContainer">
+            <!-- Repos will be populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Languages -->
+      <section class="slide theme-yellow" id="slide-3" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            LANGUAGES YOU SPOKE
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">CODE</h2>
+          <p class="title-subtitle">Your programming languages of 2025.</p>
+
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="4 17 10 11 4 5"/>
+              <line x1="12" y1="19" x2="20" y2="19"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+
+          <div class="languages-grid" id="languagesGrid">
+            <!-- Languages will be populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Streak & Days -->
+      <section class="slide theme-yellow" id="slide-4" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2v20M2 12h20"/>
+            </svg>
+            LONGEST STREAK
+          </div>
+          <div class="big-number" id="streakNumber">0</div>
+          <p class="stat-description">
+            <span id="streakDays">0</span> days straight! Plus, you coded on <span class="highlight-box" id="daysCodedNumber">0</span> days this year.
+          </p>
+          
+          <!-- Achievements badges -->
+          <div class="achievements-grid" id="achievementsGrid">
+            <!-- Achievements will be populated by JS -->
+          </div>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 23s-5-5.5-5-11c0-4.4 2.2-8 5-8s5 3.6 5 8c0 5.5-5 11-5 11zm0-16c-1.7 0-3 2.2-3 5 0 3.2 2 6.8 3 8.3 1-1.5 3-5.1 3-8.3 0-2.8-1.3-5-3-5z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <polyline points="9 14 11 16 15 12"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Fun Facts / Roast -->
+      <section class="slide theme-pink" id="slide-5" data-theme="pink">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            AGE IS JUST A NUMBER
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2rem, 6vw, 4rem);">FUN FACTS</h2>
+          <p class="stat-description" id="codingAgeText">
+            Your GitHub age is <span class="highlight-box" id="codingAge">0</span> years, but we think you're <span class="highlight-box" id="predictedAge">25</span>
+          </p>
+          <p class="stat-description" style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;" id="predictedAgeReason">
+            <!-- Reason will be populated by JS -->
+          </p>
+          <p class="stat-description" style="margin-top: 1rem;" id="oldestRepoText">
+            Oldest starred repo: <span class="highlight-box" id="oldestStarYear">2020</span> — <span id="oldestStarName">-</span>
+          </p>
+          <p class="stat-description" style="margin-top: 1rem;">
+            Most productive day: <span class="highlight-box" id="mostProductiveDay">-</span>
+          </p>
+          <p class="stat-description" style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;" id="roastText">
+            <!-- Roast will be populated by JS -->
+          </p>
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 1 2 2 6 2s6-1 6-2v-5"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2h10l2 5H5l2-5zm-2 7h14v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9zm7 2v6m-3-3h6"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Timeline -->
+      <section class="slide theme-yellow" id="slide-6" data-theme="yellow">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            YOUR YEAR IN CODE
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2.5rem, 7vw, 5rem);">TIMELINE</h2>
+          <p class="title-subtitle">Your monthly commit journey through 2025.</p>
+          
+          <div class="timeline-container" id="timelineContainer">
+            <!-- Timeline will be populated by JS -->
+          </div>
+          
+          <p class="stat-description" style="margin-top: 1.5rem;">
+            <br>
+            Peak month: <span class="highlight-box" id="peakMonth">-</span> with <span id="peakCommits">0</span> commits!
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 7: Your Squad -->
+      <section class="slide theme-purple" id="slide-7" data-theme="purple">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            YOUR GITHUB
+          </div>
+          <h2 class="title-main" style="font-size: clamp(3rem, 8vw, 6rem);">SQUAD</h2>
+          <p class="title-subtitle">Developers you collaborated with the most in 2025.</p>
+
+          <div class="squad-container" id="squadContainer">
+            <!-- Squad avatars will be populated by JS -->
+          </div>
+          
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 13h2l2-4 1 6 2-6 1 4h2M6 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Wise Quote -->
+      <section class="slide theme-green" id="slide-8" data-theme="green">
+        <div class="slide-content">
+          <div class="title-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+            </svg>
+            WORD FROM A WISE CODER
+          </div>
+          <h2 class="title-main" style="font-size: clamp(2rem, 5vw, 3.5rem);">WISDOM</h2>
+          
+          <div class="quote-container">
+            <p class="quote-text" id="wiseQuote">"Touch some grass, dude."</p>
+            <p class="quote-author" id="quoteAuthor">— The Universe</p>
+          </div>
+
+          <div class="deco-icons">
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18h6"/>
+              <path d="M10 22h4"/>
+              <path d="M15 2c1 1 1 3 1 5a7 7 0 1 1-8 0c0-2 0-4 1-5h6z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <svg class="deco-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Summary / Share - Discord Checkpoint Style -->
+      <section class="slide theme-pink" id="slide-9" data-theme="pink">
+        <div class="summary-layout">
+          <!-- Left side: Stacked cards -->
+          <div class="summary-cards">
+            <div class="card-stack">
+              <!-- Back card (dark) -->
+              <div class="github-card back">
+                <div class="card-image" style="background: linear-gradient(135deg, rgba(255,92,170,0.3), rgba(255,92,170,0.1));">
+                </div>
+              </div>
+              <!-- Front card (pink) -->
+              <div class="github-card front">
+                <div class="card-header">
+                  <span class="card-header-title">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    WRAPPED 2025
+                  </span>
+                  <span class="card-level" id="cardLevel">LV. 1</span>
+                </div>
+                <div class="card-image" id="cardImageContainer">
+                  <img id="cardProfileImg" class="card-profile-img" src="" alt="">
+                  <span class="card-vertical-text">I<span class="heart">♥</span><br>OPEN SOURCE</span>
+                </div>
+                <div class="card-footer">
+                  <div class="card-info">
+                    <div class="card-title" id="cardUsername">Developer</div>
+                  </div>
+                  <div class="card-icons">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="3" height="10" rx="1"/><rect x="8" y="6" width="3" height="15" rx="1"/><rect x="13" y="9" width="3" height="12" rx="1"/><rect x="18" y="3" width="3" height="18" rx="1"/></svg>
+                  </div>
+                </div>
+                <div class="card-stats">
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardCommits">0</div>
+                    <div class="card-stat-label">Commits</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardPRs">0</div>
+                    <div class="card-stat-label">PRs</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardStreak">0</div>
+                    <div class="card-stat-label">Streak</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardStars">0</div>
+                    <div class="card-stat-label">Stars</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardLanguages">0</div>
+                    <div class="card-stat-label">Languages</div>
+                  </div>
+                  <div class="card-stat">
+                    <div class="card-stat-value" id="cardAchievements">0</div>
+                    <div class="card-stat-label">Badges</div>
+                  </div>
+                  <div class="card-stat wide">
+                    <div class="card-stat-label">Top Lang:</div>
+                    <div class="card-stat-value" id="cardTopLang">-</div>
+                  </div>
+                  <div class="card-stat wide">
+                    <div class="card-stat-label">Top Repo:</div>
+                    <div class="card-stat-value" id="cardTopRepo">-</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Stats panel -->
+          <div class="summary-stats">
+            <div class="summary-header">
+              <div class="summary-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                YOUR GITHUB WRAPPED
+              </div>
+              <h2 class="summary-title">SUMMARY</h2>
+            </div>
+
+            <div class="stats-grid" id="summaryStatsGrid">
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+                  COMMITS
+                </div>
+                <div class="stat-item-value" id="summaryCommits">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  STREAK
+                </div>
+                <div class="stat-item-value" id="summaryStreak">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 21H6a2 2 0 0 1-2-2V7l4-4h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2zM8 3v4H4"/></svg>
+                  PULL REQUESTS
+                </div>
+                <div class="stat-item-value" id="summaryPRs">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  STARS EARNED
+                </div>
+                <div class="stat-item-value" id="summaryStars">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  LANGUAGES
+                </div>
+                <div class="stat-item-value" id="summaryLanguages">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  TOP LANGUAGE
+                </div>
+                <div class="stat-item-value small" id="summaryTopLang">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  TOP REPO
+                </div>
+                <div class="stat-item-value small" id="summaryTopRepo">-</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-item-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                  BADGES EARNED
+                </div>
+                <div class="stat-item-value" id="summaryAchievements">0</div>
+              </div>
+            </div>
+
+            <button class="restart-btn" onclick="resetAndRestart()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+              </svg>
+              START OVER
+            </button>
+
+            <button class="share-btn" onclick="shareWrapped()">
+              SHARE
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"/>
+                <polyline points="7 7 17 7 17 17"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow left" id="navLeft" onclick="prevSlide()" style="display: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="nav-arrow right" id="navRight" onclick="nextSlide()" style="display: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Transition Overlay -->
+    <div class="transition-overlay" id="transitionOverlay"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container" id="progressBarContainer" style="display: none;">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+      Made with 💖 using Motia Framework
+    </footer>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+    let currentSlide = 0;
+    let totalSlides = 0; // Will be set dynamically
+    let wrappedData = null;
+    let pollInterval = null;
+    let isInWrapped = false;
+    let autoPlayInterval = null; // legacy; replaced by timeout for dynamic durations
+    let autoPlayTimeout = null;  // dynamic per-slide scheduling
+    let autoPlayEnabled = false;
+    const AUTO_PLAY_BASE_DELAY = 5000; // base buffer after reveals, before transition
+    const REVEAL_STEP_DELAY = 1000;   // per-element delay in sequential reveal
+    let autoPlayDurations = [];       // per-slide durations (computed)
+    let totalAutoPlayDuration = 0;    // sum of durations for progress bar
+    let presentationStartTime = null;
+    let progressAnimationFrame = null;
+
+    // Theme colors for dot pattern
+    const themeColors = {
+      green: '#00ff87',
+      pink: '#ff5caa',
+      cyan: '#00ffd5',
+      yellow: '#ffd93d',
+      purple: '#a855f7'
+    };
+
+    // Creative transition types for each slide (only diagonal and split)
+    const transitionTypes = [
+      'none',       // Slide 0: Landing (no transition needed)
+      'diagonal',   // Slide 1: Commits
+      'split',      // Slide 2: Repos
+      'diagonal',   // Slide 3: Languages
+      'split',      // Slide 4: Streak
+      'diagonal',   // Slide 5: Fun Facts
+      'split',      // Slide 6: Timeline
+      'diagonal',   // Slide 7: Squad
+      'split',      // Slide 8: Wisdom
+      'diagonal'    // Slide 9: Summary
+    ];
+
+    // Create transition overlay content
+    function createTransitionContent(type, color) {
+      const overlay = document.getElementById('transitionOverlay');
+      overlay.innerHTML = '';
+      
+      switch(type) {
+        case 'tiles':
+          const tilesGrid = document.createElement('div');
+          tilesGrid.className = 'tiles-grid';
+          for (let i = 0; i < 48; i++) { // 8x6 grid
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.style.background = color;
+            // Stagger animation delays based on position
+            const row = Math.floor(i / 8);
+            const col = i % 8;
+            const delay = (row + col) * 30; // diagonal stagger
+            tile.style.animationDelay = delay + 'ms';
+            tilesGrid.appendChild(tile);
+          }
+          overlay.appendChild(tilesGrid);
+          return tilesGrid;
+          
+        case 'diagonal':
+          const diagonal = document.createElement('div');
+          diagonal.className = 'diagonal-wipe';
+          diagonal.style.background = color;
+          overlay.appendChild(diagonal);
+          return diagonal;
+          
+        case 'bubble':
+          const bubble = document.createElement('div');
+          bubble.className = 'bubble-reveal';
+          bubble.style.background = color;
+          overlay.appendChild(bubble);
+          return bubble;
+          
+        case 'split':
+          const split = document.createElement('div');
+          split.className = 'split-transition horizontal';
+          split.innerHTML = `
+            <div class="split-half" style="background: ${color}"></div>
+            <div class="split-half" style="background: ${color}"></div>
+          `;
+          overlay.appendChild(split);
+          return split;
+          
+        case 'wave':
+          const wave = document.createElement('div');
+          wave.className = 'wave-reveal';
+          wave.style.background = color;
+          overlay.appendChild(wave);
+          return wave;
+          
+        default:
+          return null;
+      }
+    }
+
+    // Play transition animation
+    async function playTransition(type, color, isOut = false) {
+      return new Promise((resolve) => {
+        const element = createTransitionContent(type, color);
+        if (!element) {
+          resolve();
+          return;
+        }
+        
+        // Small delay to ensure DOM is ready
+        requestAnimationFrame(() => {
+          element.classList.add(isOut ? 'animate-out' : 'animate');
+          
+          // Determine animation duration based on type (increased for visibility)
+          const durations = {
+            tiles: isOut ? 600 : 1000,
+            diagonal: isOut ? 700 : 1200,
+            bubble: isOut ? 700 : 1200,
+            split: isOut ? 500 : 800,
+            wave: isOut ? 700 : 1200
+          };
+          
+          setTimeout(() => {
+            if (isOut) {
+              document.getElementById('transitionOverlay').innerHTML = '';
+            }
+            resolve();
+          }, durations[type] || 500);
+        });
+      });
+    }
+
+    // Mock data for demo mode
+    function generateMockData(username) {
+      return {
+        username: username || 'demo_user',
+        year: 2025,
+        status: 'completed',
+        generatedAt: new Date().toISOString(),
+        profile: {
+          username: username || 'demo_user',
+          avatarUrl: `https://api.dicebear.com/7.x/identicon/svg?seed=${username || 'demo'}`,
+          name: username ? username.charAt(0).toUpperCase() + username.slice(1) : 'Demo Developer',
+          bio: 'A passionate developer exploring the world of code',
+          company: 'OpenSource Inc',
+          location: 'The Cloud',
+          joinDate: '2020-01-15T00:00:00Z',
+          followers: 1234,
+          following: 567,
+          publicRepos: 42
+        },
+        stats: {
+          totalCommits: 847,
+          totalPRs: 56,
+          totalPRsMerged: 48,
+          totalIssues: 23,
+          totalReviews: 89,
+          totalStars: 156,
+          longestStreak: 42,
+          currentStreak: 7,
+          mostCommitsDay: { date: '2025-03-15', count: 28 },
+          mostDiverseDay: { date: '2025-06-20', languages: ['TypeScript', 'Python', 'Go'] },
+          daysCodedThisYear: 234
+        },
+        languages: [
+          { name: 'TypeScript', percentage: 35.2, color: '#3178c6', bytes: 450000 },
+          { name: 'Python', percentage: 24.8, color: '#3572A5', bytes: 320000 },
+          { name: 'JavaScript', percentage: 18.5, color: '#f1e05a', bytes: 240000 },
+          { name: 'Go', percentage: 12.1, color: '#00ADD8', bytes: 155000 },
+          { name: 'Rust', percentage: 5.7, color: '#dea584', bytes: 73000 },
+          { name: 'CSS', percentage: 3.7, color: '#563d7c', bytes: 48000 }
+        ],
+        topRepos: [
+          { name: 'awesome-project', fullName: `${username}/awesome-project`, description: 'An awesome open source project that helps developers', stars: 234, forks: 45, language: 'TypeScript', commits: 156, url: '#', isPrivate: false },
+          { name: 'cli-tool', fullName: `${username}/cli-tool`, description: 'A powerful CLI tool for automation', stars: 89, forks: 12, language: 'Go', commits: 78, url: '#', isPrivate: false },
+          { name: 'web-app', fullName: `${username}/web-app`, description: 'Modern web application with React', stars: 56, forks: 8, language: 'JavaScript', commits: 234, url: '#', isPrivate: false }
+        ],
+        timeline: [
+          { month: 'January', year: 2025, commits: 65, prs: 4, issues: 2, highlights: [] },
+          { month: 'February', year: 2025, commits: 78, prs: 6, issues: 1, highlights: [] },
+          { month: 'March', year: 2025, commits: 92, prs: 8, issues: 3, highlights: [] },
+          { month: 'April', year: 2025, commits: 54, prs: 3, issues: 2, highlights: [] },
+          { month: 'May', year: 2025, commits: 87, prs: 7, issues: 4, highlights: [] },
+          { month: 'June', year: 2025, commits: 103, prs: 9, issues: 2, highlights: [] },
+          { month: 'July', year: 2025, commits: 76, prs: 5, issues: 1, highlights: [] },
+          { month: 'August', year: 2025, commits: 68, prs: 4, issues: 3, highlights: [] },
+          { month: 'September', year: 2025, commits: 91, prs: 6, issues: 2, highlights: [] },
+          { month: 'October', year: 2025, commits: 82, prs: 5, issues: 1, highlights: [] },
+          { month: 'November', year: 2025, commits: 73, prs: 4, issues: 2, highlights: [] },
+          { month: 'December', year: 2025, commits: 45, prs: 3, issues: 0, highlights: [] }
+        ],
+        titles: [
+          { id: 'commit-master', title: 'Commit Master', description: '500+ commits this year', icon: '🔥' },
+          { id: 'streak-lord', title: 'Streak Lord', description: '30+ day coding streak', icon: '⚡' },
+          { id: 'polyglot', title: 'Polyglot', description: '5+ programming languages', icon: '🌐' },
+          { id: 'open-sourcerer', title: 'Open Sourcerer', description: 'Active contributor', icon: '✨' }
+        ],
+        squad: [
+          { username: 'alice_dev', avatarUrl: 'https://api.dicebear.com/7.x/identicon/svg?seed=alice', sharedProjects: 5, collaborationType: 'contributor' },
+          { username: 'bob_coder', avatarUrl: 'https://api.dicebear.com/7.x/identicon/svg?seed=bob', sharedProjects: 3, collaborationType: 'reviewer' }
+        ],
+        funFacts: {
+          codingAge: 4,
+          predictedAge: 28,
+          predictedAgeReason: 'TypeScript maximalist energy detected',
+          oldestStarredRepoYear: 2018,
+          oldestStarredRepoName: 'torvalds/linux',
+          favoriteTimeOfDay: 'Night Owl (10PM-2AM)',
+          mostProductiveDay: 'Wednesday',
+          quote: 'Code is poetry',
+          roast: 'You commit more on weekends than weekdays... work-life balance who?'
+        },
+        streak: {
+          longestStreak: 42,
+          longestStreakStart: '2025-02-01',
+          longestStreakEnd: '2025-03-14',
+          currentStreak: 7
+        },
+        contributionDays: generateMockContributionDays()
+      };
+    }
+
+    // Generate mock contribution days for demo mode
+    function generateMockContributionDays() {
+      const days = [];
+      const startDate = new Date('2025-01-01');
+      for (let i = 0; i < 365; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        // Generate realistic-looking contribution pattern
+        const dayOfWeek = date.getDay();
+        const weekOfYear = Math.floor(i / 7);
+        // More activity mid-year, less on weekends
+        const baseChance = 0.3 + Math.sin((weekOfYear / 52) * Math.PI) * 0.3;
+        const weekendPenalty = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.5 : 1;
+        const hasCommit = Math.random() < (baseChance * weekendPenalty);
+        const count = hasCommit ? Math.floor(Math.random() * 12) + 1 : 0;
+        days.push({
+          date: date.toISOString().split('T')[0],
+          count: count,
+          weekday: dayOfWeek
+        });
+      }
+      return days;
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDotPatternColor('green');
+      document.getElementById('usernameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') generateWrapped();
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!isInWrapped) return;
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    function updateDotPatternColor(theme) {
+      const dotPattern = document.getElementById('dotPattern');
+      dotPattern.style.color = themeColors[theme] || themeColors.green;
+    }
+
+    function generateProgressNav() {
+      const nav = document.getElementById('progressNav');
+      const icons = [
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>', // Landing
+        '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>', // Commits
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>', // Repos
+        '<svg viewBox="0 0 24 24" fill="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>', // Languages
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>', // Streak
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM8.5 8C9.33 8 10 8.67 10 9.5S9.33 11 8.5 11 7 10.33 7 9.5 7.67 8 8.5 8zm7 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm-3.5 9.5c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/></svg>', // Fun Facts
+        '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', // Timeline
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>', // Squad
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>', // Wisdom
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>' // Summary
+      ];
+      
+      nav.innerHTML = icons.map((icon, i) => 
+        `<div class="progress-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})">${icon}</div>`
+      ).join('');
+      nav.style.visibility = 'visible';
+    }
+
+    function updateProgressNav() {
+      const dots = document.querySelectorAll('.progress-dot');
+      const currentTheme = document.querySelectorAll('.slide')[currentSlide]?.dataset.theme || 'green';
+      const activeColor = themeColors[currentTheme];
+      
+      dots.forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        dot.style.backgroundColor = ''; // Reset
+        if (i === currentSlide) {
+          dot.classList.add('active');
+          dot.style.backgroundColor = activeColor;
+        } else if (i < currentSlide) {
+          dot.classList.add('completed');
+        }
+      });
+    }
+
+    let isTransitioning = false;
+
+    async function goToSlide(index) {
+      if (index < 0 || index >= totalSlides || isTransitioning) return;
+      if (index === currentSlide) return;
+      
+      isTransitioning = true;
+      
+      const slides = document.querySelectorAll('.slide');
+      const currentSlideEl = slides[currentSlide];
+      const nextSlideEl = slides[index];
+      const isForward = index > currentSlide;
+      
+      // Get transition type and color for next slide
+      const transitionType = transitionTypes[index] || 'none';
+      const nextTheme = nextSlideEl.dataset.theme;
+      const transitionColor = themeColors[nextTheme];
+      
+      // Reset any existing animations on current slide elements
+      currentSlideEl.querySelectorAll('.title-label, .title-main, .big-number, .title-subtitle, .stat-description, .deco-icons, .start-btn, .input-section, .repo-card, .language-card').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth; // Force reflow
+      });
+      
+      // Start creative transition IN
+      if (transitionType !== 'none' && isInWrapped) {
+        await playTransition(transitionType, transitionColor, false);
+      }
+      
+      // Ensure current slide doesn't carry sequential override
+      currentSlideEl.classList.remove('sequential-reveal');
+
+      // Exit current slide
+      currentSlideEl.classList.remove('active');
+      currentSlideEl.classList.add(isForward ? 'exit' : 'prev');
+      
+      // Small delay for slide swap
+      await new Promise(r => setTimeout(r, 50));
+      
+      // Prepare next slide elements to be hidden before activation
+      prepareSlideForReveal(nextSlideEl);
+
+      // Swap slides
+      currentSlideEl.classList.remove('exit', 'prev');
+      // Apply sequential reveal behavior to next slide
+      nextSlideEl.classList.add('sequential-reveal');
+      nextSlideEl.classList.add('active');
+      currentSlide = index;
+      
+      // Update theme colors
+      updateDotPatternColor(nextTheme);
+      
+      // Update nav arrows color
+      document.querySelectorAll('.nav-arrow').forEach(arrow => {
+        arrow.style.color = themeColors[nextTheme];
+      });
+      
+      // Update progress bar
+      updateProgressBar();
+      updateProgressNav();
+      updateNavButtons();
+      
+      // Transition OUT (after slide is visible)
+      if (transitionType !== 'none' && isInWrapped) {
+        await playTransition(transitionType, transitionColor, true);
+      }
+      
+      // Reveal text content sequentially
+      revealSlideContent(nextSlideEl);
+
+      // Start background music when moving to slide 1
+      if (index === 1 && !isMusicPlaying) {
+        bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        isMusicPlaying = true;
+        document.getElementById('soundOnIcon').style.display = 'block';
+        document.getElementById('soundOffIcon').style.display = 'none';
+      }
+
+      // Numbers animate within reveal sequence only (after visible)
+      
+      isTransitioning = false;
+    }
+
+    function updateProgressBar() {
+      const progressFill = document.getElementById('progressBarFill');
+      
+      // Update progress bar color based on current theme
+      const currentTheme = document.querySelectorAll('.slide')[currentSlide]?.dataset.theme || 'green';
+      const themeColor = themeColors[currentTheme];
+      progressFill.style.color = themeColor;
+      
+      // Only update width if not auto-playing (discrete mode)
+      if (!autoPlayEnabled) {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = progress + '%';
+      }
+      // If auto-playing, the animateProgressBar function handles width updates
+    }
+
+    function animateProgressBar() {
+      if (!autoPlayEnabled || !presentationStartTime) return;
+      
+      const progressFill = document.getElementById('progressBarFill');
+      const totalElapsed = Date.now() - presentationStartTime;
+      const totalDuration = totalAutoPlayDuration || (totalSlides * REVEAL_STEP_DELAY);
+      
+      // Calculate progress based on total elapsed time
+      const totalProgress = Math.min((totalElapsed / totalDuration) * 100, 100);
+      progressFill.style.width = totalProgress + '%';
+      
+      // Continue animation until we reach 100%
+      if (totalProgress < 100 && autoPlayEnabled) {
+        progressAnimationFrame = requestAnimationFrame(animateProgressBar);
+      } else if (totalProgress >= 100) {
+        // Ensure we hit exactly 100%
+        progressFill.style.width = '100%';
+        stopAutoPlay();
+        showShareButton();
+      }
+    }
+
+    function animateNumbers(slideEl) {
+      // Find elements with data-count attribute and animate them
+      const countElements = slideEl.querySelectorAll('.big-number[data-count], [data-animate-count]');
+      countElements.forEach(el => {
+        const target = parseInt(el.dataset.count || el.textContent.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(target)) return;
+        if (el.dataset.animated === 'true') return;
+        el.dataset.animated = 'true';
+        animateValue(el, 0, target, 800);
+      });
+    }
+
+    function animateValue(element, start, end, duration) {
+      const startTime = performance.now();
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function (ease-out)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (end - start) * easeOut);
+        
+        element.textContent = formatNumber(current);
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.textContent = formatNumber(end);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+
+    function setAnimatedCount(elementId, value) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.dataset.count = value;
+      el.dataset.animateCount = 'true';
+      el.dataset.animated = 'false';
+      el.textContent = formatNumber(0);
+    }
+
+    function getRevealElements(slideEl) {
+      // Collect in DOM (top-to-bottom) order; include all major slide elements, plus summary
+      return Array.from(slideEl.querySelectorAll([
+        '.title-label',
+        '.title-main',
+        '.big-number',
+        '.title-subtitle',
+        '.stat-description',
+        // Content containers
+        '.github-3d-frame',
+        '.contribution-graph',
+        '.repos-container',
+        '.languages-grid',
+        '.achievements-grid',
+        '.timeline-container',
+        '.squad-container',
+        '.quote-container',
+        // Summary page elements
+        '.summary-layout',
+        '.summary-header',
+        '.summary-title',
+        '.summary-stats',
+        '.stats-grid',
+        '.stat-item',
+        '.stat-item-value',
+        // UI bits
+        '.deco-icons',
+        '.start-btn',
+        '.input-section'
+      ].join(', ')));
+    }
+
+    function prepareSlideForReveal(slideEl) {
+      const elements = getRevealElements(slideEl);
+
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+        el.style.transition = 'opacity 400ms ease, transform 400ms ease';
+      });
+    }
+
+    function revealSlideContent(slideEl) {
+      // Reveal elements strictly in DOM order (top-to-bottom)
+      const elements = getRevealElements(slideEl);
+
+      // Stagger reveal
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const slideIndex = slides.indexOf(slideEl);
+      const isLastSlide = (slideIndex === slides.length - 1);
+      let delay = 0;
+      const step = isLastSlide ? 300 : REVEAL_STEP_DELAY; // faster on last slide
+      elements.forEach((el, index) => {
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+
+          // Trigger number animation when element appears and for any nested targets
+          const candidates = [el, ...Array.from(el.querySelectorAll('[data-animate-count="true"]'))];
+          candidates.forEach(node => {
+            const nodeTarget = parseInt((node.dataset && node.dataset.count) || node.textContent.replace(/[^0-9]/g, ''), 10);
+            const shouldAnimate = (!isNaN(nodeTarget)) && (
+              (node.dataset && node.dataset.animateCount) === 'true' || node.classList.contains('big-number')
+            );
+            if (shouldAnimate && node.dataset.animated !== 'true') {
+              node.dataset.animated = 'true';
+              animateValue(node, 0, nodeTarget, 800);
+            }
+          });
+
+          // Show buttons after last element on last slide
+          if (isLastSlide && index === elements.length - 1) {
+            setTimeout(() => {
+              showShareButton();
+            }, 500); // small delay after last element
+          }
+        }, delay);
+        delay += step;
+      });
+    }
+
+    // Auto-play functions
+    function startAutoPlay() {
+      // Clear any existing scheduling
+      if (autoPlayInterval) clearInterval(autoPlayInterval);
+      if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+
+      // Compute dynamic durations based on reveal element counts per slide
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      autoPlayDurations = slides.map((slide, idx) => {
+        const count = getRevealElements(slide).length;
+        // duration = count * step + base buffer; extra pause on last slide
+        const isLastSlide = (idx === slides.length - 1);
+        const stepDelay = isLastSlide ? 300 : REVEAL_STEP_DELAY; // faster on last slide
+        const bufferTime = isLastSlide ? 1000 : AUTO_PLAY_BASE_DELAY;
+        return (count * stepDelay) + bufferTime;
+      });
+      totalAutoPlayDuration = autoPlayDurations.reduce((a, b) => a + b, 0);
+
+      // Presentation start time should account for elapsed of previous slides
+      const elapsedBefore = autoPlayDurations.slice(0, currentSlide).reduce((a, b) => a + b, 0);
+      autoPlayEnabled = true;
+      presentationStartTime = Date.now() - elapsedBefore; // Account for current position
+      resetTimer();
+
+      const scheduleNext = () => {
+        if (!autoPlayEnabled) return;
+        if (currentSlide < totalSlides - 1) {
+          const duration = autoPlayDurations[currentSlide] || (3 * REVEAL_STEP_DELAY);
+          autoPlayTimeout = setTimeout(() => {
+            nextSlide();
+            scheduleNext();
+          }, duration);
+        }
+        // Don't show buttons here; let animateProgressBar show them at 100%
+      };
+      scheduleNext();
+    }
+
+    function stopAutoPlay() {
+      autoPlayEnabled = false;
+      if (autoPlayInterval) { clearInterval(autoPlayInterval); autoPlayInterval = null; }
+      if (autoPlayTimeout) { clearTimeout(autoPlayTimeout); autoPlayTimeout = null; }
+      pauseTimer();
+      presentationStartTime = null; // Reset for next auto-play session
+    }
+
+    function resetTimer() {
+      if (!presentationStartTime) {
+        presentationStartTime = Date.now();
+      }
+      if (progressAnimationFrame) {
+        cancelAnimationFrame(progressAnimationFrame);
+      }
+      if (autoPlayEnabled) {
+        animateProgressBar();
+      }
+    }
+
+    function pauseTimer() {
+      if (progressAnimationFrame) {
+        cancelAnimationFrame(progressAnimationFrame);
+        progressAnimationFrame = null;
+      }
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayEnabled) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+      updateAutoPlayButton();
+    }
+
+    function updateAutoPlayButton() {
+      const btn = document.getElementById('autoPlayBtn');
+      if (btn) {
+        btn.innerHTML = autoPlayEnabled ? 
+          '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>' :
+          '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+        btn.title = autoPlayEnabled ? 'Pause auto-play' : 'Start auto-play';
+      }
+    }
+
+    // Pause auto-play on user interaction
+    function handleUserInteraction() {
+      if (autoPlayEnabled) {
+        stopAutoPlay();
+        updateAutoPlayButton();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        handleUserInteraction();
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    function updateNavButtons() {
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      
+      leftBtn.disabled = currentSlide === 0;
+      rightBtn.disabled = currentSlide === totalSlides - 1;
+      
+      // Only manage display if buttons are visible (after presentation completes)
+      const presentationComplete = leftBtn.style.opacity === '1';
+      
+      if (presentationComplete) {
+        // Presentation has completed, manage button visibility normally
+        if (currentSlide === totalSlides - 1) {
+          rightBtn.style.display = 'none';
+          rightBtn.style.pointerEvents = 'none';
+        } else {
+          rightBtn.style.display = 'flex';
+          rightBtn.style.opacity = '1';
+          rightBtn.style.pointerEvents = 'auto';
+        }
+        
+        // Ensure left button stays functional
+        leftBtn.style.pointerEvents = 'auto';
+      }
+    }
+
+    function showShareButton() {
+      const shareBtn = document.querySelector('.share-btn');
+      const restartBtn = document.querySelector('.restart-btn');
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      
+      setTimeout(() => {
+        if (shareBtn) shareBtn.classList.add('show');
+        if (restartBtn) restartBtn.classList.add('show');
+        
+        // Make navigation buttons visible and enable manual navigation
+        if (leftBtn) {
+          leftBtn.style.opacity = '1';
+          leftBtn.style.pointerEvents = 'auto';
+        }
+        if (rightBtn && currentSlide < totalSlides - 1) {
+          rightBtn.style.opacity = '1';
+          rightBtn.style.display = 'flex';
+          rightBtn.style.pointerEvents = 'auto';
+        }
+        
+        // Update play button to show play icon (since auto-play has stopped)
+        updateAutoPlayButton();
+      }, 300);
+    }
+
+    function showWrappedUI() {
+      isInWrapped = true;
+      
+      // Count actual slides
+      totalSlides = document.querySelectorAll('.slide').length;
+      
+      document.getElementById('logo').style.visibility = 'visible';
+      document.getElementById('headerControls').style.visibility = 'visible';
+      
+      // Show nav buttons but make them invisible during auto-play
+      const leftBtn = document.getElementById('navLeft');
+      const rightBtn = document.getElementById('navRight');
+      leftBtn.style.display = 'flex';
+      rightBtn.style.display = 'flex';
+      leftBtn.style.opacity = '0';
+      rightBtn.style.opacity = '0';
+      leftBtn.style.pointerEvents = 'none';
+      rightBtn.style.pointerEvents = 'none';
+      leftBtn.style.transition = 'opacity 0.5s ease';
+      rightBtn.style.transition = 'opacity 0.5s ease';
+      
+      document.getElementById('progressBarContainer').style.display = 'block';
+      document.getElementById('footer').style.display = 'none';
+      
+      generateProgressNav();
+      updateNavButtons();
+      
+      // Initialize progress bar at 0% AFTER other updates
+      const progressFill = document.getElementById('progressBarFill');
+      const theme = document.getElementById('slide-0').dataset.theme;
+      progressFill.style.width = '0%';
+      progressFill.style.color = themeColors[theme];
+      
+      // Update nav arrow colors
+      document.querySelectorAll('.nav-arrow').forEach(arrow => {
+        arrow.style.color = themeColors[theme];
+      });
+      
+      // Start auto-play by default
+      setTimeout(() => {
+        startAutoPlay();
+        updateAutoPlayButton();
+      }, 500);
+    }
+
+    function hideWrappedUI() {
+      isInWrapped = false;
+      document.getElementById('logo').style.visibility = 'hidden';
+      document.getElementById('progressNav').style.visibility = 'hidden';
+      document.getElementById('headerControls').style.visibility = 'hidden';
+      document.getElementById('navLeft').style.display = 'none';
+      document.getElementById('navRight').style.display = 'none';
+      document.getElementById('progressBarContainer').style.display = 'none';
+      document.getElementById('footer').style.display = 'block';
+    }
+
+    async function generateWrapped() {
+      const username = document.getElementById('usernameInput').value.trim();
+      if (!username) { showError('Please enter a GitHub username'); return; }
+
+      // Enter fullscreen mode
+      enterFullscreen();
+
+      // Check if demo mode is enabled
+      const demoMode = document.getElementById('demoModeToggle').checked;
+      
+      if (demoMode) {
+        // Demo mode: use mock data without API calls
+        hideError();
+        showLoading();
+        
+        // Simulate loading animation
+        let progress = 0;
+        const loadingInterval = setInterval(() => {
+          progress += 10;
+          updateProgress(Math.min(progress, 100));
+          
+          if (progress >= 100) {
+            clearInterval(loadingInterval);
+            hideLoading();
+            wrappedData = generateMockData(username);
+            displayWrapped(wrappedData);
+          }
+        }, 150);
+        
+        return;
+      }
+
+      // Normal mode: use real API
+      hideError();
+      showLoading();
+
+      try {
+        const token = document.getElementById('tokenInput').value.trim();
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(`${API_BASE}/wrapped/${username}`, {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({ 
+            year: new Date().getFullYear()
+          })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to start generation');
+        }
+
+        pollStatus(username);
+      } catch (error) {
+        hideLoading(); showError(error.message);
+      }
+    }
+
+    function pollStatus(username) {
+      let attempts = 0;
+      const maxAttempts = 60;
+
+      pollInterval = setInterval(async () => {
+        attempts++;
+        try {
+          const response = await fetch(`${API_BASE}/wrapped/${username}/status`);
+          const data = await response.json();
+          updateProgress(data.progress || Math.min(attempts * 5, 90));
+
+          if (data.status === 'completed') {
+            clearInterval(pollInterval);
+            fetchWrappedData(username);
+          } else if (data.status === 'failed') {
+            clearInterval(pollInterval); hideLoading();
+            showError(data.error || 'Generation failed');
+          } else if (attempts >= maxAttempts) {
+            clearInterval(pollInterval); hideLoading();
+            showError('Generation timed out. Please try again.');
+          }
+        } catch (error) {
+          clearInterval(pollInterval); hideLoading();
+          showError('Failed to check status');
+        }
+      }, 2000);
+    }
+
+    async function fetchWrappedData(username) {
+      try {
+        const response = await fetch(`${API_BASE}/wrapped/${username}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to fetch data');
+        }
+
+        wrappedData = result.data;
+        hideLoading();
+        displayWrapped(wrappedData);
+      } catch (error) {
+        hideLoading(); showError(error.message);
+      }
+    }
+
+    function displayWrapped(data) {
+      // Commits
+      setAnimatedCount('commitsNumber', data.stats.totalCommits);
+      const commitVerdict = getCommitVerdict(data.stats.totalCommits);
+      document.getElementById('commitsDescription').innerHTML = commitVerdict;
+
+      // Generate Contribution Graph from real data
+      const contributionGraph = document.getElementById('contributionGraph');
+      if (contributionGraph && data.contributionDays && data.contributionDays.length > 0) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        // Generate month labels
+        let monthsHtml = '<div class="contribution-months">';
+        months.forEach(m => { monthsHtml += `<span class="contribution-month">${m}</span>`; });
+        monthsHtml += '</div>';
+        
+        // Build a map of date -> count for quick lookup
+        const contributionMap = {};
+        data.contributionDays.forEach(day => {
+          contributionMap[day.date] = day.count;
+        });
+        
+        // Generate grid - 7 rows (days) x 52 cols (weeks)
+        // Start from first day of the year
+        const year = data.year || 2025;
+        const startDate = new Date(`${year}-01-01`);
+        const startDayOfWeek = startDate.getDay(); // 0 = Sunday
+        
+        let gridHtml = '';
+        for (let day = 0; day < 7; day++) {
+          gridHtml += '<div class="contribution-week">';
+          for (let week = 0; week < 52; week++) {
+            // Calculate the actual date for this cell
+            const daysFromStart = week * 7 + day - startDayOfWeek;
+            const cellDate = new Date(startDate);
+            cellDate.setDate(startDate.getDate() + daysFromStart);
+            const dateStr = cellDate.toISOString().split('T')[0];
+            
+            // Get contribution count for this date
+            const count = contributionMap[dateStr] || 0;
+            
+            // GitHub-style intensity levels (fixed thresholds)
+            let level = 0;
+            if (count >= 10) level = 4;
+            else if (count >= 5) level = 3;
+            else if (count >= 2) level = 2;
+            else if (count >= 1) level = 1;
+            
+            gridHtml += `<div class="contribution-day level-${level}" title="${dateStr}: ${count} contributions"></div>`;
+          }
+          gridHtml += '</div>';
+        }
+        
+        contributionGraph.innerHTML = monthsHtml + gridHtml;
+      } else if (contributionGraph) {
+        // Fallback: show empty graph with message
+        contributionGraph.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">No contribution data available</p>';
+      }
+
+      // Repos
+      const reposContainer = document.getElementById('reposContainer');
+      if (data.topRepos && data.topRepos.length > 0) {
+        reposContainer.innerHTML = data.topRepos.slice(0, 3).map((repo, i) => `
+          <div class="repo-card ${i === 0 ? 'featured' : ''}">
+            <span class="repo-rank">#${i + 1}</span>
+            <div class="repo-avatar">${repo.name.charAt(0).toUpperCase()}</div>
+            <div class="repo-info">
+              <div class="repo-name">${repo.name}</div>
+              ${repo.description ? `<div class="repo-description">${repo.description.slice(0, 60)}${repo.description.length > 60 ? '...' : ''}</div>` : ''}
+            </div>
+            <div class="repo-stats">
+              <div class="repo-stat">
+                <div class="repo-stat-value">${repo.stars}</div>
+                <div class="repo-stat-label">Stars</div>
+              </div>
+              <div class="repo-stat">
+                <div class="repo-stat-value">${repo.forks}</div>
+                <div class="repo-stat-label">Forks</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Languages
+      const languagesGrid = document.getElementById('languagesGrid');
+      if (data.languages && data.languages.length > 0) {
+        languagesGrid.innerHTML = data.languages.slice(0, 6).map((lang, index) => `
+          <div class="language-card" style="--lang-color: ${lang.color}; --lang-percent: ${lang.percentage}%;">
+            <span class="language-rank">#${index + 1}</span>
+            <div class="language-dot" style="background: ${lang.color}"></div>
+            <div class="language-info">
+              <span class="language-name">${lang.name}</span>
+              <div class="language-stats">
+                <div class="language-bar-container">
+                  <div class="language-bar" style="width: ${lang.percentage}%; background: ${lang.color};"></div>
+                </div>
+                <span class="language-percent">${lang.percentage}%</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Streak
+      setAnimatedCount('streakNumber', data.stats.longestStreak);
+      setAnimatedCount('streakDays', data.stats.longestStreak);
+      setAnimatedCount('daysCodedNumber', data.stats.daysCodedThisYear);
+
+      // Badges/Titles earned based on activity
+      const achievementsGrid = document.getElementById('achievementsGrid');
+      if (data.titles && data.titles.length > 0) {
+        achievementsGrid.innerHTML = data.titles.slice(0, 6).map(title => `
+          <div class="achievement-badge" title="${title.description}">
+            <span class="achievement-icon">${title.icon}</span>
+            <span>${title.title}</span>
+          </div>
+        `).join('');
+      } else {
+        achievementsGrid.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No badges earned yet</p>';
+      }
+
+      // Fun Facts / Roast (Slide 6)
+      if (data.funFacts) {
+        document.getElementById('codingAge').textContent = data.funFacts.codingAge || '?';
+        document.getElementById('predictedAge').textContent = data.funFacts.predictedAge || '25';
+        document.getElementById('predictedAgeReason').textContent = data.funFacts.predictedAgeReason || '';
+        document.getElementById('oldestStarYear').textContent = data.funFacts.oldestStarredRepoYear || '?';
+        document.getElementById('oldestStarName').textContent = data.funFacts.oldestStarredRepoName || 'unknown';
+        document.getElementById('mostProductiveDay').textContent = data.funFacts.mostProductiveDay || '-';
+        document.getElementById('roastText').textContent = data.funFacts.roast || 'You coded so much, even your terminal needs therapy.';
+      }
+
+      // Timeline (Slide 7)
+      const timelineContainer = document.getElementById('timelineContainer');
+      if (data.timeline && data.timeline.length > 0) {
+        const maxCommits = Math.max(...data.timeline.map(m => m.commits));
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        let peakMonth = data.timeline[0];
+        data.timeline.forEach(m => {
+          if (m.commits > peakMonth.commits) peakMonth = m;
+        });
+        
+        timelineContainer.innerHTML = data.timeline.map((m, i) => {
+          const height = maxCommits > 0 ? Math.max(10, (m.commits / maxCommits) * 120) : 10;
+          return `
+            <div class="timeline-bar" style="height: ${height}px;" title="${m.month}: ${m.commits} commits">
+              <span class="timeline-bar-value">${m.commits}</span>
+              <span class="timeline-bar-label">${months[i] || m.month.slice(0,3)}</span>
+            </div>
+          `;
+        }).join('');
+        
+        document.getElementById('peakMonth').textContent = peakMonth.month;
+        setAnimatedCount('peakCommits', peakMonth.commits);
+      }
+
+      // Squad (Slide 8)
+      const squadContainer = document.getElementById('squadContainer');
+      if (data.squad && data.squad.length > 0) {
+        squadContainer.innerHTML = data.squad.map(member => `
+          <div class="squad-member">
+            <div class="squad-avatar">
+              ${member.avatarUrl ? `<img src="${member.avatarUrl}" alt="${member.username}">` : member.username.charAt(0).toUpperCase()}
+            </div>
+            <span class="squad-name">${member.username}</span>
+            <span class="squad-role">${member.collaborationType || 'collaborator'}</span>
+          </div>
+        `).join('');
+      } else {
+        squadContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5)">No squad data available yet</p>';
+      }
+
+      // Wisdom (Slide 9)
+      const quotes = [
+        { text: '"Touch some grass, dude."', author: '— The Universe' },
+        { text: '"It works on my machine."', author: '— Every Developer' },
+        { text: '"There are only 10 types of people..."', author: '— Ancient Binary Proverb' },
+        { text: '"Real programmers count from 0."', author: '— Dijkstra, probably' },
+        { text: '"Sleep is for the weak. Coffee is for the coders."', author: '— Your IDE' }
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('wiseQuote').textContent = data.funFacts?.quote 
+        ? `"${data.funFacts.quote}"` 
+        : randomQuote.text;
+      document.getElementById('quoteAuthor').textContent = randomQuote.author;
+
+      // Summary page - populate stats grid
+      setAnimatedCount('summaryCommits', data.stats.totalCommits);
+      setAnimatedCount('summaryPRs', data.stats.totalPRs || 0);
+      setAnimatedCount('summaryStreak', data.stats.longestStreak);
+      setAnimatedCount('summaryStars', data.stats.totalStars || 0);
+      setAnimatedCount('summaryLanguages', data.languages?.length || 0);
+      setAnimatedCount('summaryAchievements', data.titles?.length || 0);
+      document.getElementById('summaryTopLang').textContent = data.languages?.[0]?.name || '-';
+      document.getElementById('summaryTopRepo').textContent = data.topRepos?.[0]?.name || '-';
+
+      // Summary page - populate card
+      document.getElementById('cardUsername').textContent = data.username || 'Developer';
+      
+      // Card level - comprehensive formula (1-999 scale)
+      // Uses logarithmic scaling for commits/stars to prevent outliers from dominating
+      // Base XP from activity
+      const commits = data.stats.totalCommits || 0;
+      const prs = data.stats.totalPRs || 0;
+      const prsMerged = data.stats.totalPRsMerged || 0;
+      const streak = data.stats.longestStreak || 0;
+      const stars = data.stats.totalStars || 0;
+      const issues = data.stats.totalIssues || 0;
+      const languages = data.languages?.length || 0;
+      const badges = data.titles?.length || 0;
+      const accountAge = data.funFacts?.codingAge || 0;
+      const daysActive = data.stats.daysCodedThisYear || 0;
+      
+      // XP calculation with diminishing returns for high values
+      const commitXP = Math.floor(Math.log10(commits + 1) * 100); // ~0-400 for 1-10000 commits
+      const prXP = prsMerged * 15 + (prs - prsMerged) * 5; // merged PRs worth more
+      const streakXP = Math.min(streak * 3, 300); // max 300 from streak (100 days)
+      const starXP = Math.floor(Math.log10(stars + 1) * 80); // ~0-320 for 1-10000 stars
+      const issueXP = Math.min(issues * 5, 150); // max 150 from issues
+      const langXP = Math.min(languages * 15, 150); // max 150 from languages (10 langs)
+      const badgeXP = badges * 20; // 20 XP per badge earned
+      const ageXP = Math.min(accountAge * 25, 250); // max 250 from account age (10 years)
+      const consistencyXP = Math.floor((daysActive / 365) * 200); // up to 200 for coding every day
+      
+      const totalXP = commitXP + prXP + streakXP + starXP + issueXP + langXP + badgeXP + ageXP + consistencyXP;
+      
+      // Convert XP to level (1-999) using a curve that makes early levels easier
+      // Level 100 ≈ 500 XP, Level 500 ≈ 1500 XP, Level 999 ≈ 2500+ XP
+      const level = Math.max(1, Math.min(999, Math.floor(Math.sqrt(totalXP * 1.5) + 1)));
+      document.getElementById('cardLevel').textContent = `LV. ${level}`;
+
+      // Card stats - all values
+      document.getElementById('cardCommits').textContent = formatNumber(data.stats.totalCommits);
+      document.getElementById('cardPRs').textContent = formatNumber(data.stats.totalPRs || 0);
+      document.getElementById('cardStreak').textContent = formatNumber(data.stats.longestStreak);
+      document.getElementById('cardStars').textContent = formatNumber(data.stats.totalStars || 0);
+      document.getElementById('cardLanguages').textContent = formatNumber(data.languages?.length || 0);
+      document.getElementById('cardAchievements').textContent = formatNumber(data.titles?.length || 0);
+      document.getElementById('cardTopLang').textContent = data.languages?.[0]?.name || '-';
+      document.getElementById('cardTopRepo').textContent = data.topRepos?.[0]?.name || '-';
+
+      // Show profile image as circular overlay on GitHub logo
+      if (data.profile?.avatarUrl) {
+        const cardProfileImg = document.getElementById('cardProfileImg');
+        cardProfileImg.src = data.profile.avatarUrl;
+      }
+
+      // Show wrapped UI and move to slide 1
+      showWrappedUI();
+      setTimeout(() => goToSlide(1), 300);
+    }
+
+    function shareWrapped() {
+      const frontCard = document.querySelector('.github-card.front');
+      if (!frontCard) return;
+
+      // Create or get share overlay
+      let shareOverlay = document.querySelector('.share-overlay');
+      if (!shareOverlay) {
+        shareOverlay = document.createElement('div');
+        shareOverlay.className = 'share-overlay';
+        shareOverlay.innerHTML = `
+          <div class="share-modal">
+            <div class="share-card-container"></div>
+            <div class="share-actions">
+              <button class="download-btn" onclick="downloadCard()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                DOWNLOAD IMAGE
+              </button>
+              <button class="close-share-btn" onclick="closeShareOverlay()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                CLOSE
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(shareOverlay);
+
+        // Close on overlay click (not modal)
+        shareOverlay.addEventListener('click', (e) => {
+          if (e.target === shareOverlay) closeShareOverlay();
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && shareOverlay.classList.contains('active')) {
+            closeShareOverlay();
+          }
+        });
+      }
+
+      // Clone card into share modal
+      const cardContainer = shareOverlay.querySelector('.share-card-container');
+      cardContainer.innerHTML = '';
+      const cardClone = frontCard.cloneNode(true);
+      cardClone.className = 'github-card share-card-preview';
+      cardClone.style.transform = 'none';
+      cardClone.style.position = 'relative';
+      cardContainer.appendChild(cardClone);
+
+      shareOverlay.classList.add('active');
+    }
+
+    function closeShareOverlay() {
+      const shareOverlay = document.querySelector('.share-overlay');
+      if (shareOverlay) shareOverlay.classList.remove('active');
+    }
+
+    async function downloadCard() {
+      const cardElement = document.querySelector('.share-card-preview');
+      if (!cardElement) return;
+
+      const downloadBtn = document.querySelector('.download-btn');
+      const originalText = downloadBtn.innerHTML;
+      downloadBtn.innerHTML = 'Generating...';
+      downloadBtn.disabled = true;
+
+      try {
+        // Wait for fonts to be ready
+        await document.fonts.ready;
+
+        // Convert external image to base64 to avoid CORS issues
+        const profileImg = cardElement.querySelector('.card-profile-img');
+        let originalSrc = null;
+        
+        if (profileImg && profileImg.src) {
+          originalSrc = profileImg.src;
+          try {
+            const response = await fetch(profileImg.src);
+            const blob = await response.blob();
+            const base64 = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            profileImg.src = base64;
+          } catch (imgError) {
+            console.log('Fetch failed, trying canvas method');
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = profileImg.naturalWidth || 130;
+              canvas.height = profileImg.naturalHeight || 130;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(profileImg, 0, 0);
+              profileImg.src = canvas.toDataURL('image/png');
+            } catch (canvasError) {
+              console.log('Canvas method also failed, using placeholder');
+              profileImg.style.display = 'none';
+            }
+          }
+        }
+
+        // Add CRT overlay to the card temporarily
+        const crtOverlay = document.createElement('div');
+        crtOverlay.className = 'card-crt-overlay';
+        crtOverlay.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: url('/static/crt.jpg') repeat;
+          background-size: 500px;
+          opacity: 0.08;
+          pointer-events: none;
+          border-radius: 16px;
+          z-index: 100;
+        `;
+        cardElement.style.position = 'relative';
+        cardElement.appendChild(crtOverlay);
+
+        // Use dom-to-image which handles CSS better
+        const dataUrl = await domtoimage.toPng(cardElement, {
+          quality: 1,
+          scale: 2,
+          style: {
+            transform: 'none'
+          },
+          cacheBust: true
+        });
+
+        // Remove CRT overlay after capture
+        crtOverlay.remove();
+
+        // Restore original image src
+        if (profileImg && originalSrc) {
+          profileImg.src = originalSrc;
+          profileImg.style.display = '';
+        }
+
+        // Download the image
+        const link = document.createElement('a');
+        link.download = `github-wrapped-2025-${document.getElementById('cardUsername').textContent || 'user'}.png`;
+        link.href = dataUrl;
+        link.click();
+
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+      } catch (error) {
+        console.error('Error generating image:', error);
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+        alert('Failed to generate image. Please try again.');
+      }
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    // Fullscreen functions
+    function enterFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
+    function exitFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+
+    function isFullscreen() {
+      return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+    }
+
+    function toggleFullscreen() {
+      if (isFullscreen()) {
+        exitFullscreen();
+      } else {
+        enterFullscreen();
+      }
+    }
+
+    function updateFullscreenButton() {
+      const enterIcon = document.getElementById('fullscreenEnterIcon');
+      const exitIcon = document.getElementById('fullscreenExitIcon');
+      const btn = document.getElementById('fullscreenBtn');
+      if (isFullscreen()) {
+        enterIcon.style.display = 'none';
+        exitIcon.style.display = 'block';
+        btn.title = 'Exit Fullscreen';
+      } else {
+        enterIcon.style.display = 'block';
+        exitIcon.style.display = 'none';
+        btn.title = 'Enter Fullscreen';
+      }
+    }
+
+    // Listen for fullscreen changes
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+    document.addEventListener('msfullscreenchange', updateFullscreenButton);
+
+    function calculatePercentile(value, type) {
+      // Estimated percentiles based on typical GitHub activity
+      const thresholds = {
+        commits: [
+          { max: 50, percentile: 70 },
+          { max: 100, percentile: 50 },
+          { max: 300, percentile: 30 },
+          { max: 500, percentile: 20 },
+          { max: 1000, percentile: 10 },
+          { max: 2000, percentile: 5 },
+          { max: Infinity, percentile: 1 }
+        ]
+      };
+
+      const ranges = thresholds[type] || thresholds.commits;
+      for (const range of ranges) {
+        if (value <= range.max) {
+          return range.percentile.toFixed(2);
+        }
+      }
+      return '1.00';
+    }
+
+    function getCommitVerdict(commits) {
+      if (commits === 0) return `You <span class="highlight-box">didn't commit at all</span>... time to start!`;
+      if (commits < 10) return `You <span class="highlight-box">barely committed</span> this year`;
+      if (commits < 50) return `You committed <span class="highlight-box">a little bit</span>`;
+      if (commits < 100) return `You committed <span class="highlight-box">a decent amount</span>`;
+      if (commits < 300) return `You committed <span class="highlight-box">quite a bit</span>!`;
+      if (commits < 500) return `You committed <span class="highlight-box">a lot</span>!`;
+      if (commits < 1000) return `You committed <span class="highlight-box">A LOT</span>!`;
+      if (commits < 2000) return `You're a <span class="highlight-box">commit machine</span>!`;
+      return `You're absolutely <span class="highlight-box">CRACKED</span>!`;
+    }
+
+    function updateProgress(percent) {
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      if (progressFill) progressFill.style.width = `${percent}%`;
+      if (progressText) progressText.textContent = `${Math.round(percent)}%`;
+    }
+
+    function showLoading() {
+      // Hide all landing page content
+      const slide0 = document.getElementById('slide-0');
+      slide0.querySelectorAll('.title-label, .title-main, .github-3d-frame, .title-subtitle, .input-section').forEach(el => {
+        el.style.display = 'none';
+      });
+      document.getElementById('loadingContainer').classList.add('active');
+    }
+    function hideLoading() {
+      // Show all landing page content
+      const slide0 = document.getElementById('slide-0');
+      slide0.querySelectorAll('.title-label, .title-subtitle').forEach(el => {
+        el.style.display = 'inline-flex';
+      });
+      slide0.querySelectorAll('.title-main').forEach(el => {
+        el.style.display = 'block';
+      });
+      slide0.querySelectorAll('.github-3d-frame').forEach(el => {
+        el.style.display = 'block';
+      });
+      document.getElementById('inputSection').style.display = 'flex';
+      document.getElementById('loadingContainer').classList.remove('active');
+    }
+    function showError(message) {
+      const el = document.getElementById('errorMessage');
+      el.textContent = `❌ ${message}`;
+      el.classList.add('active');
+    }
+
+    function hideError() {
+      document.getElementById('errorMessage').classList.remove('active');
+    }
+
+    function resetAndRestart() {
+      wrappedData = null;
+      currentSlide = 0;
+      
+      // Reset all slides
+      document.querySelectorAll('.slide').forEach((slide, i) => {
+        slide.classList.remove('active', 'exit');
+        if (i === 0) slide.classList.add('active');
+      });
+      
+      // Reset UI
+      hideWrappedUI();
+      updateDotPatternColor('green');
+      document.getElementById('usernameInput').value = '';
+    }
+
+    // Card zoom functionality
+    function initCardZoom() {
+      const frontCard = document.querySelector('.github-card.front');
+      if (!frontCard) return;
+
+      // Create zoom overlay
+      let overlay = document.querySelector('.card-zoom-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'card-zoom-overlay';
+        overlay.innerHTML = '<div class="card-zoom-hint">Click anywhere to close</div>';
+        document.body.appendChild(overlay);
+      }
+
+      // Click on card to zoom
+      frontCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cardClone = frontCard.cloneNode(true);
+        cardClone.className = 'github-card zoomed-card';
+        cardClone.style.position = 'relative';
+        cardClone.style.transform = 'scale(1.8)';
+        
+        // Clear previous clone
+        const existingClone = overlay.querySelector('.zoomed-card');
+        if (existingClone) existingClone.remove();
+        
+        overlay.insertBefore(cardClone, overlay.firstChild);
+        overlay.classList.add('active');
+      });
+
+      // Click overlay to close
+      overlay.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+
+      // ESC key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          overlay.classList.remove('active');
+        }
+      });
+    }
+
+    // Initialize card zoom when DOM is ready
+    document.addEventListener('DOMContentLoaded', initCardZoom);
+
+    // Background music functionality
+    const bgMusic = new Audio('/static/bg.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+    let isMusicPlaying = false;
+
+    function toggleBackgroundMusic() {
+      const soundOnIcon = document.getElementById('soundOnIcon');
+      const soundOffIcon = document.getElementById('soundOffIcon');
+      
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        soundOnIcon.style.display = 'none';
+        soundOffIcon.style.display = 'block';
+      } else {
+        bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        soundOnIcon.style.display = 'block';
+        soundOffIcon.style.display = 'none';
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
+  </script>
+</body>
+</html>
