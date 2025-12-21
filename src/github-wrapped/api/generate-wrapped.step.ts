@@ -32,8 +32,7 @@ export const config: ApiRouteConfig = {
             error: z.string(),
         }),
     },
-    emits: ['fetch-github-data'],
-    virtualEmits: [{ topic: 'fetch-github-data', label: 'Start Pipeline' }],
+    emits: [{ topic: 'fetch-github-data', label: 'Start Pipeline' }],
 };
 
 export const handler: Handlers['GenerateWrapped'] = async (req, { emit, logger, state, traceId }) => {
@@ -60,12 +59,12 @@ export const handler: Handlers['GenerateWrapped'] = async (req, { emit, logger, 
         }
 
         // Emit event to start the async processing flow
+        // traceId is automatically propagated by Motia's context
         await emit({
             topic: 'fetch-github-data',
             data: {
                 username,
                 year,
-                traceId,
             },
         });
 

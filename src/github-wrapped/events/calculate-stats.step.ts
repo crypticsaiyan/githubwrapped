@@ -12,7 +12,6 @@ import { ContributionDay, Repository, GitHubProfile } from '../types';
 const inputSchema = z.object({
     username: z.string(),
     year: z.number(),
-    traceId: z.string(),
 });
 
 export const config: EventConfig = {
@@ -21,14 +20,12 @@ export const config: EventConfig = {
     description: 'Calculates derived statistics from raw GitHub data',
     flows: ['github-wrapped'],
     subscribes: ['calculate-stats'],
-    emits: ['generate-achievements'],
+    emits: [{ topic: 'generate-achievements', label: 'Stats Calculated' }],
     input: inputSchema,
-    virtualSubscribes: ['calculate-stats'],
-    virtualEmits: [{ topic: 'generate-achievements', label: 'Stats Calculated' }],
 };
 
-export const handler: Handlers['CalculateStats'] = async (input, { emit, logger, state }) => {
-    const { username, year, traceId } = input;
+export const handler: Handlers['CalculateStats'] = async (input, { emit, logger, state, traceId }) => {
+    const { username, year } = input;
 
     logger.info('Calculating statistics', { username, year, traceId });
 
@@ -115,7 +112,6 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
             data: {
                 username,
                 year,
-                traceId,
             },
         });
 
@@ -128,5 +124,7 @@ export const handler: Handlers['CalculateStats'] = async (input, { emit, logger,
             error: errorMessage,
             startedAt: (await state.get<any>('wrapped-status', username))?.startedAt,
         });
+
+        throw error;
     }
 };

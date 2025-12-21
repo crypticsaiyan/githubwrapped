@@ -17,7 +17,6 @@ import {
 const inputSchema = z.object({
     username: z.string(),
     year: z.number(),
-    traceId: z.string(),
 });
 
 export const config: EventConfig = {
@@ -26,14 +25,12 @@ export const config: EventConfig = {
     description: 'Generates titles, fun facts, and quotes based on user stats',
     flows: ['github-wrapped'],
     subscribes: ['generate-achievements'],
-    emits: ['finalize-wrapped'],
+    emits: [{ topic: 'finalize-wrapped', label: 'Achievements Ready' }],
     input: inputSchema,
-    virtualSubscribes: ['generate-achievements'],
-    virtualEmits: [{ topic: 'finalize-wrapped', label: 'Achievements Ready' }],
 };
 
-export const handler: Handlers['GenerateAchievements'] = async (input, { emit, logger, state }) => {
-    const { username, year, traceId } = input;
+export const handler: Handlers['GenerateAchievements'] = async (input, { emit, logger, state, traceId }) => {
+    const { username, year } = input;
 
     logger.info('Generating achievements', { username, year, traceId });
 
@@ -96,7 +93,6 @@ export const handler: Handlers['GenerateAchievements'] = async (input, { emit, l
             data: {
                 username,
                 year,
-                traceId,
             },
         });
 
@@ -109,5 +105,7 @@ export const handler: Handlers['GenerateAchievements'] = async (input, { emit, l
             error: errorMessage,
             startedAt: (await state.get<any>('wrapped-status', username))?.startedAt,
         });
+
+        throw error;
     }
 };
