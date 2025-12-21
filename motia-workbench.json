@@ -55,30 +55,5 @@
         "y": 886
       }
     }
-  },
-  {
-    "id": "basic-tutorial",
-    "config": {
-      "src/petstore/state-audit-cron.step.ts": {
-        "x": -316,
-        "y": 242,
-        "sourceHandlePosition": "right"
-      },
-      "src/petstore/process-food-order.step.ts": {
-        "x": 105,
-        "y": -5,
-        "sourceHandlePosition": "bottom"
-      },
-      "src/petstore/notification.step.ts": {
-        "x": 331,
-        "y": 261,
-        "sourceHandlePosition": "bottom"
-      },
-      "src/petstore/api.step.ts": {
-        "x": -265,
-        "y": -9,
-        "sourceHandlePosition": "right"
-      }
-    }
   }
 ]

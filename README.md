@@ -1,6 +1,10 @@
 # GitHub Wrapped 2025
 
+![GitHub Wrapped](./assets/screenshots/gw.png)
+
 Generate personalized GitHub statistics and achievements for any user. Analyzes GitHub activity and presents stunning visual cards with your coding journey.
+
+![Powered by Motia](./assets/screenshots/motia.png)
 
 Built with **[Motia](https://motia.dev)** - an event-driven backend framework for building scalable, type-safe applications.
 
