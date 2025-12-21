@@ -5,29 +5,6 @@ async function generateWrapped() {
   if (!username) { showError('Please enter a GitHub username'); return; }
 
   enterFullscreen();
-
-  const demoMode = document.getElementById('demoModeToggle').checked;
-  
-  if (demoMode) {
-    hideError();
-    showLoading();
-    
-    let progress = 0;
-    const loadingInterval = setInterval(() => {
-      progress += 10;
-      updateProgress(Math.min(progress, 100));
-      
-      if (progress >= 100) {
-        clearInterval(loadingInterval);
-        hideLoading();
-        wrappedData = generateMockData(username);
-        displayWrapped(wrappedData);
-      }
-    }, 150);
-    
-    return;
-  }
-
   hideError();
   showLoading();
 
