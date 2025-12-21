@@ -1,15 +1,72 @@
 [
   {
+    "id": "github-wrapped",
+    "config": {
+      "src/github-wrapped/events/generate-achievements.step.ts": {
+        "x": 1136,
+        "y": 666
+      },
+      "src/github-wrapped/events/finalize-wrapped.step.ts": {
+        "x": 1726,
+        "y": 677
+      },
+      "src/github-wrapped/events/fetch-github-data.step.ts": {
+        "x": 69,
+        "y": 701
+      },
+      "src/github-wrapped/events/calculate-stats.step.ts": {
+        "x": 609,
+        "y": 688
+      },
+      "src/github-wrapped/cron/schedule-generate.step.ts": {
+        "x": -607,
+        "y": 614
+      },
+      "src/github-wrapped/api/serve-static.step.ts": {
+        "x": 214,
+        "y": 94
+      },
+      "src/github-wrapped/api/serve-static-js.step.ts": {
+        "x": 803,
+        "y": 119
+      },
+      "src/github-wrapped/api/serve-static-css.step.ts": {
+        "x": 869,
+        "y": 369
+      },
+      "src/github-wrapped/api/serve-frontend.step.ts": {
+        "x": 511,
+        "y": 872
+      },
+      "src/github-wrapped/api/get-wrapped.step.ts": {
+        "x": -115,
+        "y": 321
+      },
+      "src/github-wrapped/api/get-wrapped-status.step.ts": {
+        "x": 319,
+        "y": 335
+      },
+      "src/github-wrapped/api/get-badge.step.ts": {
+        "x": 1266,
+        "y": 211
+      },
+      "src/github-wrapped/api/generate-wrapped.step.ts": {
+        "x": -441,
+        "y": 886
+      }
+    }
+  },
+  {
     "id": "basic-tutorial",
     "config": {
       "src/petstore/state-audit-cron.step.ts": {
-        "x": -369,
-        "y": 247,
+        "x": -316,
+        "y": 242,
         "sourceHandlePosition": "right"
       },
       "src/petstore/process-food-order.step.ts": {
-        "x": 144,
-        "y": 17,
+        "x": 105,
+        "y": -5,
         "sourceHandlePosition": "bottom"
       },
       "src/petstore/notification.step.ts": {
@@ -18,66 +75,9 @@
         "sourceHandlePosition": "bottom"
       },
       "src/petstore/api.step.ts": {
-        "x": -319,
-        "y": 0,
+        "x": -265,
+        "y": -9,
         "sourceHandlePosition": "right"
-      }
-    }
-  },
-  {
-    "id": "github-wrapped",
-    "config": {
-      "src/github-wrapped/events/generate-achievements.step.ts": {
-        "x": 1074,
-        "y": 690
-      },
-      "src/github-wrapped/events/finalize-wrapped.step.ts": {
-        "x": 1495,
-        "y": 695
-      },
-      "src/github-wrapped/events/fetch-github-data.step.ts": {
-        "x": 279,
-        "y": 689
-      },
-      "src/github-wrapped/events/calculate-stats.step.ts": {
-        "x": 679,
-        "y": 688
-      },
-      "src/github-wrapped/api/serve-static.step.ts": {
-        "x": 14,
-        "y": 26
-      },
-      "src/github-wrapped/api/serve-static-js.step.ts": {
-        "x": 22,
-        "y": 204
-      },
-      "src/github-wrapped/api/serve-static-css.step.ts": {
-        "x": 11,
-        "y": 408
-      },
-      "src/github-wrapped/api/serve-frontend.step.ts": {
-        "x": 5,
-        "y": 896
-      },
-      "src/github-wrapped/api/get-wrapped.step.ts": {
-        "x": 10,
-        "y": -195
-      },
-      "src/github-wrapped/api/get-wrapped-status.step.ts": {
-        "x": -11,
-        "y": 219
-      },
-      "src/github-wrapped/api/get-badge.step.ts": {
-        "x": 0,
-        "y": 448
-      },
-      "src/github-wrapped/api/generate-wrapped.step.ts": {
-        "x": -128,
-        "y": 657
-      }
-      ,"src/github-wrapped/cron/schedule-generate.step.ts": {
-        "x": -350,
-        "y": 650
       }
     }
   }
