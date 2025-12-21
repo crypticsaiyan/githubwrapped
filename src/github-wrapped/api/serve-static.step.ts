@@ -19,6 +19,8 @@ const MIME_TYPES: Record<string, string> = {
     '.svg': 'image/svg+xml',
     '.gif': 'image/gif',
     '.ico': 'image/x-icon',
+    '.mp3': 'audio/mpeg',
+    '.html': 'text/html',
 }
 
 export const config: ApiRouteConfig = {
