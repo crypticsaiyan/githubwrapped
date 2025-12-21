@@ -10,7 +10,6 @@ import { githubService } from '../services/github.service';
 const inputSchema = z.object({
     username: z.string(),
     year: z.number(),
-    traceId: z.string(),
 });
 
 export const config: EventConfig = {
@@ -19,14 +18,12 @@ export const config: EventConfig = {
     description: 'Fetches all raw data from GitHub API for the user',
     flows: ['github-wrapped'],
     subscribes: ['fetch-github-data'],
-    emits: ['calculate-stats'],
+    emits: [{ topic: 'calculate-stats', label: 'Raw Data Ready' }],
     input: inputSchema,
-    virtualSubscribes: ['fetch-github-data'],
-    virtualEmits: [{ topic: 'calculate-stats', label: 'Raw Data Ready' }],
 };
 
-export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger, state }) => {
-    const { username, year, traceId } = input;
+export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger, state, traceId }) => {
+    const { username, year } = input;
 
     logger.info('Fetching GitHub data', { username, year, traceId });
 
@@ -111,13 +108,12 @@ export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger
             totalCommits,
         });
 
-        // Emit to next step
+        // Emit to next step - traceId is automatically propagated
         await emit({
             topic: 'calculate-stats',
             data: {
                 username,
                 year,
-                traceId,
             },
         });
 
@@ -130,5 +126,8 @@ export const handler: Handlers['FetchGitHubData'] = async (input, { emit, logger
             error: errorMessage,
             startedAt: (await state.get<any>('wrapped-status', username))?.startedAt,
         });
+
+        // Re-throw so Motia knows the step failed
+        throw error;
     }
 };

@@ -21,7 +21,6 @@ import {
 const inputSchema = z.object({
     username: z.string(),
     year: z.number(),
-    traceId: z.string(),
 });
 
 export const config: EventConfig = {
@@ -32,12 +31,11 @@ export const config: EventConfig = {
     subscribes: ['finalize-wrapped'],
     emits: [],
     input: inputSchema,
-    virtualSubscribes: ['finalize-wrapped'],
     virtualEmits: [{ topic: 'wrapped-complete', label: 'Data Ready' }],
 };
 
-export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, state }) => {
-    const { username, year, traceId } = input;
+export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, state, traceId }) => {
+    const { username, year } = input;
 
     logger.info('Finalizing wrapped data', { username, year, traceId });
 
@@ -108,5 +106,7 @@ export const handler: Handlers['FinalizeWrapped'] = async (input, { logger, stat
             error: errorMessage,
             startedAt: (await state.get<any>('wrapped-status', username))?.startedAt,
         });
+
+        throw error;
     }
 };

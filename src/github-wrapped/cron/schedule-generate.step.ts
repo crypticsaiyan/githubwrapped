@@ -10,7 +10,7 @@ export const config: CronConfig = {
   cron: '0 3 * * *', // run daily at 03:00 UTC
   name: 'ScheduleGenerateWrapped',
   description: 'Daily scheduled job that triggers generation for configured users',
-  emits: ['fetch-github-data'],
+  emits: [{ topic: 'fetch-github-data', label: 'Daily Trigger' }],
   flows: ['github-wrapped'],
 }
 
@@ -27,7 +27,6 @@ export const handler: Handlers['ScheduleGenerateWrapped'] = async ({ logger, emi
 
   for (const username of users) {
     try {
-      const traceId = `cron-${Date.now()}-${username}`
       await state.set('wrapped-status', username, {
         status: 'processing',
         progress: 0,
@@ -36,10 +35,10 @@ export const handler: Handlers['ScheduleGenerateWrapped'] = async ({ logger, emi
 
       await emit({
         topic: 'fetch-github-data',
-        data: { username, year: new Date().getFullYear(), traceId },
+        data: { username, year: new Date().getFullYear() },
       })
 
-      logger.info('Triggered generation', { username, traceId })
+      logger.info('Triggered generation', { username })
     } catch (err) {
       logger.error('Failed to trigger generate for user', { username, error: err instanceof Error ? err.message : err })
     }
