@@ -4044,20 +4044,36 @@
       // Summary page - populate card
       document.getElementById('cardUsername').textContent = data.username || 'Developer';
       
-      // Card level - comprehensive formula considering multiple factors
-      // Factors: commits, PRs, streak, stars, languages, account age, achievements
-      const commitScore = Math.min(40, Math.floor(data.stats.totalCommits / 50)); // max 40 points
-      const prScore = Math.min(15, Math.floor((data.stats.totalPRs || 0) / 5)); // max 15 points
-      const streakScore = Math.min(10, Math.floor(data.stats.longestStreak / 7)); // max 10 points
-      const starScore = Math.min(10, Math.floor((data.stats.totalStars || 0) / 20)); // max 10 points
-      const langScore = Math.min(5, (data.languages?.length || 0)); // max 5 points
-      const achievementScore = Math.min(10, (data.titles?.length || 0) * 2); // max 10 points
-      // Account age bonus (years on GitHub)
+      // Card level - comprehensive formula (1-999 scale)
+      // Uses logarithmic scaling for commits/stars to prevent outliers from dominating
+      // Base XP from activity
+      const commits = data.stats.totalCommits || 0;
+      const prs = data.stats.totalPRs || 0;
+      const prsMerged = data.stats.totalPRsMerged || 0;
+      const streak = data.stats.longestStreak || 0;
+      const stars = data.stats.totalStars || 0;
+      const issues = data.stats.totalIssues || 0;
+      const languages = data.languages?.length || 0;
+      const badges = data.titles?.length || 0;
       const accountAge = data.funFacts?.codingAge || 0;
-      const ageScore = Math.min(10, accountAge); // max 10 points for 10+ years
+      const daysActive = data.stats.daysCodedThisYear || 0;
       
-      const totalScore = commitScore + prScore + streakScore + starScore + langScore + achievementScore + ageScore;
-      const level = Math.max(1, Math.min(99, totalScore));
+      // XP calculation with diminishing returns for high values
+      const commitXP = Math.floor(Math.log10(commits + 1) * 100); // ~0-400 for 1-10000 commits
+      const prXP = prsMerged * 15 + (prs - prsMerged) * 5; // merged PRs worth more
+      const streakXP = Math.min(streak * 3, 300); // max 300 from streak (100 days)
+      const starXP = Math.floor(Math.log10(stars + 1) * 80); // ~0-320 for 1-10000 stars
+      const issueXP = Math.min(issues * 5, 150); // max 150 from issues
+      const langXP = Math.min(languages * 15, 150); // max 150 from languages (10 langs)
+      const badgeXP = badges * 20; // 20 XP per badge earned
+      const ageXP = Math.min(accountAge * 25, 250); // max 250 from account age (10 years)
+      const consistencyXP = Math.floor((daysActive / 365) * 200); // up to 200 for coding every day
+      
+      const totalXP = commitXP + prXP + streakXP + starXP + issueXP + langXP + badgeXP + ageXP + consistencyXP;
+      
+      // Convert XP to level (1-999) using a curve that makes early levels easier
+      // Level 100 ≈ 500 XP, Level 500 ≈ 1500 XP, Level 999 ≈ 2500+ XP
+      const level = Math.max(1, Math.min(999, Math.floor(Math.sqrt(totalXP * 1.5) + 1)));
       document.getElementById('cardLevel').textContent = `LV. ${level}`;
 
       // Card stats - all values

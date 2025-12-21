@@ -470,16 +470,6 @@ export function generateTitles(
         });
     }
 
-    // Night owl (placeholder - would need commit timestamps)
-    if (Math.random() > 0.5) {
-        titles.push({
-            id: 'night-owl',
-            title: 'Night Owl',
-            description: 'The best code is written at 2 AM',
-            icon: '🦉',
-        });
-    }
-
     return titles;
 }
 
